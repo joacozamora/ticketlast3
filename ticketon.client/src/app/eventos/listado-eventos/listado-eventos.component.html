@@ -1,0 +1,15 @@
+<div *ngIf="eventos?.length === 0">
+  <p>No hay eventos cargados!</p>
+</div>
+
+<div *ngIf="eventos && eventos.length > 0">
+  <div *ngFor="let evento of eventos let index = index" class = "evento-contenedor">
+    <div>Evento {{ index }}: {{ evento.titulo }}</div>
+    <div>
+      {{evento.fechaEvento | date: "dd-MMMM-yyyy" | uppercase}}
+    </div>
+    <div>
+      {{evento.precio | currency}}
+    </div>
+  </div>
+</div>
