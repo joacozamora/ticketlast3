@@ -3,12 +3,12 @@
 namespace TicketOn.Server.Controllers
 {
     [ApiController]
-    [Route("api/generos")]
-    public class GenerosController : ControllerBase
+    [Route("api/entradas")]
+    public class EntradasController : ControllerBase
     {
         private readonly ApplicationDbContext context;
 
-        public GenerosController(ApplicationDbContext context)
+        public EntradasController(ApplicationDbContext context)
         {
             this.context = context;
         }
