@@ -7,10 +7,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<TicketBDContext>(options => {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
-});
-builder.Services.AddTransient<IRepositorio, RepositorioEnMemoria>();
+//builder.Services.AddDbContext<TicketBDContext>(options => {
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
+//});
+//builder.Services.AddTransient<IRepositorio, RepositorioEnMemoria>();
 
 var origenesPermitidos = builder.Configuration.GetValue<string>("origenesPermitidos")!.Split(",");
 
