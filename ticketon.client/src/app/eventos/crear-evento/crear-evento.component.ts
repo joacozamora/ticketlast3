@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventoCreacionDTO } from '../evento';
@@ -9,10 +9,11 @@ import { EventoCreacionDTO } from '../evento';
   styleUrl: './crear-evento.component.css'
 })
 export class CrearEventoComponent {
-  constructor(private router: Router) { }
+  private router = inject(Router);
+  /*constructor(private router: Router) { }*/
 
-  guardarCambios(evento: EventoCreacionDTO) {
-    console.log(evento);
+  guardarCambios() {
+    this.router.navigate(['/']);
   }
 
 }
