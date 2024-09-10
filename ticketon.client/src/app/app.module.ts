@@ -14,6 +14,8 @@ import { IndiceGenerosComponent } from './generos/indice-generos/indice-generos.
 import { CrearGeneroComponent } from './generos/crear-genero/crear-genero.component';
 import { FormularioGeneroComponent } from './generos/formulario-genero/formulario-genero.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CrearEventoComponent } from './eventos/crear-evento/crear-evento.component';
+import { FormularioEventoComponent } from './eventos/formulario-evento/formulario-evento.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     IndiceGenerosComponent,
     CrearGeneroComponent,
     FormularioGeneroComponent,
+    CrearEventoComponent,
+    FormularioEventoComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,
