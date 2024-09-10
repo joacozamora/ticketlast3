@@ -1,1 +1,25 @@
-<p>formulario-evento works!</p>
+<form *ngIf="form" (onSubmit)="guardarCambios()" [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Nombre</mat-label>
+    <input formControlName="nombre" matInput />
+    <mat-error>El campo nombre es requerido</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Fecha del Evento</mat-label>
+    <input formControlName="fechaInicio" matInput [matDatepicker]="picker" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <h4>Seleccionar Imagen</h4>
+
+  <app-input-img></app-input-img>
+
+  <div>
+    <button mat-flat-button color="primary" [disabled]="form.invalid">
+      Guardar Cambios
+    </button>
+    <a mat-stroked-button routerLink="/">Cancelar</a>
+  </div>
+</form>
