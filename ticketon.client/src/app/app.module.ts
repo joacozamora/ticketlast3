@@ -16,6 +16,7 @@ import { FormularioGeneroComponent } from './generos/formulario-genero/formulari
 import { ReactiveFormsModule } from '@angular/forms';
 import { CrearEventoComponent } from './eventos/crear-evento/crear-evento.component';
 import { FormularioEventoComponent } from './eventos/formulario-evento/formulario-evento.component';
+import { InputImgComponent } from './utilidades/input-img/input-img.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { FormularioEventoComponent } from './eventos/formulario-evento/formulari
     FormularioGeneroComponent,
     CrearEventoComponent,
     FormularioEventoComponent,
+    InputImgComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,

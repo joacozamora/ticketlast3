@@ -32,7 +32,7 @@ export class FormularioEventoComponent implements OnInit {
   //archivoSeleccionado(archivo: File) {
   //  this.form?.get('poster')?.setValue(archivo);
 
-   /<!--[urlImagenActual]="modelo?.foto"(archivoSeleccionado) = "archivoSeleccionado($event)"-- >/
+  /* /<!--[urlImagenActual]="modelo?.foto"(archivoSeleccionado) = "archivoSeleccionado($event)"-- >/*/
 //}
 
 guardarCambios() {
