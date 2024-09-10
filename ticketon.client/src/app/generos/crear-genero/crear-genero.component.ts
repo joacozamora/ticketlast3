@@ -14,10 +14,7 @@ export class CrearGeneroComponent {
   private router = inject(Router);
 
   guardarCambios() {
-   
-
-      this.router.navigate(['/generos']);
-
     
+      this.router.navigate(['/generos']);
   }
 }
