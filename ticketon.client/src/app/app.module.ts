@@ -12,6 +12,11 @@ import { MenuComponent } from './menu/menu.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { IndiceGenerosComponent } from './generos/indice-generos/indice-generos.component';
 import { CrearGeneroComponent } from './generos/crear-genero/crear-genero.component';
+import { FormularioGeneroComponent } from './generos/formulario-genero/formulario-genero.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CrearEventoComponent } from './eventos/crear-evento/crear-evento.component';
+import { FormularioEventoComponent } from './eventos/formulario-evento/formulario-evento.component';
+import { InputImgComponent } from './utilidades/input-img/input-img.component';
 
 @NgModule({
   declarations: [
@@ -21,11 +26,16 @@ import { CrearGeneroComponent } from './generos/crear-genero/crear-genero.compon
     LandingPageComponent,
     IndiceGenerosComponent,
     CrearGeneroComponent,
+    FormularioGeneroComponent,
+    CrearEventoComponent,
+    FormularioEventoComponent,
+    InputImgComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,
     AppRoutingModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule
   ],
   providers: [
     provideAnimationsAsync()
