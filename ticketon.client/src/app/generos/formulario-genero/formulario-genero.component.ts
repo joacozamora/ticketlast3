@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
 import { generoCreacionDTO } from '../genero';
+
 
 @Component({
   selector: 'app-formulario-genero',

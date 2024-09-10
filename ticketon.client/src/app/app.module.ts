@@ -13,6 +13,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { IndiceGenerosComponent } from './generos/indice-generos/indice-generos.component';
 import { CrearGeneroComponent } from './generos/crear-genero/crear-genero.component';
 import { FormularioGeneroComponent } from './generos/formulario-genero/formulario-genero.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { FormularioGeneroComponent } from './generos/formulario-genero/formulari
   imports: [
     BrowserModule, HttpClientModule,
     AppRoutingModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule
   ],
   providers: [
     provideAnimationsAsync()

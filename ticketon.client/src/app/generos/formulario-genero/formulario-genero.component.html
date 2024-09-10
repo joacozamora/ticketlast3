@@ -1,9 +1,9 @@
-<form (submit)="guardarCambios()" [formGroup]="form">
+<form (onSubmit)="guardarCambios()" [formGroup]="form">
 
   <mat-form-field appearance="outline">
     <mat-label>Nombre</mat-label>
     <input formControlName="nombre" matInput />
-    <mat-errorngIf ="form.get('nombre')?.invalid && form.get('nombre')?.touched">{{obtenerErrorCampoNombre()}}</mat-error>
+    <mat-error *ngIf ="form.get('nombre')?.invalid && form.get('nombre')?.touched">{{obtenerErrorCampoNombre()}}</mat-error>
   </mat-form-field>
 
   <div>
