@@ -1,3 +1,7 @@
+using TicketOn.Server;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,10 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews();
-//builder.Services.AddDbContext<TicketBDContext>(options => {
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
-//});
-//builder.Services.AddTransient<IRepositorio, RepositorioEnMemoria>();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
+});
+
 
 var origenesPermitidos = builder.Configuration.GetValue<string>("origenesPermitidos")!.Split(",");
 
