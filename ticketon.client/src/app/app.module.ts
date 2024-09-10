@@ -12,6 +12,7 @@ import { MenuComponent } from './menu/menu.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { IndiceGenerosComponent } from './generos/indice-generos/indice-generos.component';
 import { CrearGeneroComponent } from './generos/crear-genero/crear-genero.component';
+import { FormularioGeneroComponent } from './generos/formulario-genero/formulario-genero.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { CrearGeneroComponent } from './generos/crear-genero/crear-genero.compon
     LandingPageComponent,
     IndiceGenerosComponent,
     CrearGeneroComponent,
+    FormularioGeneroComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,
