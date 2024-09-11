@@ -3,11 +3,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 @Component({
   selector: 'app-input-img',
   templateUrl: './input-img.component.html',
-  styleUrl: './input-img.component.css'
+  styleUrls: ['./input-img.component.css']
 })
 export class InputImgComponent {
 
-  imagenBase64: string | undefined;
+  imagenBase64!: string;
 
   @Output()
   archivoSeleccionado: EventEmitter<File> = new EventEmitter<File>();

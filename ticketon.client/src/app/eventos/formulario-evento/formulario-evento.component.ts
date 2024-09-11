@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
 import { EventoCreacionDTO } from '../evento';
 
@@ -7,7 +7,7 @@ import { EventoCreacionDTO } from '../evento';
   templateUrl: './formulario-evento.component.html',
   styleUrls: ['./formulario-evento.component.css']
 })
-export class FormularioEventoComponent implements OnInit {
+export class FormularioEventoComponent{
 
   constructor(private formBuilder: FormBuilder) { }
   form!: FormGroup;
