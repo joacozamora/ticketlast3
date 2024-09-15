@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.Entidades;
 
 namespace TicketOn.Server.Controllers
@@ -41,10 +42,32 @@ namespace TicketOn.Server.Controllers
             return await context.Eventos.FirstOrDefaultAsync(ped => ped.Id == id);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Evento>> Post(EventoDTO eventoDTO)
+        {
+            if (eventoDTO == null)
+            {
+                return BadRequest("Error");
+            }
 
-        //[HttpPost]
-        //public async Task<ActionResult<int>> Post()
-        //{
+            var evento = new Evento
+            {
+                Nombre = eventoDTO.Nombre,
+                Imagen = "",
+                Ubicacion ="",
+                Descripcion= "esto funciona"
+               
+
+                /*Ubicacion = eventoDTO.Ubicacion*/,
+
+            };
+
+            context.Eventos.Add(evento);
+            await context.SaveChangesAsync();
+
+            return Ok(evento);
+
+        }
 
         //}
 

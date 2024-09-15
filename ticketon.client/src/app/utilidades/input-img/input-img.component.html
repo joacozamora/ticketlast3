@@ -9,7 +9,7 @@
 </div>
 
 <div>
-  <div ngIf="imagenBase64">
+  <div *ngIf="imagenBase64">
     <img [src]="imagenBase64" ngIf="imagenBase64" />
   </div>
 </div>
