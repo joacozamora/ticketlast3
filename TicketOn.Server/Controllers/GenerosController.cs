@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.DTOs.Generos;
@@ -11,25 +13,27 @@ namespace TicketOn.Server.Controllers
     public class GenerosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public GenerosController(ApplicationDbContext context)
+        public GenerosController(ApplicationDbContext context,IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Genero>>> Get()
+        public async Task<ActionResult<List<GeneroDTO>>> Get()
         {
 
-            var lista = await context.Generos.ToListAsync();
+            var generos  = await context.Generos.ProjectTo<GeneroDTO>(mapper.ConfigurationProvider).ToListAsync();
 
 
-            if (lista == null || lista.Count == 0)
+            if (generos == null || generos.Count == 0)
             {
                 return BadRequest("No hay Generos cargados");
             }
 
-            return lista;
+            return generos;
         }
 
         [HttpGet("{id:int}")]
@@ -52,11 +56,7 @@ namespace TicketOn.Server.Controllers
                 return BadRequest("Error");
             }
 
-            var genero = new Genero
-            {
-                Nombre = generoCreacionDTO.Nombre,
-                          
-            };
+            var genero = mapper.Map<Genero>(generoCreacionDTO);
 
             context.Generos.Add(genero);
             await context.SaveChangesAsync();
