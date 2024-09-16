@@ -17,13 +17,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 
-var origenesPermitidos = builder.Configuration.GetValue<string>("origenesPermitidos")!.Split(",");
 
 builder.Services.AddCors(opciones =>
 {
     opciones.AddDefaultPolicy(opcionesCORS =>
     {
-        opcionesCORS.WithOrigins(origenesPermitidos).AllowAnyMethod().AllowAnyHeader();
+        opcionesCORS.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
 });
 
@@ -40,6 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 

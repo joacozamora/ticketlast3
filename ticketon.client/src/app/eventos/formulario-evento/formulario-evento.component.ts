@@ -1,15 +1,17 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
 import { EventoCreacionDTO } from '../evento';
+import { EventosService } from '../eventos.service';
+
 
 @Component({
   selector: 'app-formulario-evento',
   templateUrl: './formulario-evento.component.html',
   styleUrls: ['./formulario-evento.component.css']
 })
-export class FormularioEventoComponent implements OnInit {
+export class FormularioEventoComponent{
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private eventoServicio: EventosService) { }
   form!: FormGroup;
 
   @Output()
@@ -33,9 +35,20 @@ export class FormularioEventoComponent implements OnInit {
 
   /* /<!--[urlImagenActual]="modelo?.foto"(archivoSeleccionado) = "archivoSeleccionado($event)"-- >/*/
   //}
+  onSubmit(): void {
+    if (this.form.valid) {
+      this.eventoServicio.createEvento(this.form.value).subscribe(response => {
+        console.log('Evento guardado', response);
+      });
+    }
+  }
 
   guardarCambios() {
-    this.OnSubmit.emit(this.form?.value)
+    if (this.form.valid) {
+      this.eventoServicio.createEvento(this.form.value).subscribe(response => {
+        console.log('Evento guardado', response);
+      });
+    }
   }
 
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TicketOn.Server.DTOs.Eventos;
+using TicketOn.Server.DTOs.Generos;
 using TicketOn.Server.Entidades;
 
 namespace TicketOn.Server.Controllers
@@ -42,22 +44,44 @@ namespace TicketOn.Server.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<ActionResult<int>> Post()
-        //{
+        [HttpPost]
+        public async Task<ActionResult<Genero>> Post(GeneroCreacionDTO generoCreacionDTO)
+        {
+            if (generoCreacionDTO == null)
+            {
+                return BadRequest("Error");
+            }
 
-        //}
+            var genero = new Genero
+            {
+                Nombre = generoCreacionDTO.Nombre,
+                          
+            };
 
+            context.Generos.Add(genero);
+            await context.SaveChangesAsync();
+
+            return Ok(genero);
+        }
         //[HttpPut("{id:int}")]
         //public async Task<ActionResult> Put()
         //{
 
         //}
 
-        //[HttpDelete("{id:int}")]
-        //public async Task<ActionResult> Delete()
-        //{
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var genero = await context.Generos.FindAsync(id);
+            if (genero == null)
+            {
+                return NotFound();
+            }
 
-        //}
+            context.Generos.Remove(genero);
+            await context.SaveChangesAsync();
+
+            return Ok($"Se elimino correctamente el genero de id {id}");
+        }
     }
 }

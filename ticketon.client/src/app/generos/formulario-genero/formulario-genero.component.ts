@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
-import { generoCreacionDTO } from '../genero';
+import { GeneroCreacionDTO } from '../genero';
+import { GenerosService } from '../generos.service';
 
 
 @Component({
@@ -10,11 +11,11 @@ import { generoCreacionDTO } from '../genero';
 })
 export class FormularioGeneroComponent {
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private generoServicio: GenerosService) { }
   form!: FormGroup;
 
   @Output()
-  onSubmit: EventEmitter<generoCreacionDTO> = new EventEmitter<generoCreacionDTO>();
+  onSubmit: EventEmitter<GeneroCreacionDTO> = new EventEmitter<GeneroCreacionDTO>();
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -23,7 +24,11 @@ export class FormularioGeneroComponent {
   }
 
   guardarCambios() {
-    this.onSubmit.emit(this.form.value);
+    if (this.form.valid) {
+      this.generoServicio.createGenero(this.form.value).subscribe(response => {
+        console.log('Genero guardado', response);
+      });
+    }
   }
 
   obtenerErrorCampoNombre() {
