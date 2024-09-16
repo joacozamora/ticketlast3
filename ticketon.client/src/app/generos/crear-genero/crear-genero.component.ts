@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { generoCreacionDTO } from '../genero';
+import { GeneroCreacionDTO } from '../genero';
 
 
 @Component({

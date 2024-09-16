@@ -2,5 +2,7 @@
 {
     public class GeneroCreacionDTO
     {
+
+        public string Nombre { get; set; }
     }
 }

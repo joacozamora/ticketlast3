@@ -77,10 +77,19 @@ namespace TicketOn.Server.Controllers
 
         //}
 
-        //[HttpDelete("{id:int}")]
-        //public async Task<ActionResult> Delete()
-        //{
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var evento = await context.Eventos.FindAsync(id);
+            if (evento == null)
+            {
+                return NotFound();
+            }
 
-        //}
+            context.Eventos.Remove(evento);
+            await context.SaveChangesAsync();
+
+            return Ok($"Se elimino correctamente el evento de id {id}");
+        }
     }
 }
