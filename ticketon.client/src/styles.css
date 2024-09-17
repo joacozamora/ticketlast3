@@ -1,1 +1,8 @@
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.indice-elementos{
+    margin-top: 1rem;
+}
+.indice-elementos a{
+  margin-right: 1rem;
+}

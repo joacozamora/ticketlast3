@@ -1,10 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { GenerosService } from '../generos.service';
+import { GeneroDTO } from '../genero';
 
 @Component({
   selector: 'app-indice-generos',
   templateUrl: './indice-generos.component.html',
-  styleUrl: './indice-generos.component.css'
+  styleUrls: ['./indice-generos.component.css']
 })
-export class IndiceGenerosComponent {
 
+
+export class IndiceGenerosComponent {
+  generosService = inject(GenerosService)
+  generos!: GeneroDTO[];
+  columnasAMostrar = ['id', 'nombre', 'acciones']
+
+  constructor() {
+    this.generosService.obtenerTodos().subscribe(generos => {
+      this.generos = generos;
+    })
+  }
 }
