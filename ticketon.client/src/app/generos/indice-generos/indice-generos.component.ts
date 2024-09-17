@@ -14,4 +14,9 @@ export class IndiceGenerosComponent {
   generos!: GeneroDTO[];
   columnasAMostrar = ['id', 'nombre', 'acciones']
 
+  constructor() {
+    this.generosService.obtenerTodos().subscribe(generos => {
+      this.generos = generos;
+    })
+  }
 }
