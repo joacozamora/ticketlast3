@@ -17,6 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CrearEventoComponent } from './eventos/crear-evento/crear-evento.component';
 import { FormularioEventoComponent } from './eventos/formulario-evento/formulario-evento.component';
 import { InputImgComponent } from './utilidades/input-img/input-img.component';
+import { ListadoGenericoComponent } from './utilidades/listado-generico/listado-generico.component';
+
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { InputImgComponent } from './utilidades/input-img/input-img.component';
     CrearEventoComponent,
     FormularioEventoComponent,
     InputImgComponent,
+    ListadoGenericoComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,
