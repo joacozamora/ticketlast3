@@ -18,6 +18,7 @@ import { CrearEventoComponent } from './eventos/crear-evento/crear-evento.compon
 import { FormularioEventoComponent } from './eventos/formulario-evento/formulario-evento.component';
 import { InputImgComponent } from './utilidades/input-img/input-img.component';
 import { ListadoGenericoComponent } from './utilidades/listado-generico/listado-generico.component';
+import { EditarGeneroComponent } from './generos/editar-genero/editar-genero.component';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { ListadoGenericoComponent } from './utilidades/listado-generico/listado-
     FormularioEventoComponent,
     InputImgComponent,
     ListadoGenericoComponent,
+    EditarGeneroComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule,

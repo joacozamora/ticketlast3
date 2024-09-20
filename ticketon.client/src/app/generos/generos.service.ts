@@ -16,10 +16,18 @@ export class GenerosService {
     return this.http.get<GeneroDTO[]>(this.apiUrl);
   }
 
-  //public obtenerTodos(): GeneroDTO[] {
-  //  return [{id:1, nombre:'Tecno'}]
-  //}
 
+  public obtenerPorId(id: number): Observable<GeneroDTO> {
+    return this.http.get<GeneroDTO>(`${this.apiUrl}/${id}`)
+  }
+
+  public actualizar(id: number, genero: GeneroCreacionDTO) {
+    return this.http.put(`${this.apiUrl}/${id}`, genero);
+  }
+
+  public crear(genero: GeneroCreacionDTO) {
+    return this.http.post(this.apiUrl, genero);
+  }
 
   createGenero(genero: any): Observable<any> {
     return this.http.post(this.apiUrl, genero);
