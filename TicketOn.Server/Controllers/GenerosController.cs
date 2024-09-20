@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.DTOs.Generos;
@@ -14,8 +15,9 @@ namespace TicketOn.Server.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        //private readonly object outputCacheStore;
 
-        public GenerosController(ApplicationDbContext context,IMapper mapper)
+        public GenerosController(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -25,7 +27,7 @@ namespace TicketOn.Server.Controllers
         public async Task<ActionResult<List<GeneroDTO>>> Get()
         {
 
-            var generos  = await context.Generos.ProjectTo<GeneroDTO>(mapper.ConfigurationProvider).ToListAsync();
+            var generos = await context.Generos.ProjectTo<GeneroDTO>(mapper.ConfigurationProvider).ToListAsync();
 
 
             if (generos == null || generos.Count == 0)
@@ -36,38 +38,64 @@ namespace TicketOn.Server.Controllers
             return generos;
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Genero?>> Get(int id)
+        [HttpGet("{id:int}", Name = "ObtenerGeneroPorId")]
+        public async Task<ActionResult<GeneroDTO>> Get(int id)
         {
-            var existe = await context.Generos.AnyAsync(x => x.Id == id);
-            if (!existe)
+            var genero = await context.Generos
+                 .ProjectTo<GeneroDTO>(mapper.ConfigurationProvider)
+                 .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (genero == null)
             {
-                return NotFound($"El genero {id} no existe");
+                return NotFound();
             }
-            return await context.Generos.FirstOrDefaultAsync(ped => ped.Id == id);
+
+            return genero;
         }
 
-
         [HttpPost]
-        public async Task<ActionResult<Genero>> Post(GeneroCreacionDTO generoCreacionDTO)
+        public async Task<IActionResult> Post([FromBody] GeneroCreacionDTO generoCreacionDTO)
         {
-            if (generoCreacionDTO == null)
+            var genero = mapper.Map<Genero>(generoCreacionDTO);
+            context.Add(genero);
+            await context.SaveChangesAsync();
+            return CreatedAtRoute("ObtenerGeneroPorId", new { id = genero.Id }, genero);
+
+        }
+
+        //[HttpPost]
+        //public async Task<ActionResult<Genero>> Post(GeneroCreacionDTO generoCreacionDTO)
+        //{
+        //    if (generoCreacionDTO == null)
+        //    {
+        //        return BadRequest("Error");
+        //    }
+
+        //    var genero = mapper.Map<Genero>(generoCreacionDTO);
+
+        //    context.Generos.Add(genero);
+        //    await context.SaveChangesAsync();
+        //    //await outputCacheStore.EvicByTagAsync();
+        //    return Ok(genero);
+        //}
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Put(int id, [FromBody] GeneroCreacionDTO generoCreacionDTO)
+        {
+            var generoExiste = await context.Generos.AnyAsync(g => g.Id == id);
+
+            if (!generoExiste)
             {
-                return BadRequest("Error");
+                return NotFound();
             }
 
             var genero = mapper.Map<Genero>(generoCreacionDTO);
+            genero.Id = id;
 
-            context.Generos.Add(genero);
+            context.Generos.Update(genero);
             await context.SaveChangesAsync();
 
-            return Ok(genero);
+            return NoContent();
         }
-        //[HttpPut("{id:int}")]
-        //public async Task<ActionResult> Put()
-        //{
-
-        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
 import { GeneroCreacionDTO } from '../genero';
 import { GenerosService } from '../generos.service';
@@ -14,20 +14,22 @@ export class FormularioGeneroComponent {
   constructor(private formBuilder: FormBuilder, private generoServicio: GenerosService) { }
   form!: FormGroup;
 
+  @Input()
+  modelo: GeneroCreacionDTO | undefined;
+
   @Output()
   onSubmit: EventEmitter<GeneroCreacionDTO> = new EventEmitter<GeneroCreacionDTO>();
 
   ngOnInit(): void {
+    // Inicializa el formulario, prellenando el nombre si se está editando
     this.form = this.formBuilder.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]]
+      nombre: [this.modelo?.nombre ?? '', [Validators.required, Validators.minLength(3)]]
     });
   }
 
   guardarCambios() {
     if (this.form.valid) {
-      this.generoServicio.createGenero(this.form.value).subscribe(response => {
-        console.log('Genero guardado', response);
-      });
+      this.onSubmit.emit(this.form.value);  // Emitimos el valor del formulario
     }
   }
 

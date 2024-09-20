@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GeneroCreacionDTO } from '../genero';
+import { GenerosService } from '../generos.service';
 
 
 @Component({
@@ -9,12 +10,23 @@ import { GeneroCreacionDTO } from '../genero';
   templateUrl: './crear-genero.component.html',
   styleUrls: ['./crear-genero.component.css']
 })
-export class CrearGeneroComponent {
+export class CrearGeneroComponent implements OnInit {
+  form!: FormGroup;
+  constructor(
+    private formBuilder: FormBuilder,
+    private generosServices: GenerosService, 
+    private router: Router
+  ) { }
 
-  private router = inject(Router);
+  ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      nombre: ['', [Validators.required, Validators.minLength(3)]]
+    });
+  }
 
-  guardarCambios() {
-    
+  guardarCambios(genero: GeneroCreacionDTO) {
+    this.generosServices.crear(genero).subscribe(() => {
       this.router.navigate(['/generos']);
+    });
   }
 }
