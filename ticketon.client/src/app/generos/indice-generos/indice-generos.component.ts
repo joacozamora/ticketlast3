@@ -19,4 +19,13 @@ export class IndiceGenerosComponent {
       this.generos = generos;
     })
   }
+
+  borrar(id: number) {
+    this.generosService.borrar(id).subscribe(() => {
+      this.generosService.obtenerTodos().subscribe(generos => {
+        this.generos = generos;
+      });
+    });
+  }
+
 }

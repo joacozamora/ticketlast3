@@ -29,7 +29,11 @@ export class GenerosService {
     return this.http.post(this.apiUrl, genero);
   }
 
-  createGenero(genero: any): Observable<any> {
-    return this.http.post(this.apiUrl, genero);
+  //createGenero(genero: any): Observable<any> {
+  //  return this.http.post(this.apiUrl, genero);
+  //}
+
+  public borrar(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }
