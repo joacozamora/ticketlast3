@@ -97,7 +97,7 @@ namespace TicketOn.Server.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var genero = await context.Generos.FindAsync(id);

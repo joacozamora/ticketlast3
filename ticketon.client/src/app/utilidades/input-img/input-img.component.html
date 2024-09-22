@@ -1,15 +1,13 @@
+<h4>{{titulo}}</h4>
 <div>
-  <button type="button" mat-raised-button (click)="fileInput.click()">
-    Seleccionar Imagen
-  </button>
-  <input type="file"
-         hidden
-         #fileInput
-         (change)="change($event)" />
+  <button type="button" mat-raised-button (click)="cargadorArchivo.click()">Seleccionar Imagen</button>
+    <input type="file" hidden #cargadorArchivo accept="image/*" (change)="cambio($event)" />
 </div>
 
+
 <div>
-  <div *ngIf="imagenBase64">
-    <img [src]="imagenBase64" ngIf="imagenBase64" />
-  </div>
+ @if(imagenBase64){
+  <img [src]="imagenBase64" width="169" height="250" />
+
+  }
 </div>
