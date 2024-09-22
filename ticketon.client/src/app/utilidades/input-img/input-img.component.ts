@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-input-img',
@@ -7,16 +7,20 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class InputImgComponent {
 
-  imagenBase64!: string;
+  @Input({ required: true })
+  titulo!: string;
+
+
+  imagenBase64?: string;
 
   @Output()
-  archivoSeleccionado: EventEmitter<File> = new EventEmitter<File>();
+  archivoSeleccionado = new EventEmitter<File>();
 
 
-  change(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target.files && target.files.length > 0) {
-      const file: File = target.files[0];
+  cambio(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file: File = input.files[0];
       this.toBase64(file).then((value: string) => this.imagenBase64 = value);
       this.archivoSeleccionado.emit(file);
     }
@@ -24,10 +28,10 @@ export class InputImgComponent {
 
   private toBase64(file: File): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
+      const lector = new FileReader();
+      lector.readAsDataURL(file);
+      lector.onload = () => resolve(lector.result as string);
+      lector.onerror = error => reject(error);
     });
   }
 }

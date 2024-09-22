@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormGroup, Validators, FormControl } from '@angular/forms';
 import { EventoCreacionDTO } from '../evento';
 import { EventosService } from '../eventos.service';
 
@@ -24,17 +24,14 @@ export class FormularioEventoComponent{
         {
           validators: [Validators.required]
         }
-      ],
-      fechaInicio: '',
-      poster: ''
+      ],     
+      poster: new FormControl<File| null>(null)
     });
   }
 
-  //archivoSeleccionado(archivo: File) {
-  //  this.form?.get('poster')?.setValue(archivo);
-
-  /* /<!--[urlImagenActual]="modelo?.foto"(archivoSeleccionado) = "archivoSeleccionado($event)"-- >/*/
-  //}
+  archivoSeleccionado(archivo: File) {
+    this.form.controls['poster'].setValue(archivo);
+  }
   onSubmit(): void {
     if (this.form.valid) {
       this.eventoServicio.createEvento(this.form.value).subscribe(response => {
