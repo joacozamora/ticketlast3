@@ -20,6 +20,7 @@ import { InputImgComponent } from './utilidades/input-img/input-img.component';
 import { ListadoGenericoComponent } from './utilidades/listado-generico/listado-generico.component';
 import { EditarGeneroComponent } from './generos/editar-genero/editar-genero.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { CrearEntradaComponent } from './entradas/crear-entrada/crear-entrada.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     InputImgComponent,
     ListadoGenericoComponent,
     EditarGeneroComponent,
+    CrearEntradaComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),
