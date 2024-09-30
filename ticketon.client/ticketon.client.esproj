@@ -8,7 +8,6 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\ticketon.client\browser\</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\app\utilidades\" />
     <Folder Include="src\assets\imagenes\" />
   </ItemGroup>
   <ProjectExtensions>

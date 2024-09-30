@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
 import { GeneroCreacionDTO } from '../genero';
 import { GenerosService } from '../generos.service';
+import { primeraLetraMayuscula } from '../../utilidades/funciones/validaciones';
 
 
 @Component({
@@ -23,8 +24,10 @@ export class FormularioGeneroComponent {
   ngOnInit(): void {
     // Inicializa el formulario, prellenando el nombre si se está editando
     this.form = this.formBuilder.group({
-      nombre: [this.modelo?.nombre ?? '', [Validators.required, Validators.minLength(3)]]
+      nombre: ['', { validators: [Validators.required, primeraLetraMayuscula(), Validators.maxLength(50)] }]
     });
+
+   
   }
 
   guardarCambios() {
@@ -33,20 +36,23 @@ export class FormularioGeneroComponent {
     }
   }
 
-  obtenerErrorCampoNombre() {
-    var campo = this.form.get('nombre');
-    console.log('Errores del campo nombre:', campo?.errors);
+  
+  obtenerErrorCampoNombre(): string {
+    let nombre = this.form.controls['nombre'];
 
-    if (campo?.hasError('required')) {
-      return 'El campo nombre es requerido';
+    if (nombre.hasError('required')) {
+      return "El campo nombre es requerido";
     }
 
-    if (campo?.hasError('minLength')) {
-      console.log('Error: Longitud mínima');
-      return 'El campo debe contener al menos 3 caracteres';
-
+    if (nombre.hasError('maxlength')) {
+      return `El campo nombre no puede tener más de ${nombre.getError('maxlength').requiredLength} caracteres`;
     }
-    console.log('No hay errores');
-    return '';
+
+    if (nombre.hasError('primeraLetraMayuscula')) {
+      return nombre.getError('primeraLetraMayuscula').mensaje;
+    }
+
+    return "";
+
   }
 }
