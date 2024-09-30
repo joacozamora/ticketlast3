@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.Entidades;
@@ -10,10 +12,12 @@ namespace TicketOn.Server.Controllers
     public class EventosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public EventosController(ApplicationDbContext context)
+        public EventosController(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -31,43 +35,59 @@ namespace TicketOn.Server.Controllers
             return lista;
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Evento?>> Get(int id)
+        [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
+        public async Task<ActionResult<EventoDTO>> Get(int id)
         {
-            var existe = await context.Eventos.AnyAsync(x => x.Id == id);
-            if (!existe)
+            var evento = await context.Eventos
+                 .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
+                 .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (evento == null)
             {
-                return NotFound($"El evento {id} no existe");
+                return NotFound();
             }
-            return await context.Eventos.FirstOrDefaultAsync(ped => ped.Id == id);
+
+            return evento;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Evento>> Post(EventoDTO eventoDTO)
+        public async Task<IActionResult> Post([FromBody] EventoCreacionDTO eventoCreacionDTO)
         {
-            if (eventoDTO == null)
-            {
-                return BadRequest("Error");
-            }
-
-            var evento = new Evento
-            {
-                Nombre = eventoDTO.Nombre,
-                Imagen = "",
-                Ubicacion ="",
-                Descripcion= "esto funciona"
-               
-
-                /*Ubicacion = eventoDTO.Ubicacion*/,
-
-            };
-
-            context.Eventos.Add(evento);
+            var evento = mapper.Map<Evento>(eventoCreacionDTO);
+            evento.Imagen = "";
+            evento.Descripcion = "esto funciona";
+            evento.Ubicacion = "";
+            context.Add(evento);
             await context.SaveChangesAsync();
-
-            return Ok(evento);
+            return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }
+        //[HttpPost]
+        //public async Task<ActionResult<Evento>> Post(EventoDTO eventoDTO)
+        //{
+        //    if (eventoDTO == null)
+        //    {
+        //        return BadRequest("Error");
+        //    }
+
+        //    var evento = new Evento
+        //    {
+        //        Nombre = eventoDTO.Nombre,
+        //        Imagen = "",
+        //        Ubicacion ="",
+        //        Descripcion= "esto funciona"
+
+
+        //        /*Ubicacion = eventoDTO.Ubicacion*/,
+
+        //    };
+
+        //    context.Eventos.Add(evento);
+        //    await context.SaveChangesAsync();
+
+        //    return Ok(evento);
+
+        //}
 
         //}
 

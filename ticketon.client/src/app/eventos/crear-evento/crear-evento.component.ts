@@ -5,6 +5,7 @@ import { EventoCreacionDTO } from '../evento';
 import { FormularioEventoComponent } from '../formulario-evento/formulario-evento.component';
 import { CommonModule } from '@angular/common'; // Si es necesario para otros elementos
 import { RouterModule } from '@angular/router'; // Si estás usando enrutamiento en este componente
+import { EventosService } from '../eventos.service';
 
 
 
@@ -17,12 +18,19 @@ import { RouterModule } from '@angular/router'; // Si estás usando enrutamiento
   styleUrls: ['./crear-evento.component.css']
 })
 export class CrearEventoComponent {
+  private router = inject(Router);  // Usamos inject para el Router
 
-  private router = inject(Router);
-  /*constructor(private router: Router) { }*/
+  constructor(private eventoServices: EventosService) { }
 
-  guardarCambios() {
-    this.router.navigate(['/']);
+  guardarCambios(evento: EventoCreacionDTO) {
+    this.eventoServices.crear(evento).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (errorResponse) => {
+        console.error('Error al guardar el evento:', errorResponse.error.errors);
+      }
+    });
   }
 
 }

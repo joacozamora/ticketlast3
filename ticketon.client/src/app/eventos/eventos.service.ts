@@ -12,16 +12,16 @@ export class EventosService {
 
   constructor(private http: HttpClient) { }
 
-  createEvento(evento: any): Observable<any> {
+  public crear(evento: EventoCreacionDTO) {
     return this.http.post(this.apiUrl, evento);
   }
+
+  //createEvento(evento: any): Observable<any> {
+  //  return this.http.post(this.apiUrl, evento);
+  //}
 }
 
 
 
-export class Evento {
-  id!: number;
-  nombre!: string;
-  /*ubicacion!: string;*/
-}
+
 

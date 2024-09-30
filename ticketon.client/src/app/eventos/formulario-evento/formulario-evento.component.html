@@ -6,23 +6,23 @@
   </mat-form-field>
 
 
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="outline">
     <mat-label>Fecha evento</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="fechaEvento" />
+    <input matInput [matDatepicker]="picker" formControlName="fechaInicio" />
     <mat-datepicker #picker></mat-datepicker>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-error *ngIf="form.controls['fechaEvento'].hasError('required')">
+    <mat-error *ngIf="form.controls['fechaInicio'].hasError('required')">
       La fecha es requerida.
     </mat-error>
   </mat-form-field>
 
-  <app-input-img titulo="Foto del evento" (archivoSeleccionado)="archivoSeleccionado($event)"></app-input-img>
+  <!--<app-input-img titulo="Foto del evento" (archivoSeleccionado)="archivoSeleccionado($event)"></app-input-img>-->
 
   <div>
-    <!--<button mat-flat-button color="primary" [disabled]="form.invalid">
+    <button mat-flat-button color="primary" [disabled]="form.invalid">
     Guardar Cambios
-  </button>-->
-    <button mat-raised-button type="submit">Guardar Evento</button>
+  </button>
+    
     <a mat-stroked-button routerLink="/">Cancelar</a>
   </div>
 </form>
