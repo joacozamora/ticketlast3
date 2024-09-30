@@ -10,9 +10,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatTableModule} from '@angular/material/table'
+import { MatTableModule } from '@angular/material/table';
+import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 
-
+export const MY_FORMATS = {
+  parse: {
+    dateInput: ['DD-MM-YYYY'],
+  },
+  display: {
+    dateInput: 'DD-MM-YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @NgModule({
   declarations: [],
@@ -26,7 +38,8 @@ import { MatTableModule} from '@angular/material/table'
     MatTabsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTableModule
+    MatTableModule,
+    MatMomentDateModule,
   ],
   imports: [
     CommonModule    
