@@ -25,6 +25,11 @@ import { FormularioEntradaComponent } from './entradas/formulario-entrada/formul
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AutorizadoComponent } from './seguridad/autorizado/autorizado.component';
+import { LoginComponent } from './seguridad/login/login.component';
+import { RegistroComponent } from './seguridad/registro/registro.component';
+import { FormularioAutenticacionComponent } from './seguridad/formulario-autenticacion/formulario-autenticacion.component';
+import { MostrarErroresComponent } from './utilidades/mostrar-errores/mostrar-errores.component';
 
 // Configuración del formato de fecha
 export const MY_FORMATS = {
@@ -42,9 +47,9 @@ export const MY_FORMATS = {
 
 @NgModule({
   declarations: [
-    AppComponent,
+    //AppComponent,
     ListadoEventosComponent,
-    MenuComponent,
+    //MenuComponent,
     LandingPageComponent,
     IndiceGenerosComponent,
     CrearGeneroComponent,
@@ -56,6 +61,11 @@ export const MY_FORMATS = {
     EditarGeneroComponent,
     CrearEntradaComponent,
     FormularioEntradaComponent,
+    //AutorizadoComponent,
+   // LoginComponent,
+    //RegistroComponent,
+    //FormularioAutenticacionComponent,
+    //MostrarErroresComponent,
   ],
   imports: [
     SweetAlert2Module.forRoot(),
