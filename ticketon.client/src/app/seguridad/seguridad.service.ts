@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable, tap } from 'rxjs';
-import { CredencialesUsuarioDTO, RespuestaAutenticacionDTO } from './seguridad';
+import { CredencialesUsuarioDTO, RespuestaAutenticacionDTO, UsuarioDTO } from './seguridad';
+import { construirQueryParams } from '../utilidades/funciones/construirQueryParams';
+import { PaginacionDTO } from '../utilidades/modelos/PaginacionDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,15 @@ export class SeguridadService {
 
   obtenerUsuariosPaginado(paginacion: PaginacionDTO): Observable<HttpResponse<UsuarioDTO[]>> {
     let queryParams = construirQueryParams(paginacion);
-    return this.http.get(`${this.urlBase}/ListadoUsuarios`, {params: queryParams, observe: `response`})
+    return this.http.get<UsuarioDTO[]>(`${this.urlBase}/ListadoUsuarios`, {params: queryParams, observe: `response` });
+  }
+
+  hacerAdmin(email: string) {
+    return this.http.post(`${this.urlBase}/haceradmin`, { email });
+  }
+
+  removerAdmin(email: string) {
+    return this.http.post(`${this.urlBase}/removeradmin`, { email });
   }
 
   registrar(credenciales: CredencialesUsuarioDTO): Observable<RespuestaAutenticacionDTO> {
@@ -76,6 +86,12 @@ export class SeguridadService {
   }
 
   obtenerRol(): string {
-    return ''
+    const esAdmin = this.obtenerCampoJWT('esadmin');
+    if (esAdmin) {
+      return 'admin'
+    } else {
+      return '';
+    }
+    
   }
 }

@@ -30,6 +30,7 @@ import { LoginComponent } from './seguridad/login/login.component';
 import { RegistroComponent } from './seguridad/registro/registro.component';
 import { FormularioAutenticacionComponent } from './seguridad/formulario-autenticacion/formulario-autenticacion.component';
 import { MostrarErroresComponent } from './utilidades/mostrar-errores/mostrar-errores.component';
+import { IndiceUsuariosComponent } from './seguridad/indice-usuarios/indice-usuarios.component';
 
 // Configuración del formato de fecha
 export const MY_FORMATS = {
@@ -51,16 +52,17 @@ export const MY_FORMATS = {
     ListadoEventosComponent,
     //MenuComponent,
     LandingPageComponent,
-    IndiceGenerosComponent,
+    //IndiceGenerosComponent,
     CrearGeneroComponent,
     FormularioGeneroComponent,
     /*CrearEventoComponent,*/
     /*FormularioEventoComponent,*/
     /*InputImgComponent,*/
-    ListadoGenericoComponent,
+    //ListadoGenericoComponent,
     EditarGeneroComponent,
     CrearEntradaComponent,
     FormularioEntradaComponent,
+   // IndiceUsuariosComponent,
     //AutorizadoComponent,
    // LoginComponent,
     //RegistroComponent,
