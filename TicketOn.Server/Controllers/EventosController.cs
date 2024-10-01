@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.Entidades;
+using TicketOn.Server.Servicios;
 
 namespace TicketOn.Server.Controllers
 {
@@ -13,14 +15,21 @@ namespace TicketOn.Server.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        //private readonly IOutputCacheStore outputCacheStore;
+        private readonly IAlmacenadorArchivos almacenadorArchivos;
+        private const string cacheTag = "eventos";
+        private readonly string contenedor = "eventos";
 
-        public EventosController(ApplicationDbContext context, IMapper mapper)
+        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos)
         {
             this.context = context;
             this.mapper = mapper;
+            //this.outputCacheStore = outputCacheStore;
+            this.almacenadorArchivos = almacenadorArchivos;
         }
 
         [HttpGet]
+        //[OutputCache(Tags = [cacheTag])]
         public async Task<ActionResult<List<Evento>>> Get()
         {
 
@@ -36,6 +45,7 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
+        //[OutputCache(Tags = [cacheTag])]
         public async Task<ActionResult<EventoDTO>> Get(int id)
         {
             var evento = await context.Eventos
@@ -55,7 +65,12 @@ namespace TicketOn.Server.Controllers
         {
             var evento = mapper.Map<Evento>(eventoCreacionDTO);
 
-            
+            if (eventoCreacionDTO.Imagen is not null)
+            {
+                var url = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
+                evento.Imagen = url;
+            }
+
             evento.Descripcion = "esto funciona";
             evento.Ubicacion = "";
 
@@ -63,6 +78,7 @@ namespace TicketOn.Server.Controllers
             await context.SaveChangesAsync();
 
             var eventoDTO = mapper.Map<EventoDTO>(evento);
+            //await outputCacheStore.EvictByTagAsync(cacheTag, default);
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }
