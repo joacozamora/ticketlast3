@@ -10,3 +10,6 @@ export interface EventoDTO {
   fechaInicio: Date;
   imagen?: string;
 }
+export interface LandingPageDTO {
+  publicados: EventoDTO[];
+}

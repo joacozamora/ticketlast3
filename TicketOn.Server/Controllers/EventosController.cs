@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
+using TicketOn.Server.DTOs;
 using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.Entidades;
 using TicketOn.Server.Servicios;
@@ -28,21 +30,38 @@ namespace TicketOn.Server.Controllers
             this.almacenadorArchivos = almacenadorArchivos;
         }
 
-        [HttpGet]
-        //[OutputCache(Tags = [cacheTag])]
-        public async Task<ActionResult<List<Evento>>> Get()
+        [HttpGet("landing")]
+        [AllowAnonymous]
+        public async Task<ActionResult<LandingPageDTO>> Get()
         {
 
-            var lista = await context.Eventos.ToListAsync();
+            var publicados = await context.Eventos
+                .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
+                .ToListAsync();
 
+  
 
-            if (lista == null || lista.Count == 0)
-            {
-                return BadRequest("No hay Eventos cargados");
-            }
-
-            return lista;
+            var resultado = new LandingPageDTO();
+            resultado.Publicados = publicados;
+            
+            return resultado;
         }
+
+        //[HttpGet]
+        ////[OutputCache(Tags = [cacheTag])]
+        //public async Task<ActionResult<List<Evento>>> Get()
+        //{
+
+        //    var lista = await context.Eventos.ToListAsync();
+
+
+        //    if (lista == null || lista.Count == 0)
+        //    {
+        //        return BadRequest("No hay Eventos cargados");
+        //    }
+
+        //    return lista;
+        //}
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
         //[OutputCache(Tags = [cacheTag])]

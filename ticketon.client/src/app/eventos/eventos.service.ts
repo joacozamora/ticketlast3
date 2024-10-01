@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { EventoCreacionDTO, EventoDTO } from './evento';
+import { EventoCreacionDTO, EventoDTO, LandingPageDTO } from './evento';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,10 @@ export class EventosService {
 
   constructor(private http: HttpClient) { }
 
+  public obtenerLandingPage(): Observable<LandingPageDTO> {
+    return this.http.get<LandingPageDTO>(`${this.apiUrl}/landing`);
+  }
+
   //public crear(evento: EventoCreacionDTO) {
   //  return this.http.post(this.apiUrl, evento);
   //}
@@ -19,6 +23,16 @@ export class EventosService {
     const formData = this.construirFormData(evento);
     return this.http.post<EventoDTO>(this.apiUrl, formData);
   }
+
+  public actualizar(id: number, evento: EventoCreacionDTO) {
+    const formData = this.construirFormData(evento);
+    return this.http.put(`${this.apiUrl}/${id}`, formData);
+  }
+
+  public borrar(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
 
   private construirFormData(evento: EventoCreacionDTO): FormData {
     const formData = new FormData();

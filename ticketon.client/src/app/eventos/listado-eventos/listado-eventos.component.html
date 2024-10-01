@@ -1,4 +1,4 @@
-<div *ngIf="!eventos">
+<!--<div *ngIf="!eventos">
   <img src="https://media3.giphy.com/media/xTk9ZvMnbIiIew7IpW/giphy.gif" />
 
 </div>
@@ -8,7 +8,7 @@
 
 <div *ngIf="eventos && eventos.length > 0">
   <div class="eventos-contenedor">
-    <div *ngFor="let evento of eventos let index = index" class="evento-contenedor">
+    <div *ngFor="let evento of eventos let index = index" class="evento-contenedor">-->
       <!--<div>Evento {{ index }}: {{ evento.titulo }}</div>
       <div>
         {{evento.fechaEvento | date: "dd-MMMM-yyyy" | uppercase}}
@@ -16,7 +16,7 @@
       <div>
         {{evento.precio | currency}}
       </div>-->
-      <a>
+      <!--<a>
         <img [src]="evento.poster" alt="Poster"  class="imagen"/>
       </a>
       <p>
@@ -33,4 +33,37 @@
       </div>
     </div>
   </div>
-</div>
+</div>-->
+<app-listado-generico [listado]="eventos">
+  <ng-container contenido>
+    <div class="eventos-contenedor">
+      @for (evento of eventos; track $index) {
+      <div class="evento-contenedor">
+        <a [routerLink]="['/evento', evento.id]">
+          @if(evento.imagen){
+          <img [src]="evento.imagen" width="169" height="250" />
+          } @else {
+          <img srcc="default.jpg" width="169" height="250" />
+          }
+        </a>
+        <p>
+          <a [routerLink]="['/evento', evento.id]">{{evento.nombre}}</a>
+        </p>
+        
+          <ng-container autorizado>
+            <div>
+              <a mat-flat-button [routerLink]="['/eventos/editar', evento.id]">Editar</a>
+              <button mat-flat-button type="button" color="warn" [swal]="{title: 'Confirmación',
+                  text: '¿Deseas borrar el registro?', showCancelButton: true}"
+                      (confirm)="borrar(evento.id)">
+                Borrar
+              </button>
+            </div>
+          </ng-container>
+      
+
+      </div>
+      }
+    </div>
+  </ng-container>
+</app-listado-generico>
