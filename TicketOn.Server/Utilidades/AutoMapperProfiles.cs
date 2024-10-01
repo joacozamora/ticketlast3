@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.DTOs.Generos;
+using TicketOn.Server.DTOs.Usuario;
 using TicketOn.Server.Entidades;
 
 namespace TicketOn.Server.Utilidades
@@ -11,6 +13,13 @@ namespace TicketOn.Server.Utilidades
         {
             ConfigurarMapeoGeneros();
             ConfigurarMapeoEventos();
+            ConfigurarMapeoUsuarios();
+        }
+
+        private void ConfigurarMapeoUsuarios() 
+        {
+            CreateMap<IdentityUser, UsuarioDTO>();
+        
         }
         
         private void ConfigurarMapeoEventos()
