@@ -16,6 +16,11 @@ export class SeguridadService {
   private readonly llaveToken = 'token';
   private readonly llaveExpiracion = 'token-expiracion'
 
+  obtenerUsuariosPaginado(paginacion: PaginacionDTO): Observable<HttpResponse<UsuarioDTO[]>> {
+    let queryParams = construirQueryParams(paginacion);
+    return this.http.get(`${this.urlBase}/ListadoUsuarios`, {params: queryParams, observe: `response`})
+  }
+
   registrar(credenciales: CredencialesUsuarioDTO): Observable<RespuestaAutenticacionDTO> {
     return this.http.post<RespuestaAutenticacionDTO>(`${this.urlBase}/register`, credenciales)
       .pipe(

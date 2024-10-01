@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
@@ -11,17 +13,23 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/generos")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
     public class GenerosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         //private readonly object outputCacheStore;
+        //private const string cacheTag = "generos";
 
         public GenerosController(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
+
+        //[HttpGet]
+        //[OutputCache(Tags = [cacheTag])]
+        //public async Task<List<GeneroDTO>> Get([FormQuery] PaginacionDTO paginacion) 
 
         [HttpGet]
         public async Task<ActionResult<List<GeneroDTO>>> Get()

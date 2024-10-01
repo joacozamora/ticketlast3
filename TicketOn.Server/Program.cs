@@ -44,6 +44,11 @@ builder.Services.AddAuthentication().AddJwtBearer(opciones =>
     };
 });
 
+builder.Services.AddAuthorization(opciones =>
+{
+    opciones.AddPolicy("esadmin", politica => politica.RequireClaim("esadmin"));
+});
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
@@ -55,7 +60,8 @@ builder.Services.AddCors(opciones =>
 {
     opciones.AddDefaultPolicy(opcionesCORS =>
     {
-        opcionesCORS.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        opcionesCORS.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+        .WithExposedHeaders("cantidad-total-registros");
     });
 });
 

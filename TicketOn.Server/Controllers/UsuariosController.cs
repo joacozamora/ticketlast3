@@ -1,10 +1,19 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using TicketOn.Server.DTO;
+using TicketOn.Server.DTOs.Claims;
+using TicketOn.Server.DTOs.Paginacion;
+using TicketOn.Server.DTOs.Usuario;
+using TicketOn.Server.Utilidades;
 
 
 namespace TicketOn.Server.Controllers
@@ -16,17 +25,33 @@ namespace TicketOn.Server.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly IConfiguration configuration;
+        private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public UsuariosController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration, ApplicationDbContext context, IMapper mapper)
 
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
+            this.context = context;
+            this.mapper = mapper;
         }
 
+        [HttpGet("ListadoUsuarios")]
+        public async Task<ActionResult<List<UsuarioDTO>>> ListadoUsuarios([FromQuery] PaginacionDTO paginacionDTO)
+        {
+            var queryable = context.Users.AsQueryable();
+            await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable);
+            var usuarios = await queryable.ProjectTo<UsuarioDTO>(mapper.ConfigurationProvider)
+                    .OrderBy(x => x.Email).Paginar(paginacionDTO).ToListAsync();
+
+            return usuarios;
+        }
+        
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<ActionResult<RespuestaAutenticacionDTO>> Registrar(CredencialesUsuarioDTO credencialesUsuarioDTO)
         {
             var usuario = new IdentityUser
@@ -50,6 +75,7 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<RespuestaAutenticacionDTO>> Login(CredencialesUsuarioDTO credencialesUsuarioDTO)
         {
             var usuario = await userManager.FindByEmailAsync(credencialesUsuarioDTO.Email);
@@ -71,6 +97,34 @@ namespace TicketOn.Server.Controllers
                 return BadRequest(errores);
             }
 
+        }
+
+        [HttpPost("HacerAdmin")]
+        public async Task<IActionResult> HacerAdmin(EditarClaimDto editarClaimDTO)
+        {
+            var usuario = await userManager.FindByEmailAsync(editarClaimDTO.Email);
+            
+            if(usuario is null)
+            {
+                return NotFound();
+            }
+
+            await userManager.AddClaimAsync(usuario, new Claim("esadmin", "true"));
+            return NoContent();
+        }
+
+        [HttpPost("RemoverAdmin")]
+        public async Task<IActionResult> RemoverAdmin(EditarClaimDto editarClaimDTO)
+        {
+            var usuario = await userManager.FindByEmailAsync(editarClaimDTO.Email);
+
+            if (usuario is null)
+            {
+                return NotFound();
+            }
+
+            await userManager.RemoveClaimAsync(usuario, new Claim("esadmin", "true"));
+            return NoContent();
         }
 
         private IEnumerable<IdentityError> ConstruirLoginIncorrecto()
