@@ -116,8 +116,37 @@ namespace TicketOn.Server.Controllers
         //{
 
         //}
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
+        {
+            var evento = await context.Eventos.FirstOrDefaultAsync(a => a.Id == id);
 
-        [HttpDelete("{id}")]
+            if (evento is null)
+            {
+                return NotFound();
+            }
+
+            evento = mapper.Map(eventoCreacionDTO, evento);
+
+            if (eventoCreacionDTO.Imagen is not null)
+            {
+                evento.Imagen = await almacenadorArchivos.Editar(evento.Imagen, contenedor,
+                    eventoCreacionDTO.Imagen);
+            }
+
+            await context.SaveChangesAsync();
+            //await outputCacheStore.EvictByTagAsync(cacheTag, default);
+
+            return NoContent();
+        }
+
+        //[HttpDelete("{id:int}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    return await Delete<Evento>(id);
+        //}
+
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var evento = await context.Eventos.FindAsync(id);
