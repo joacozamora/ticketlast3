@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'generos/editar/:id', component: EditarGeneroComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registrar', component: RegistroComponent },
-  { path: 'usuarios', component: IndiceUsuariosComponent },
+  { path: 'usuarios', component: IndiceUsuariosComponent, canActivate: [esAdminGuard] },
   { path: '**', redirectTo: '' }
 ];
 
