@@ -58,8 +58,10 @@ export const MY_FORMATS = {
     EditarGeneroComponent,
     CrearEntradaComponent,
     FormularioEntradaComponent,
+
     SelectorMultipleComponent,
    
+
   ],
   imports: [
     SweetAlert2Module.forRoot(),
