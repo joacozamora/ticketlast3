@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators, FormControl } from '@angular/forms';
-import { EventoCreacionDTO } from '../evento';
+import { EventoCreacionDTO, EventoDTO } from '../evento';
 import { EventosService } from '../eventos.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field'; // Campo de formulario
 import { InputImgComponent } from '../../utilidades/input-img/input-img.component';
 import { MatButtonModule } from '@angular/material/button';
+import moment from 'moment';
 
 @Component({
   selector: 'app-formulario-evento',
@@ -28,33 +29,61 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './formulario-evento.component.html',
   styleUrls: ['./formulario-evento.component.css']
 })
-export class FormularioEventoComponent {
-  form!: FormGroup;
+export class FormularioEventoComponent implements OnInit {
+  //form!: FormGroup;
 
-  @Output()
-  onSubmit: EventEmitter<EventoCreacionDTO> = new EventEmitter<EventoCreacionDTO>();
+  //@Output()
+  //onSubmit: EventEmitter<EventoCreacionDTO> = new EventEmitter<EventoCreacionDTO>();
 
-  constructor(private formBuilder: FormBuilder, private eventoServicio: EventosService) { }
-
+  //constructor(private formBuilder: FormBuilder, private eventoServicio: EventosService) { }
   ngOnInit(): void {
-    this.form = this.formBuilder.group({
-      nombre: ['', [Validators.required]],
-      fechaInicio: [null, Validators.required], // Campo de fecha
-      /*imagen: new FormControl<File | null>(null)*/
-    });
+    if (this.modelo !== undefined) {
+      this.form.patchValue(this.modelo);
+    }
   }
 
+  @Input()
+  modelo?: EventoDTO;
+
+  @Output()
+  posteoFormulario = new EventEmitter<EventoCreacionDTO>();
+
+  private formBuilder = inject(FormBuilder);
+  form = this.formBuilder.group({
+    nombre: ['', { validators: [Validators.required] }],
+    fechaInicio: new FormControl<Date | null>(null, { validators: [Validators.required] }),
+    imagen: new FormControl<File | string | null>(null)
+  });
+  //ngOnInit(): void {
+  //  this.form = this.formBuilder.group({
+  //    nombre: ['', [Validators.required]],
+  //    fechaInicio: [null, Validators.required], // Campo de fecha
+  //    /*imagen: new FormControl<File | null>(null)*/
+  //  });
+  //}
+
   archivoSeleccionado(archivo: File) {
-    this.form.controls['imagen'].setValue(archivo);
+    this.form.controls.imagen.setValue(archivo);
   }
 
   guardarCambios() {
-    if (this.form.valid) {
-      this.onSubmit.emit(this.form.value); // Emitimos el valor del formulario
-      this.eventoServicio.crear(this.form.value).subscribe(response => {
-        console.log('Evento guardado', response);
-      });
+    if (!this.form.valid) {
+      return;
     }
+
+    const evento = this.form.value as EventoCreacionDTO;
+
+    evento.fechaInicio = moment(evento.fechaInicio).toDate();
+
+    this.posteoFormulario.emit(evento);
   }
+  //guardarCambios() {
+  //  if (this.form.valid) {
+  //    this.onSubmit.emit(this.form.value); // Emitimos el valor del formulario
+  //    this.eventoServicio.crear(this.form.value).subscribe(response => {
+  //      console.log('Evento guardado', response);
+  //    });
+  //  }
+  //}
 
 }

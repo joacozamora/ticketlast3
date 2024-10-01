@@ -18,19 +18,31 @@ import { EventosService } from '../eventos.service';
   styleUrls: ['./crear-evento.component.css']
 })
 export class CrearEventoComponent {
-  private router = inject(Router);  // Usamos inject para el Router
-
-  constructor(private eventoServices: EventosService) { }
-
+  router = inject(Router);  // Usamos inject para el Router
+  eventosServices = inject(EventosService);
+  /*constructor(private eventoServices: EventosService) { }*/
+  
   guardarCambios(evento: EventoCreacionDTO) {
-    this.eventoServices.crear(evento).subscribe({
-      next: () => {
+    this.eventosServices.crear(evento).subscribe({
+      next: evento => {
+        console.log(evento);
         this.router.navigate(['/']);
       },
-      error: (errorResponse) => {
-        console.error('Error al guardar el evento:', errorResponse.error.errors);
-      }
-    });
+      //error: err => {
+      //  const errores = extraerErrores(err);
+      //  this.errores = errores;
+      //}
+    })
   }
+  //guardarCambios(evento: EventoCreacionDTO) {
+  //  this.eventoServices.crear(evento).subscribe({
+  //    next: () => {
+  //      this.router.navigate(['/']);
+  //    },
+  //    error: (errorResponse) => {
+  //      console.error('Error al guardar el evento:', errorResponse.error.errors);
+  //    }
+  //  });
+  //}
 
 }

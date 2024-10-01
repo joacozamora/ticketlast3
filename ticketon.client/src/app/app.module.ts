@@ -25,6 +25,7 @@ import { FormularioEntradaComponent } from './entradas/formulario-entrada/formul
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { SelectorMultipleComponent } from './utilidades/selector-multiple/selector-multiple.component';
 
 
 // Configuración del formato de fecha
@@ -57,6 +58,7 @@ export const MY_FORMATS = {
     EditarGeneroComponent,
     CrearEntradaComponent,
     FormularioEntradaComponent,
+    SelectorMultipleComponent,
    
   ],
   imports: [

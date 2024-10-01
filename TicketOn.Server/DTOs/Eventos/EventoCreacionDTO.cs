@@ -6,7 +6,7 @@
         //public string Ubicacion { get; set; }
         public DateTime FechaInicio { get; set; }
 
-        public string? Imagen { get; set; }
+        public IFormFile? Imagen { get; set; }
 
     }
 }

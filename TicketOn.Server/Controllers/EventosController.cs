@@ -51,14 +51,18 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] EventoCreacionDTO eventoCreacionDTO)
+        public async Task<IActionResult> Post([FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
             var evento = mapper.Map<Evento>(eventoCreacionDTO);
-            evento.Imagen = "";
+
+            
             evento.Descripcion = "esto funciona";
             evento.Ubicacion = "";
+
             context.Add(evento);
             await context.SaveChangesAsync();
+
+            var eventoDTO = mapper.Map<EventoDTO>(evento);
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }

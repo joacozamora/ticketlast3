@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { toBase64 } from '../funciones/toBase64';
 
 @Component({
   selector: 'app-input-img',
   standalone: true,
+  imports: [MatButtonModule],
   templateUrl: './input-img.component.html',
   styleUrls: ['./input-img.component.css']
 })
@@ -11,28 +14,24 @@ export class InputImgComponent {
   @Input({ required: true })
   titulo!: string;
 
-
-  imagenBase64?: string;
+  @Input()
+  urlImagenActual?: string;
 
   @Output()
   archivoSeleccionado = new EventEmitter<File>();
 
+  imagenBase64?: string;
 
   cambio(event: Event) {
     const input = event.target as HTMLInputElement;
+
     if (input.files && input.files.length > 0) {
       const file: File = input.files[0];
-      this.toBase64(file).then((value: string) => this.imagenBase64 = value);
-      this.archivoSeleccionado.emit(file);
-    }
-  }
+      toBase64(file).then((valor: string) => this.imagenBase64 = valor)
+        .catch(error => console.log(error));
 
-  private toBase64(file: File): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      const lector = new FileReader();
-      lector.readAsDataURL(file);
-      lector.onload = () => resolve(lector.result as string);
-      lector.onerror = error => reject(error);
-    });
+      this.archivoSeleccionado.emit(file);
+      this.urlImagenActual = undefined;
+    }
   }
 }
