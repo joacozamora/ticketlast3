@@ -9,5 +9,7 @@
         //public DateTime FechaFin { get; set; }
         public string Imagen { get; set; }
 
+        
+
     }
 }

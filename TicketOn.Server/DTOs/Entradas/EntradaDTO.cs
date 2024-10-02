@@ -1,20 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace TicketOn.Server.Entidades
+﻿namespace TicketOn.Server.DTOs.EntradasDTO
 {
-    public class Entrada
+    public class EntradaDTO
     {
-
         public int Id { get; set; }
         public string? NombreTanda { get; set; }
-
         public int? Stock { get; set; }
-
         public decimal? Precio { get; set; }
-
-        [ForeignKey("Evento")]
         public int IdEvento { get; set; }
-        public Evento Evento { get; set; }
-        
     }
 }

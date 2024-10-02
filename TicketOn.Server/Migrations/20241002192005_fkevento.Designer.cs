@@ -12,8 +12,8 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241001233728_merge")]
-    partial class merge
+    [Migration("20241002192005_fkevento")]
+    partial class fkevento
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -231,23 +231,21 @@ namespace TicketOn.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CodigoQR")
-                        .IsRequired()
+                    b.Property<int>("IdEvento")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreTanda")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("FechaFin")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaInicio")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Precio")
+                    b.Property<decimal?>("Precio")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Stock")
+                    b.Property<int?>("Stock")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdEvento");
 
                     b.ToTable("Entradas");
                 });
@@ -376,6 +374,22 @@ namespace TicketOn.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TicketOn.Server.Entidades.Entrada", b =>
+                {
+                    b.HasOne("TicketOn.Server.Entidades.Evento", "Evento")
+                        .WithMany("EntradasVenta")
+                        .HasForeignKey("IdEvento")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Evento");
+                });
+
+            modelBuilder.Entity("TicketOn.Server.Entidades.Evento", b =>
+                {
+                    b.Navigation("EntradasVenta");
                 });
 #pragma warning restore 612, 618
         }

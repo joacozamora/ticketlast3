@@ -10,6 +10,7 @@ import { RegistroComponent } from './seguridad/registro/registro.component';
 import { IndiceUsuariosComponent } from './seguridad/indice-usuarios/indice-usuarios.component';
 import { esAdminGuard } from './utilidades/guards/es-admin.guard';
 import { FiltroEventosComponent } from './eventos/filtro-eventos/filtro-eventos.component';
+import { CrearEntradaComponent } from './entradas/crear-entrada/crear-entrada.component';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registrar', component: RegistroComponent },
   { path: 'usuarios', component: IndiceUsuariosComponent, canActivate: [esAdminGuard] },
+  { path: 'entradas/crear/:idEvento', component: CrearEntradaComponent },
   { path: '**', redirectTo: '' }
 ];
 

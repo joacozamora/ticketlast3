@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketOn.Server;
 
@@ -11,9 +12,11 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241002191304_NUEVA MIGRACION CON ENTRADAS")]
+    partial class NUEVAMIGRACIONCONENTRADAS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,6 +231,9 @@ namespace TicketOn.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("EventoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdEvento")
                         .HasColumnType("int");
 
@@ -242,7 +248,7 @@ namespace TicketOn.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdEvento");
+                    b.HasIndex("EventoId");
 
                     b.ToTable("Entradas");
                 });
@@ -377,7 +383,7 @@ namespace TicketOn.Server.Migrations
                 {
                     b.HasOne("TicketOn.Server.Entidades.Evento", "Evento")
                         .WithMany("EntradasVenta")
-                        .HasForeignKey("IdEvento")
+                        .HasForeignKey("EventoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
