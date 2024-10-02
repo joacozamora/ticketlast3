@@ -8,7 +8,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 /*import { ListadoEventosComponent } from './eventos/listado-eventos/listado-eventos.component';*/
 
 import {MaterialModule} from './material/material.module';
-import { MenuComponent } from './menu/menu.component';
+/*import { MenuComponent } from './menu/menu.component';*/
 /*import { LandingPageComponent } from './landing-page/landing-page.component';*/
 /*import { IndiceGenerosComponent } from './generos/indice-generos/indice-generos.component';*/
 import { CrearGeneroComponent } from './generos/crear-genero/crear-genero.component';
@@ -50,9 +50,9 @@ export const MY_FORMATS = {
 
 @NgModule({
   declarations: [
-    AppComponent,
+    /*AppComponent,*/
     /*ListadoEventosComponent,*/
-    MenuComponent,
+    /*MenuComponent,*/
     /*LandingPageComponent,*/
     /*IndiceGenerosComponent,*/
     CrearGeneroComponent,

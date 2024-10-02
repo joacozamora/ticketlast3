@@ -13,7 +13,7 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/generos")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
     public class GenerosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
