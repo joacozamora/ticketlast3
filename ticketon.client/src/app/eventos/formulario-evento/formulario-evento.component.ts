@@ -11,6 +11,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'; // Campo de f
 import { InputImgComponent } from '../../utilidades/input-img/input-img.component';
 import { MatButtonModule } from '@angular/material/button';
 import moment from 'moment';
+import { MapaComponent } from '../../utilidades/mapa/mapa.component';
+import { Coordenada } from '../../utilidades/mapa/Coordenada';
 
 @Component({
   selector: 'app-formulario-evento',
@@ -24,7 +26,8 @@ import moment from 'moment';
     MatButtonModule,
     /*MatNativeDateModule,*/
     MatFormFieldModule,
-    InputImgComponent
+    InputImgComponent,
+    MapaComponent,
   ],
   templateUrl: './formulario-evento.component.html',
   styleUrls: ['./formulario-evento.component.css']
@@ -39,8 +42,11 @@ export class FormularioEventoComponent implements OnInit {
   ngOnInit(): void {
     if (this.modelo !== undefined) {
       this.form.patchValue(this.modelo);
+      this.coordenadasIniciales.push({ latitud: this.modelo.latitud, longitud: this.modelo.longitud })
     }
   }
+
+  coordenadasIniciales: Coordenada[] = [];
 
   @Input()
   modelo?: EventoDTO;
@@ -51,6 +57,8 @@ export class FormularioEventoComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   form = this.formBuilder.group({
     nombre: ['', { validators: [Validators.required] }],
+    latitud: new FormControl<number | null>(null, [Validators.required]),
+    longitud: new FormControl<number | null>(null, [Validators.required]),
     fechaInicio: new FormControl<Date | null>(null, { validators: [Validators.required] }),
     imagen: new FormControl<File | string | null>(null)
   });
@@ -76,6 +84,10 @@ export class FormularioEventoComponent implements OnInit {
     evento.fechaInicio = moment(evento.fechaInicio).toDate();
 
     this.posteoFormulario.emit(evento);
+  }
+
+  coordenadaSeleccionada(coordenada: Coordenada) {
+    this.form.patchValue(coordenada);
   }
   //guardarCambios() {
   //  if (this.form.valid) {

@@ -4,7 +4,9 @@
     <input [formControl]="form.controls.nombre" matInput />
     <mat-error>El campo nombre es requerido</mat-error>
   </mat-form-field>
+  <h4>Ubicacion</h4>
 
+  <app-mapa (coordenadaSeleccionada)="coordenadaSeleccionada($event)" [coordenadasIniciales]="coordenadasIniciales"></app-mapa>
 
   <mat-form-field appearance="outline">
     <mat-label>Fecha evento</mat-label>
