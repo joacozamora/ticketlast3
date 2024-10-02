@@ -1,7 +1,5 @@
-function entradas() {
-  return (
-    <p>Hello world!</p>
-  );
+export interface Entrada {
+  nombreTanda: string;
+  stock: number;
+  precio: number;
 }
-
-export default entradas;

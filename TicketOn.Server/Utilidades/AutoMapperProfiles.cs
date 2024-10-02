@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using TicketOn.Server.DTOs.EntradasDTO;
 using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.DTOs.Generos;
 using TicketOn.Server.DTOs.Usuario;
@@ -14,6 +15,14 @@ namespace TicketOn.Server.Utilidades
             ConfigurarMapeoGeneros();
             ConfigurarMapeoEventos();
             ConfigurarMapeoUsuarios();
+            ConfigurarMapeoEntradas();
+        }
+
+        private void ConfigurarMapeoEntradas()
+        {
+            CreateMap<Entrada, EntradaDTO>().ReverseMap();
+            CreateMap<EntradaCreacionDTO, Entrada>()
+                .ForMember(dest => dest.IdEvento, opt => opt.MapFrom(src => src.IdEvento));
         }
 
         private void ConfigurarMapeoUsuarios() 

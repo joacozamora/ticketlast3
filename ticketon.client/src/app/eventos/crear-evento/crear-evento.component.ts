@@ -20,13 +20,14 @@ import { EventosService } from '../eventos.service';
 export class CrearEventoComponent {
   router = inject(Router);  // Usamos inject para el Router
   eventosServices = inject(EventosService);
+
   /*constructor(private eventoServices: EventosService) { }*/
   
   guardarCambios(evento: EventoCreacionDTO) {
     this.eventosServices.crear(evento).subscribe({
       next: evento => {
         console.log(evento);
-        this.router.navigate(['/']);
+        this.router.navigate(['/entradas/crear', evento.id]);
       },
       //error: err => {
       //  const errores = extraerErrores(err);

@@ -6,3 +6,41 @@
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
   </mat-form-field>
 </form>-->
+
+<form [formGroup]="form" (ngSubmit)="guardarCambios()">
+  <mat-form-field appearance="outline">
+    <mat-label>Nombre de la tanda</mat-label>
+    <input matInput formControlName="nombreTanda" />
+    <mat-error *ngIf="form.controls['nombreTanda'].hasError('required')">
+      El nombre es obligatorio
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Stock</mat-label>
+    <input matInput formControlName="stock" type="number" />
+    <mat-error *ngIf="form.controls['stock'].hasError('required')">
+      El stock es obligatorio
+    </mat-error>
+    <mat-error *ngIf="form.controls['stock'].hasError('min')">
+      El stock debe ser mayor a 0
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Precio</mat-label>
+    <input matInput formControlName="precio" type="number" />
+    <mat-error *ngIf="form.controls['precio'].hasError('required')">
+      El precio es obligatorio
+    </mat-error>
+    <mat-error *ngIf="form.controls['precio'].hasError('min')">
+      El precio debe ser mayor o igual a 0
+    </mat-error>
+  </mat-form-field>
+
+  <div>
+    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+      Guardar Entrada
+    </button>
+  </div>
+</form>

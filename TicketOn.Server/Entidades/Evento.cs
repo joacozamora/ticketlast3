@@ -1,4 +1,6 @@
-﻿namespace TicketOn.Server.Entidades
+﻿using System.Net.Sockets;
+
+namespace TicketOn.Server.Entidades
 {
     public class Evento
     {
@@ -9,5 +11,7 @@
         public string Imagen { get; set; }
         public  string Ubicacion { get; set; }
         public string Descripcion { get; set; }
+
+        public ICollection<Entrada> EntradasVenta { get; set; }
     }
 }

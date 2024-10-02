@@ -62,8 +62,8 @@ export const MY_FORMATS = {
     /*InputImgComponent,*/
     //ListadoGenericoComponent,
     EditarGeneroComponent,
-    CrearEntradaComponent,
-    FormularioEntradaComponent,
+    //CrearEntradaComponent,
+   // FormularioEntradaComponent,
    // IndiceUsuariosComponent,
     //AutorizadoComponent,
    // LoginComponent,

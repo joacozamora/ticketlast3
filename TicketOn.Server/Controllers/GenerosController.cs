@@ -71,21 +71,6 @@ namespace TicketOn.Server.Controllers
 
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<Genero>> Post(GeneroCreacionDTO generoCreacionDTO)
-        //{
-        //    if (generoCreacionDTO == null)
-        //    {
-        //        return BadRequest("Error");
-        //    }
-
-        //    var genero = mapper.Map<Genero>(generoCreacionDTO);
-
-        //    context.Generos.Add(genero);
-        //    await context.SaveChangesAsync();
-        //    //await outputCacheStore.EvicByTagAsync();
-        //    return Ok(genero);
-        //}
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromBody] GeneroCreacionDTO generoCreacionDTO)
         {
