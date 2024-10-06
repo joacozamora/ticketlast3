@@ -99,8 +99,10 @@ export class FormularioEventoComponent implements OnInit {
   coordenadaSeleccionada(coordenada: Coordenada) {
     // Reemplaza el punto con una coma
     this.form.patchValue({
-      latitud: parseFloat(coordenada.latitud.toString().replace('.', ',')),
-      longitud: parseFloat(coordenada.longitud.toString().replace('.', ','))
+      latitud: coordenada.latitud,
+      longitud: coordenada.longitud
+      //latitud: parseFloat(coordenada.latitud.toString().replace('.', ',')),
+      //longitud: parseFloat(coordenada.longitud.toString().replace('.', ','))
     });
   }
 

@@ -39,8 +39,8 @@ export class EventosService {
     const formData = new FormData();
     formData.append('nombre', evento.nombre);
     formData.append('fechaInicio', evento.fechaInicio.toISOString().split('T')[0]);
-    formData.append('latitud', evento.latitud.toString());
-    formData.append('longitud', evento.longitud.toString());
+    formData.append('latitud', evento.latitud.toString().replace('.', ','));
+    formData.append('longitud', evento.longitud.toString().replace('.', ','));
 
     if (evento.imagen) {
       formData.append('imagen', evento.imagen);
