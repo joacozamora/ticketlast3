@@ -1,18 +1,20 @@
 export interface EventoCreacionDTO {
   nombre: string;
-  latitud: number;
-  longitud: number;
   fechaInicio: Date;
   imagen?: File;
+  latitud: number;
+  longitud: number;
+  
 }
 
 export interface EventoDTO {
   id: number;
   nombre: string;
-  latitud: number;
-  longitud: number;
   fechaInicio: Date;
   imagen?: string;
+  latitud: number;
+  longitud: number;
+  
 }
 export interface LandingPageDTO {
   publicados: EventoDTO[];

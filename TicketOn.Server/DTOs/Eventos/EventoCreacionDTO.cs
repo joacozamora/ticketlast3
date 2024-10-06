@@ -3,10 +3,12 @@
     public class EventoCreacionDTO
     {
         public string Nombre { get; set; }
-        //public string Ubicacion { get; set; }
+        
         public DateTime FechaInicio { get; set; }
 
         public IFormFile? Imagen { get; set; }
+        public decimal Latitud { get; set; }
+        public decimal Longitud { get; set; }
 
     }
 }

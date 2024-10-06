@@ -34,6 +34,7 @@ import { IndiceUsuariosComponent } from './seguridad/indice-usuarios/indice-usua
 import { SelectorMultipleComponent } from './utilidades/selector-multiple/selector-multiple.component';
 
 
+
 // Configuración del formato de fecha
 export const MY_FORMATS = {
   parse: {
@@ -70,11 +71,8 @@ export const MY_FORMATS = {
     //RegistroComponent,
     //FormularioAutenticacionComponent,
     //MostrarErroresComponent,
-
     SelectorMultipleComponent,
-   
-
-  ],
+    ],
   imports: [
     SweetAlert2Module.forRoot(),
     BrowserModule, HttpClientModule,

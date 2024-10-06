@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.Sockets;
 
 namespace TicketOn.Server.Entidades
 {
@@ -9,7 +10,12 @@ namespace TicketOn.Server.Entidades
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public string Imagen { get; set; }
-        public  string Ubicacion { get; set; }
+
+        [Column(TypeName = "decimal(10, 8)")]
+        public decimal Latitud { get; set; }
+
+        [Column(TypeName = "decimal(11, 8)")] // Puedes usar decimal(11, 8) para longitud si es necesario.
+        public decimal Longitud { get; set; }
         public string Descripcion { get; set; }
 
         public ICollection<Entrada> EntradasVenta { get; set; }

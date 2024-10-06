@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TicketOn.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class NUEVAMIGRACIONCONENTRADAS : Migration
+    public partial class latitud : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,8 @@ namespace TicketOn.Server.Migrations
                     FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaFin = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Imagen = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Ubicacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Latitud = table.Column<decimal>(type: "decimal(10,8)", nullable: false),
+                    Longitud = table.Column<decimal>(type: "decimal(11,8)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -211,15 +212,14 @@ namespace TicketOn.Server.Migrations
                     NombreTanda = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Stock = table.Column<int>(type: "int", nullable: true),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    IdEvento = table.Column<int>(type: "int", nullable: false),
-                    EventoId = table.Column<int>(type: "int", nullable: false)
+                    IdEvento = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Entradas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Entradas_Eventos_EventoId",
-                        column: x => x.EventoId,
+                        name: "FK_Entradas_Eventos_IdEvento",
+                        column: x => x.IdEvento,
                         principalTable: "Eventos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -265,9 +265,9 @@ namespace TicketOn.Server.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Entradas_EventoId",
+                name: "IX_Entradas_IdEvento",
                 table: "Entradas",
-                column: "EventoId");
+                column: "IdEvento");
         }
 
         /// <inheritdoc />

@@ -33,12 +33,7 @@ import { Coordenada } from '../../utilidades/mapa/Coordenada';
   styleUrls: ['./formulario-evento.component.css']
 })
 export class FormularioEventoComponent implements OnInit {
-  //form!: FormGroup;
-
-  //@Output()
-  //onSubmit: EventEmitter<EventoCreacionDTO> = new EventEmitter<EventoCreacionDTO>();
-
-  //constructor(private formBuilder: FormBuilder, private eventoServicio: EventosService) { }
+ 
   ngOnInit(): void {
     if (this.modelo !== undefined) {
       this.form.patchValue(this.modelo);
@@ -62,18 +57,23 @@ export class FormularioEventoComponent implements OnInit {
     fechaInicio: new FormControl<Date | null>(null, { validators: [Validators.required] }),
     imagen: new FormControl<File | string | null>(null)
   });
-  //ngOnInit(): void {
-  //  this.form = this.formBuilder.group({
-  //    nombre: ['', [Validators.required]],
-  //    fechaInicio: [null, Validators.required], // Campo de fecha
-  //    /*imagen: new FormControl<File | null>(null)*/
-  //  });
-  //}
+
 
   archivoSeleccionado(archivo: File) {
     this.form.controls.imagen.setValue(archivo);
   }
 
+  //guardarCambios() {
+  //  if (!this.form.valid) {
+  //    return;
+  //  }
+
+  //  const evento = this.form.value as EventoCreacionDTO;
+
+  //  evento.fechaInicio = moment(evento.fechaInicio).toDate();
+
+  //  this.posteoFormulario.emit(evento);
+  //}
   guardarCambios() {
     if (!this.form.valid) {
       return;
@@ -81,21 +81,28 @@ export class FormularioEventoComponent implements OnInit {
 
     const evento = this.form.value as EventoCreacionDTO;
 
+    // Verificar si los valores de latitud y longitud están presentes
+    if (this.form.controls.latitud.value === null || this.form.controls.longitud.value === null) {
+      console.error("Latitud y longitud no están definidas");
+      return;
+    }
+
     evento.fechaInicio = moment(evento.fechaInicio).toDate();
 
+    console.log("Evento a guardar:", evento); // Para debug
     this.posteoFormulario.emit(evento);
   }
 
-  coordenadaSeleccionada(coordenada: Coordenada) {
-    this.form.patchValue(coordenada);
-  }
-  //guardarCambios() {
-  //  if (this.form.valid) {
-  //    this.onSubmit.emit(this.form.value); // Emitimos el valor del formulario
-  //    this.eventoServicio.crear(this.form.value).subscribe(response => {
-  //      console.log('Evento guardado', response);
-  //    });
-  //  }
+  //coordenadaSeleccionada(coordenada: Coordenada) {
+  //  this.form.patchValue(coordenada);
   //}
+  coordenadaSeleccionada(coordenada: Coordenada) {
+    // Reemplaza el punto con una coma
+    this.form.patchValue({
+      latitud: parseFloat(coordenada.latitud.toString().replace('.', ',')),
+      longitud: parseFloat(coordenada.longitud.toString().replace('.', ','))
+    });
+  }
+
 
 }

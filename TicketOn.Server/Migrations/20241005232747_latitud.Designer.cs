@@ -12,8 +12,8 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241002192005_fkevento")]
-    partial class fkevento
+    [Migration("20241005232747_latitud")]
+    partial class latitud
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -272,11 +272,13 @@ namespace TicketOn.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Latitud")
+                        .HasColumnType("decimal(10, 8)");
 
-                    b.Property<string>("Ubicacion")
+                    b.Property<decimal>("Longitud")
+                        .HasColumnType("decimal(11, 8)");
+
+                    b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

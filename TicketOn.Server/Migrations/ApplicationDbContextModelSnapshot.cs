@@ -269,11 +269,13 @@ namespace TicketOn.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Latitud")
+                        .HasColumnType("decimal(10, 8)");
 
-                    b.Property<string>("Ubicacion")
+                    b.Property<decimal>("Longitud")
+                        .HasColumnType("decimal(11, 8)");
+
+                    b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

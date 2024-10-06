@@ -35,15 +35,4 @@ export class CrearEventoComponent {
       //}
     })
   }
-  //guardarCambios(evento: EventoCreacionDTO) {
-  //  this.eventoServices.crear(evento).subscribe({
-  //    next: () => {
-  //      this.router.navigate(['/']);
-  //    },
-  //    error: (errorResponse) => {
-  //      console.error('Error al guardar el evento:', errorResponse.error.errors);
-  //    }
-  //  });
-  //}
-
 }

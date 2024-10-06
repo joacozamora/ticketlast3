@@ -93,7 +93,7 @@ namespace TicketOn.Server.Controllers
             }
 
             evento.Descripcion = "esto funciona";
-            evento.Ubicacion = "";
+            
 
             context.Add(evento);
             await context.SaveChangesAsync();
