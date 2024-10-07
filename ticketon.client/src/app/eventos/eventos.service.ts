@@ -49,6 +49,10 @@ export class EventosService {
     return formData;
 
   }
+
+  public obtenerTodos(): Observable<EventoDTO[]> {
+    return this.http.get<EventoDTO[]>(`${this.apiUrl}/todos`);
+  }
   //createEvento(evento: any): Observable<any> {
   //  return this.http.post(this.apiUrl, evento);
   //}

@@ -33,7 +33,8 @@ import { Coordenada } from '../../utilidades/mapa/Coordenada';
   styleUrls: ['./formulario-evento.component.css']
 })
 export class FormularioEventoComponent implements OnInit {
- 
+  @Input()
+  idUsuario!: string;
   ngOnInit(): void {
     if (this.modelo !== undefined) {
       this.form.patchValue(this.modelo);
@@ -79,8 +80,10 @@ export class FormularioEventoComponent implements OnInit {
       return;
     }
 
-    const evento = this.form.value as EventoCreacionDTO;
-
+    const evento = {
+      ...this.form.value as EventoCreacionDTO,
+      idUsuario: this.idUsuario
+    };
     // Verificar si los valores de latitud y longitud están presentes
     if (this.form.controls.latitud.value === null || this.form.controls.longitud.value === null) {
       console.error("Latitud y longitud no están definidas");

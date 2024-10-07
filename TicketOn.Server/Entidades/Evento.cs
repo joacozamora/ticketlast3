@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net.Sockets;
 
 namespace TicketOn.Server.Entidades
@@ -19,5 +20,9 @@ namespace TicketOn.Server.Entidades
         public string Descripcion { get; set; }
 
         public ICollection<Entrada> EntradasVenta { get; set; }
+
+        public string IdUsuario { get; set; } 
+        public IdentityUser User { get; set; }
+
     }
 }

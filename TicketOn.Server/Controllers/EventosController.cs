@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using TicketOn.Server.DTOs;
 using TicketOn.Server.DTOs.Eventos;
+using TicketOn.Server.DTOs.Generos;
 using TicketOn.Server.Entidades;
 using TicketOn.Server.Servicios;
 
@@ -48,6 +49,12 @@ namespace TicketOn.Server.Controllers
             
             return resultado;
         }
+
+        //[HttpGet("todos")] // api/eventos/todos
+        //public async Task<List<EventoDTO>> Get()
+        //{
+        //    return await Get<Evento, EventoDTO>();
+        //}
 
         //[HttpGet]
         ////[OutputCache(Tags = [cacheTag])]

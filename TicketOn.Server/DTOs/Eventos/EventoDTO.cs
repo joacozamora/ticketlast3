@@ -11,6 +11,6 @@
         public decimal Latitud { get; set; }
         public decimal Longitud { get; set; }
 
-
+        public string IdUsuario { get; set; }
     }
 }
