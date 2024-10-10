@@ -32,6 +32,7 @@ import { FormularioAutenticacionComponent } from './seguridad/formulario-autenti
 import { MostrarErroresComponent } from './utilidades/mostrar-errores/mostrar-errores.component';
 import { IndiceUsuariosComponent } from './seguridad/indice-usuarios/indice-usuarios.component';
 import { SelectorMultipleComponent } from './utilidades/selector-multiple/selector-multiple.component';
+//import { JwtModule } from '@auth0/angular-jwt';
 
 
 
@@ -48,6 +49,9 @@ export const MY_FORMATS = {
   },
 };
 
+//export function tokenGetter() {
+//  return localStorage.getItem('token');
+//}
 
 @NgModule({
   declarations: [
@@ -80,6 +84,13 @@ export const MY_FORMATS = {
     MaterialModule,
     ReactiveFormsModule,
     MatMomentDateModule,  // Importa MatMomentDateModule
+    //JwtModule.forRoot({
+    //  config: {
+    //    tokenGetter: tokenGetter,
+    //    allowedDomains: ['localhost:4200'], // Cambia esto por tu dominio de API
+    //    disallowedRoutes: []
+    //  }
+    //}),
   ],
   providers: [
     provideAnimationsAsync(),

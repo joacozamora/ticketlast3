@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import moment from 'moment';
 import { MapaComponent } from '../../utilidades/mapa/mapa.component';
 import { Coordenada } from '../../utilidades/mapa/Coordenada';
+import { SeguridadService } from '../../seguridad/seguridad.service';
 
 @Component({
   selector: 'app-formulario-evento',
@@ -28,13 +29,18 @@ import { Coordenada } from '../../utilidades/mapa/Coordenada';
     MatFormFieldModule,
     InputImgComponent,
     MapaComponent,
+
   ],
   templateUrl: './formulario-evento.component.html',
   styleUrls: ['./formulario-evento.component.css']
 })
 export class FormularioEventoComponent implements OnInit {
+
+  constructor(private seguridadService: SeguridadService) { }
+
   @Input()
   idUsuario!: string;
+
   ngOnInit(): void {
     if (this.modelo !== undefined) {
       this.form.patchValue(this.modelo);
@@ -64,48 +70,66 @@ export class FormularioEventoComponent implements OnInit {
     this.form.controls.imagen.setValue(archivo);
   }
 
+
+
+  guardarCambios() {
+    /*const userId = this.seguridadService.getCurrentUserId();*/
+    /*const userId = this.seguridadService.getUserId();*/
+    const idUsuario = this.seguridadService.obtenerIdUsuario(); // Obtenemos el ID del usuario
+    if (idUsuario) {
+      // Incluimos el ID del usuario en el evento (si es necesario)
+        // Asegúrate de que el DTO soporte esta propiedad
+
+      if (!this.form.valid) {
+        return;
+      }
+
+      const evento = {
+        ...this.form.value as EventoCreacionDTO,
+        usuarioId: idUsuario // Agregar el ID del usuario autenticado al evento
+      };
+
+      // Verificar si los valores de latitud y longitud están presentes
+      if (this.form.controls.latitud.value === null || this.form.controls.longitud.value === null) {
+        console.error("Latitud y longitud no están definidas");
+        return;
+      }
+
+      evento.fechaInicio = moment(evento.fechaInicio).toDate();
+
+      console.log("Evento a guardar:", evento); // Para debug
+      this.posteoFormulario.emit(evento);
+    }
+  }
+
   //guardarCambios() {
+  //  const userId = this.seguridadService.getCurrentUserId();
   //  if (!this.form.valid) {
   //    return;
   //  }
 
-  //  const evento = this.form.value as EventoCreacionDTO;
+  //  const evento = {
+  //    ...this.form.value as EventoCreacionDTO,
+  //  };
+
+
+  //  // Verificar si los valores de latitud y longitud están presentes
+  //  if (this.form.controls.latitud.value === null || this.form.controls.longitud.value === null) {
+  //    console.error("Latitud y longitud no están definidas");
+  //    return;
+  //  }
 
   //  evento.fechaInicio = moment(evento.fechaInicio).toDate();
 
+  //  console.log("Evento a guardar:", evento); // Para debug
   //  this.posteoFormulario.emit(evento);
   //}
-  guardarCambios() {
-    if (!this.form.valid) {
-      return;
-    }
 
-    const evento = {
-      ...this.form.value as EventoCreacionDTO,
-      idUsuario: this.idUsuario
-    };
-    // Verificar si los valores de latitud y longitud están presentes
-    if (this.form.controls.latitud.value === null || this.form.controls.longitud.value === null) {
-      console.error("Latitud y longitud no están definidas");
-      return;
-    }
 
-    evento.fechaInicio = moment(evento.fechaInicio).toDate();
-
-    console.log("Evento a guardar:", evento); // Para debug
-    this.posteoFormulario.emit(evento);
-  }
-
-  //coordenadaSeleccionada(coordenada: Coordenada) {
-  //  this.form.patchValue(coordenada);
-  //}
   coordenadaSeleccionada(coordenada: Coordenada) {
-    // Reemplaza el punto con una coma
     this.form.patchValue({
       latitud: coordenada.latitud,
       longitud: coordenada.longitud
-      //latitud: parseFloat(coordenada.latitud.toString().replace('.', ',')),
-      //longitud: parseFloat(coordenada.longitud.toString().replace('.', ','))
     });
   }
 

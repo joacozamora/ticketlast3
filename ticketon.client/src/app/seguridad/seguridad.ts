@@ -6,6 +6,7 @@ export interface CredencialesUsuarioDTO {
 export interface RespuestaAutenticacionDTO {
   token: string;
   expiracion: Date;
+  userId: string;
 }
 
 export interface UsuarioDTO {
