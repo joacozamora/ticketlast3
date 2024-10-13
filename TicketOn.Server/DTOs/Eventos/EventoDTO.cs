@@ -9,7 +9,8 @@
         //public DateTime FechaFin { get; set; }
         public string Imagen { get; set; }
 
-        
+        public string UsuarioId { get; set; }
+
 
     }
 }

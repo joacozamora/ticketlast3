@@ -18,6 +18,10 @@ export class SeguridadService {
   private readonly llaveToken = 'token';
   private readonly llaveExpiracion = 'token-expiracion'
 
+  obtenerToken(): string | null{
+    return localStorage.getItem(this.llaveToken);
+  }
+
   obtenerUsuariosPaginado(paginacion: PaginacionDTO): Observable<HttpResponse<UsuarioDTO[]>> {
     let queryParams = construirQueryParams(paginacion);
     return this.http.get<UsuarioDTO[]>(`${this.urlBase}/ListadoUsuarios`, {params: queryParams, observe: `response` });
@@ -47,7 +51,7 @@ export class SeguridadService {
 
   obtenerCampoJWT(campo: string): string {
     const token = localStorage.getItem(this.llaveToken);
-    if (!token) { return '' }
+    if (!token){ return ''}
     var dataToken = JSON.parse(atob(token.split('.')[1]))
     return dataToken[campo];
   }

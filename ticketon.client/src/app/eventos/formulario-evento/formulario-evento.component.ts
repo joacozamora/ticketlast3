@@ -30,12 +30,7 @@ import moment from 'moment';
   styleUrls: ['./formulario-evento.component.css']
 })
 export class FormularioEventoComponent implements OnInit {
-  //form!: FormGroup;
-
-  //@Output()
-  //onSubmit: EventEmitter<EventoCreacionDTO> = new EventEmitter<EventoCreacionDTO>();
-
-  //constructor(private formBuilder: FormBuilder, private eventoServicio: EventosService) { }
+  
   ngOnInit(): void {
     if (this.modelo !== undefined) {
       this.form.patchValue(this.modelo);
@@ -54,13 +49,7 @@ export class FormularioEventoComponent implements OnInit {
     fechaInicio: new FormControl<Date | null>(null, { validators: [Validators.required] }),
     imagen: new FormControl<File | string | null>(null)
   });
-  //ngOnInit(): void {
-  //  this.form = this.formBuilder.group({
-  //    nombre: ['', [Validators.required]],
-  //    fechaInicio: [null, Validators.required], // Campo de fecha
-  //    /*imagen: new FormControl<File | null>(null)*/
-  //  });
-  //}
+  
 
   archivoSeleccionado(archivo: File) {
     this.form.controls.imagen.setValue(archivo);
@@ -77,13 +66,6 @@ export class FormularioEventoComponent implements OnInit {
 
     this.posteoFormulario.emit(evento);
   }
-  //guardarCambios() {
-  //  if (this.form.valid) {
-  //    this.onSubmit.emit(this.form.value); // Emitimos el valor del formulario
-  //    this.eventoServicio.crear(this.form.value).subscribe(response => {
-  //      console.log('Evento guardado', response);
-  //    });
-  //  }
-  //}
+  
 
 }

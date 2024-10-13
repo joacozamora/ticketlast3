@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Net.Sockets;
 
 namespace TicketOn.Server.Entidades
 {
@@ -13,5 +14,8 @@ namespace TicketOn.Server.Entidades
         public string Descripcion { get; set; }
 
         public ICollection<Entrada> EntradasVenta { get; set; }
+
+        public required string UsuarioId { get; set; }
+        public IdentityUser Usuario { get; set; } = null!;
     }
 }

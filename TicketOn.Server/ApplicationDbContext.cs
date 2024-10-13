@@ -19,6 +19,7 @@ namespace TicketOn.Server
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             var cascadeFKs = modelBuilder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetForeignKeys())
                 .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
@@ -30,7 +31,7 @@ namespace TicketOn.Server
 
 
 
-            base.OnModelCreating(modelBuilder);
+            
         }
 
     }

@@ -4,6 +4,7 @@ import { SeguridadService } from '../seguridad.service';
 @Component({
   selector: 'app-autorizado',
   standalone: true,
+  imports:[],
   templateUrl: './autorizado.component.html',
   styleUrl: './autorizado.component.css'
 })
@@ -16,7 +17,7 @@ export class AutorizadoComponent {
   estaAutorizado(): boolean {
 
     if (this.rol) {
-      return this.seguridadService.obtenerRol() == this.rol;
+      return this.seguridadService.obtenerRol() === this.rol;
     } else {
       return this.seguridadService.estaLogueado();
     }

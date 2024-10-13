@@ -29,21 +29,9 @@ export class CrearEventoComponent {
         console.log(evento);
         this.router.navigate(['/entradas/crear', evento.id]);
       },
-      //error: err => {
-      //  const errores = extraerErrores(err);
-      //  this.errores = errores;
-      //}
+      
     })
   }
-  //guardarCambios(evento: EventoCreacionDTO) {
-  //  this.eventoServices.crear(evento).subscribe({
-  //    next: () => {
-  //      this.router.navigate(['/']);
-  //    },
-  //    error: (errorResponse) => {
-  //      console.error('Error al guardar el evento:', errorResponse.error.errors);
-  //    }
-  //  });
-  //}
+  
 
 }

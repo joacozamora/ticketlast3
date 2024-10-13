@@ -14,22 +14,24 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/eventos")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
     public class EventosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         //private readonly IOutputCacheStore outputCacheStore;
         private readonly IAlmacenadorArchivos almacenadorArchivos;
+        private readonly IServicioUsuarios servicioUsuarios;
         private const string cacheTag = "eventos";
         private readonly string contenedor = "eventos";
 
-        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos)
+        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos, IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
             this.mapper = mapper;
             //this.outputCacheStore = outputCacheStore;
             this.almacenadorArchivos = almacenadorArchivos;
+            this.servicioUsuarios = servicioUsuarios;
         }
 
         [HttpGet("landing")]
@@ -82,9 +84,12 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpPost]
+        
+
         public async Task<IActionResult> Post([FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
             var evento = mapper.Map<Evento>(eventoCreacionDTO);
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
             if (eventoCreacionDTO.Imagen is not null)
             {
@@ -94,6 +99,7 @@ namespace TicketOn.Server.Controllers
 
             evento.Descripcion = "esto funciona";
             evento.Ubicacion = "";
+            evento.UsuarioId = usuarioId;
 
             context.Add(evento);
             await context.SaveChangesAsync();
