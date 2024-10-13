@@ -15,7 +15,7 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/eventos")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
     public class EventosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -71,9 +71,12 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpPost]
+        
+
         public async Task<IActionResult> Post([FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
             var evento = mapper.Map<Evento>(eventoCreacionDTO);
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
             if (eventoCreacionDTO.Imagen is not null)
             {

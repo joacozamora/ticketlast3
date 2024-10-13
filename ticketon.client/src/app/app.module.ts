@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -32,7 +32,7 @@ import { FormularioAutenticacionComponent } from './seguridad/formulario-autenti
 import { MostrarErroresComponent } from './utilidades/mostrar-errores/mostrar-errores.component';
 import { IndiceUsuariosComponent } from './seguridad/indice-usuarios/indice-usuarios.component';
 import { SelectorMultipleComponent } from './utilidades/selector-multiple/selector-multiple.component';
-//import { JwtModule } from '@auth0/angular-jwt';
+import { authInterceptor } from './seguridad/token-interceptor-http';
 
 
 
@@ -47,6 +47,7 @@ export const MY_FORMATS = {
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
   },
+  
 };
 
 //export function tokenGetter() {
@@ -55,26 +56,13 @@ export const MY_FORMATS = {
 
 @NgModule({
   declarations: [
-    /*AppComponent,*/
-    /*ListadoEventosComponent,*/
-    /*MenuComponent,*/
-    /*LandingPageComponent,*/
-    /*IndiceGenerosComponent,*/
+    
     CrearGeneroComponent,
     FormularioGeneroComponent,
-    /*CrearEventoComponent,*/
-    /*FormularioEventoComponent,*/
-    /*InputImgComponent,*/
-    //ListadoGenericoComponent,
+    
     EditarGeneroComponent,
-    //CrearEntradaComponent,
-   // FormularioEntradaComponent,
-   // IndiceUsuariosComponent,
-    //AutorizadoComponent,
-   // LoginComponent,
-    //RegistroComponent,
-    //FormularioAutenticacionComponent,
-    //MostrarErroresComponent,
+    
+
     SelectorMultipleComponent,
     ],
   imports: [
@@ -96,8 +84,8 @@ export const MY_FORMATS = {
     provideAnimationsAsync(),
      { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },  // Configura el idioma
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },  // Configura Moment para usar UTC
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }  // Configura los formatos de fecha
-
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },  // Configura los formatos de fecha
+    provideHttpClient(withInterceptors([authInterceptor]))
   ],
   bootstrap: [AppComponent]
 })

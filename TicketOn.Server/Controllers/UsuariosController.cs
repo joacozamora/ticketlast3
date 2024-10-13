@@ -21,7 +21,7 @@ namespace TicketOn.Server.Controllers
 {
     [Route("api/usuarios")]
     [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
     public class UsuariosController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;

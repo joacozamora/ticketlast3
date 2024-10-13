@@ -4,6 +4,35 @@
     <input type="file" hidden #cargadorArchivo accept="image/*" (change)="cambio($event)" />
 </div>
 
+<!--<div class="font-[sans-serif] max-w-md mx-auto">
+  <label class="text-base text-gray-500 font-semibold mb-2 block">Seleccionar Imagen</label>
+
+  <input type="file"
+         class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
+  <p class="text-xs text-gray-400 mt-2">PNG, JPG SVG, WEBP, and GIF are Allowed.</p>
+  <input class="hidden"
+         id="user_avatar"
+         #cargadorArchivo
+         accept="image/*"
+         type="file"
+         (change)="cambio($event)">
+</div>-->
+
+<!--<form class="max-w-lg mx-auto">
+  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload file</label>
+  <button type="button"
+          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+          (click)="cargadorArchivo.click()">
+    Seleccionar Imagen
+  </button>
+  <input class="hidden"
+         id="user_avatar"
+         #cargadorArchivo
+         accept="image/*"
+         type="file"
+         (change)="cambio($event)">
+  <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">A profile picture is useful to confirm you are logged into your account</div>
+</form>-->
 
 <div>
  @if(imagenBase64){

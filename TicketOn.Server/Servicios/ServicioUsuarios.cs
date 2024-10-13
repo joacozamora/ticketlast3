@@ -35,10 +35,10 @@ namespace TicketOn.Server.Servicios
 
             // Verifica si el usuario es null
             if (usuario == null)
-            {
+        { 
                 return null; // O lanza una excepción personalizada si prefieres
             }
-
+        
             // Devuelve el Id del usuario
             return usuario.Id;
         }

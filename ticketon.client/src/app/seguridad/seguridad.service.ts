@@ -120,6 +120,10 @@ export class SeguridadService {
   private readonly llaveExpiracion = 'token-expiracion';
   private readonly llaveUserId = 'user_id'; // Nueva llave para almacenar el ID de usuario
 
+  obtenerToken(): string | null{
+    return localStorage.getItem(this.llaveToken);
+  }
+
   obtenerUsuariosPaginado(paginacion: PaginacionDTO): Observable<HttpResponse<UsuarioDTO[]>> {
     let queryParams = construirQueryParams(paginacion);
     return this.http.get<UsuarioDTO[]>(`${this.urlBase}/ListadoUsuarios`, { params: queryParams, observe: 'response' });
@@ -149,8 +153,8 @@ export class SeguridadService {
 
   obtenerCampoJWT(campo: string): string {
     const token = localStorage.getItem(this.llaveToken);
-    if (!token) { return ''; }
-    var dataToken = JSON.parse(atob(token.split('.')[1]));
+    if (!token){ return ''}
+    var dataToken = JSON.parse(atob(token.split('.')[1]))
     return dataToken[campo];
   }
 
@@ -158,7 +162,7 @@ export class SeguridadService {
     localStorage.setItem(this.llaveToken, respuestaAutenticacion.token);
     localStorage.setItem(this.llaveExpiracion, respuestaAutenticacion.expiracion.toString());
 
-    // Almacenar el ID del usuario si está presente en la respuesta
+    // Almacenar el ID del usuario si est� presente en la respuesta
     if (respuestaAutenticacion.userId) {
       localStorage.setItem(this.llaveUserId, respuestaAutenticacion.userId);
     }
@@ -168,7 +172,7 @@ export class SeguridadService {
     return localStorage.getItem(this.llaveToken);
   }
 
-  // Método para obtener el ID del usuario almacenado
+  // M�todo para obtener el ID del usuario almacenado
   getUserId(): string | null {
     return localStorage.getItem(this.llaveUserId);
   }
@@ -193,11 +197,16 @@ export class SeguridadService {
   logout() {
     localStorage.removeItem(this.llaveToken);
     localStorage.removeItem(this.llaveExpiracion);
-    localStorage.removeItem(this.llaveUserId); // También eliminar el ID de usuario
+    localStorage.removeItem(this.llaveUserId); // Tambi�n eliminar el ID de usuario
   }
 
   obtenerRol(): string {
     const esAdmin = this.obtenerCampoJWT('esadmin');
-    return esAdmin ? 'admin' : '';
+    if (esAdmin) {
+      return 'admin'
+    } else {
+      return '';
+    }
+    
   }
 }

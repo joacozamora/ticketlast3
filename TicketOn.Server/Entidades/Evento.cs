@@ -21,8 +21,7 @@ namespace TicketOn.Server.Entidades
 
         public ICollection<Entrada> EntradasVenta { get; set; }
 
-        public required string IdUsuario { get; set; }
-        public IdentityUser User { get; set; } = null;
-
+        public required string UsuarioId { get; set; }
+        public IdentityUser Usuario { get; set; } = null!;
     }
 }

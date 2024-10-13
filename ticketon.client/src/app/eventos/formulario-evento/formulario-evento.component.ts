@@ -76,9 +76,9 @@ export class FormularioEventoComponent implements OnInit {
     };
 
 
-    // Verificar si los valores de latitud y longitud están presentes
+    // Verificar si los valores de latitud y longitud est�n presentes
     if (this.form.controls.latitud.value === null || this.form.controls.longitud.value === null) {
-      console.error("Latitud y longitud no están definidas");
+      console.error("Latitud y longitud no est�n definidas");
       return;
     }
 

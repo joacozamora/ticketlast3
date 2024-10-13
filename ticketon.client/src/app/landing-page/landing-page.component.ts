@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { ListadoEventosComponent } from '../eventos/listado-eventos/listado-eventos.component';
 import { EventosService } from '../eventos/eventos.service';
+import { AutorizadoComponent } from '../seguridad/autorizado/autorizado.component';
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [ListadoEventosComponent],
+  imports: [ListadoEventosComponent, AutorizadoComponent],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.css'
 })

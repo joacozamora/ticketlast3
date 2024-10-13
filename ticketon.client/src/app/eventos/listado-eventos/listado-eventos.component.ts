@@ -6,11 +6,13 @@ import { ListadoGenericoComponent } from '../../utilidades/listado-generico/list
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { DatePipe, CurrencyPipe } from '@angular/common';
+import { AutorizadoComponent } from '../../seguridad/autorizado/autorizado.component';
+import { SeguridadService } from '../../seguridad/seguridad.service';
 
 @Component({
   selector: 'app-listado-eventos',
   standalone: true,
-  imports: [DatePipe, CurrencyPipe, ListadoGenericoComponent, MatButtonModule, MatIconModule, RouterLink, SweetAlert2Module],
+  imports: [DatePipe, CurrencyPipe, ListadoGenericoComponent, MatButtonModule, MatIconModule, RouterLink, SweetAlert2Module, AutorizadoComponent],
   templateUrl: './listado-eventos.component.html',
   styleUrls: ['./listado-eventos.component.css']
 })
@@ -20,6 +22,7 @@ export class ListadoEventosComponent  {
   eventos!: any[];
 
   eventosService = inject(EventosService);
+  seguridadService = inject(SeguridadService);
 
   @Output()
   borrado = new EventEmitter<void>();
