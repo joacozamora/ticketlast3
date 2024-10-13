@@ -2,18 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EventoCreacionDTO, EventoDTO, LandingPageDTO } from './evento';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventosService {
-  private apiUrl = 'https://localhost:7225/api/eventos';
+  //private apiUrl = 'https://localhost:7225/api/eventos';
+  private apiURL = environment.apiURL + '/eventos';
 
 
   constructor(private http: HttpClient) { }
 
   public obtenerLandingPage(): Observable<LandingPageDTO> {
-    return this.http.get<LandingPageDTO>(`${this.apiUrl}/landing`);
+    return this.http.get<LandingPageDTO>(`${this.apiURL}/landing`);
   }
 
   //public crear(evento: EventoCreacionDTO) {
@@ -21,16 +23,16 @@ export class EventosService {
   //}
   public crear(evento: EventoCreacionDTO): Observable<EventoDTO> {
     const formData = this.construirFormData(evento);
-    return this.http.post<EventoDTO>(this.apiUrl, formData);
+    return this.http.post<EventoDTO>(this.apiURL, formData);
   }
 
   public actualizar(id: number, evento: EventoCreacionDTO) {
     const formData = this.construirFormData(evento);
-    return this.http.put(`${this.apiUrl}/${id}`, formData);
+    return this.http.put(`${this.apiURL}/${id}`, formData);
   }
 
   public borrar(id: number) {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiURL}/${id}`);
   }
 
 

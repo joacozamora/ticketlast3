@@ -14,7 +14,7 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/eventos")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
     public class EventosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -51,21 +51,7 @@ namespace TicketOn.Server.Controllers
             return resultado;
         }
 
-        //[HttpGet]
-        ////[OutputCache(Tags = [cacheTag])]
-        //public async Task<ActionResult<List<Evento>>> Get()
-        //{
-
-        //    var lista = await context.Eventos.ToListAsync();
-
-
-        //    if (lista == null || lista.Count == 0)
-        //    {
-        //        return BadRequest("No hay Eventos cargados");
-        //    }
-
-        //    return lista;
-        //}
+        
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
         //[OutputCache(Tags = [cacheTag])]
@@ -109,40 +95,7 @@ namespace TicketOn.Server.Controllers
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }
-        //[HttpPost]
-        //public async Task<ActionResult<Evento>> Post(EventoDTO eventoDTO)
-        //{
-        //    if (eventoDTO == null)
-        //    {
-        //        return BadRequest("Error");
-        //    }
-
-        //    var evento = new Evento
-        //    {
-        //        Nombre = eventoDTO.Nombre,
-        //        Imagen = "",
-        //        Ubicacion ="",
-        //        Descripcion= "esto funciona"
-
-
-        //        /*Ubicacion = eventoDTO.Ubicacion*/,
-
-        //    };
-
-        //    context.Eventos.Add(evento);
-        //    await context.SaveChangesAsync();
-
-        //    return Ok(evento);
-
-        //}
-
-        //}
-
-        //[HttpPut("{id:int}")]
-        //public async Task<ActionResult> Put()
-        //{
-
-        //}
+        
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
         {

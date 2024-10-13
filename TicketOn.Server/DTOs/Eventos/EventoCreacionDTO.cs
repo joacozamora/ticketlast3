@@ -7,7 +7,7 @@
         public DateTime FechaInicio { get; set; }
 
         public IFormFile? Imagen { get; set; }
-        public string UsuarioId { get; set; }
+        public required string UsuarioId { get; set; }
 
     }
 }
