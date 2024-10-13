@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TicketOn.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class latitud : Migration
+    public partial class inicio : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,25 +48,6 @@ namespace TicketOn.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Eventos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FechaFin = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Imagen = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Latitud = table.Column<decimal>(type: "decimal(10,8)", nullable: false),
-                    Longitud = table.Column<decimal>(type: "decimal(11,8)", nullable: false),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Eventos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,6 +185,32 @@ namespace TicketOn.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Eventos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaFin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Imagen = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Latitud = table.Column<decimal>(type: "decimal(10,8)", nullable: false),
+                    Longitud = table.Column<decimal>(type: "decimal(11,8)", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Eventos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Eventos_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Entradas",
                 columns: table => new
                 {
@@ -268,6 +275,11 @@ namespace TicketOn.Server.Migrations
                 name: "IX_Entradas_IdEvento",
                 table: "Entradas",
                 column: "IdEvento");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Eventos_UserId",
+                table: "Eventos",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -301,10 +313,10 @@ namespace TicketOn.Server.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Eventos");
 
             migrationBuilder.DropTable(
-                name: "Eventos");
+                name: "AspNetUsers");
         }
     }
 }

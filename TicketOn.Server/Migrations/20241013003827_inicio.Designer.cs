@@ -12,8 +12,8 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241005232747_latitud")]
-    partial class latitud
+    [Migration("20241013003827_inicio")]
+    partial class inicio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -268,6 +268,10 @@ namespace TicketOn.Server.Migrations
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("IdUsuario")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Imagen")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -282,7 +286,12 @@ namespace TicketOn.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Eventos");
                 });
@@ -387,6 +396,15 @@ namespace TicketOn.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Evento");
+                });
+
+            modelBuilder.Entity("TicketOn.Server.Entidades.Evento", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TicketOn.Server.Entidades.Evento", b =>

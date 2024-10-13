@@ -1,8 +1,8 @@
-﻿namespace TicketOn.Server.Servicios
+﻿
+namespace TicketOn.Server.Servicios
 {
     public interface IServicioUsuarios
     {
-
         Task<string> ObtenerUsuarioId();
     }
 }

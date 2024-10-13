@@ -22,15 +22,18 @@ namespace TicketOn.Server.Controllers
         private readonly IMapper mapper;
         //private readonly IOutputCacheStore outputCacheStore;
         private readonly IAlmacenadorArchivos almacenadorArchivos;
+        private readonly IServicioUsuarios servicioUsuarios;
         private const string cacheTag = "eventos";
         private readonly string contenedor = "eventos";
 
-        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos)
+        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos,
+            IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
             this.mapper = mapper;
             //this.outputCacheStore = outputCacheStore;
             this.almacenadorArchivos = almacenadorArchivos;
+            this.servicioUsuarios = servicioUsuarios;
         }
 
         [HttpGet("landing")]
@@ -50,27 +53,6 @@ namespace TicketOn.Server.Controllers
             return resultado;
         }
 
-        //[HttpGet("todos")] // api/eventos/todos
-        //public async Task<List<EventoDTO>> Get()
-        //{
-        //    return await Get<Evento, EventoDTO>();
-        //}
-
-        //[HttpGet]
-        ////[OutputCache(Tags = [cacheTag])]
-        //public async Task<ActionResult<List<Evento>>> Get()
-        //{
-
-        //    var lista = await context.Eventos.ToListAsync();
-
-
-        //    if (lista == null || lista.Count == 0)
-        //    {
-        //        return BadRequest("No hay Eventos cargados");
-        //    }
-
-        //    return lista;
-        //}
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
         //[OutputCache(Tags = [cacheTag])]
@@ -98,7 +80,7 @@ namespace TicketOn.Server.Controllers
                 var url = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
                 evento.Imagen = url;
             }
-
+            evento.IdUsuario = await servicioUsuarios.ObtenerUsuarioId();
             evento.Descripcion = "esto funciona";
             
 

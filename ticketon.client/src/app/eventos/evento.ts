@@ -4,7 +4,6 @@ export interface EventoCreacionDTO {
   imagen?: File;
   latitud: number;
   longitud: number;
-  idUsuario: string;
 }
 
 export interface EventoDTO {
@@ -14,7 +13,6 @@ export interface EventoDTO {
   imagen?: string;
   latitud: number;
   longitud: number;
-  idUsuario: string;
 }
 export interface LandingPageDTO {
   publicados: EventoDTO[];
