@@ -2,9 +2,12 @@ import { Component, Input, OnInit, inject, numberAttribute } from '@angular/core
 import { GeneroCreacionDTO, GeneroDTO } from '../genero';
 import { GenerosService } from '../generos.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormularioGeneroComponent } from '../formulario-genero/formulario-genero.component';
 
 @Component({
   selector: 'app-editar-genero',
+  standalone: true,
+  imports: [FormularioGeneroComponent] ,
   templateUrl: './editar-genero.component.html',
   styleUrls: ['./editar-genero.component.css']
 })

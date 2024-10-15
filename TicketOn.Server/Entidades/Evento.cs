@@ -15,13 +15,13 @@ namespace TicketOn.Server.Entidades
         [Column(TypeName = "decimal(10, 8)")]
         public decimal Latitud { get; set; }
 
-        [Column(TypeName = "decimal(11, 8)")] // Puedes usar decimal(11, 8) para longitud si es necesario.
+        [Column(TypeName = "decimal(11, 8)")] 
         public decimal Longitud { get; set; }
         public string Descripcion { get; set; }
 
         public ICollection<Entrada> EntradasVenta { get; set; }
 
         public required string UsuarioId { get; set; }
-        public IdentityUser Usuario { get; set; } = null!;
+        public IdentityUser Usuario { get; set; }
     }
 }

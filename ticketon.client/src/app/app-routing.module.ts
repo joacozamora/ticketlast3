@@ -13,7 +13,7 @@ import { FiltroEventosComponent } from './eventos/filtro-eventos/filtro-eventos.
 import { CrearEntradaComponent } from './entradas/crear-entrada/crear-entrada.component';
 import { ListadoEventosComponent } from './eventos/listado-eventos/listado-eventos.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'generos', component: IndiceGenerosComponent },
   { path: 'generos/crear', component: CrearGeneroComponent },

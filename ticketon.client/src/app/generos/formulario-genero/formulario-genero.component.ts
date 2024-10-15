@@ -3,10 +3,15 @@ import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angula
 import { GeneroCreacionDTO } from '../genero';
 import { GenerosService } from '../generos.service';
 import { primeraLetraMayuscula } from '../../utilidades/funciones/validaciones';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-formulario-genero',
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule, MatFormFieldModule,MatInputModule],
   templateUrl: './formulario-genero.component.html',
   styleUrls: ['./formulario-genero.component.css']
 })

@@ -15,7 +15,7 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/eventos")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
     public class EventosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -35,23 +35,38 @@ namespace TicketOn.Server.Controllers
             this.almacenadorArchivos = almacenadorArchivos;
             this.servicioUsuarios = servicioUsuarios;
         }
-
         [HttpGet("landing")]
         [AllowAnonymous]
         public async Task<ActionResult<LandingPageDTO>> Get()
         {
-
             var publicados = await context.Eventos
-                .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
+                .ProjectTo<EventoDTO>(mapper.ConfigurationProvider) // Mapeamos usando AutoMapper
                 .ToListAsync();
 
-  
+            var resultado = new LandingPageDTO
+            {
+                Publicados = publicados
+            };
 
-            var resultado = new LandingPageDTO();
-            resultado.Publicados = publicados;
-            
             return resultado;
         }
+
+        //[HttpGet("landing")]
+        //[AllowAnonymous]
+        //public async Task<ActionResult<LandingPageDTO>> Get()
+        //{
+
+        //    var publicados = await context.Eventos
+        //        .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
+        //        .ToListAsync();
+
+
+
+        //    var resultado = new LandingPageDTO();
+        //    resultado.Publicados = publicados;
+
+        //    return resultado;
+        //}
 
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
@@ -71,8 +86,6 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpPost]
-        
-
         public async Task<IActionResult> Post([FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
             var evento = mapper.Map<Evento>(eventoCreacionDTO);
@@ -83,7 +96,9 @@ namespace TicketOn.Server.Controllers
                 var url = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
                 evento.Imagen = url;
             }
-            evento.IdUsuario = await servicioUsuarios.ObtenerUsuarioId();
+
+
+            evento.UsuarioId = usuarioId;
             evento.Descripcion = "esto funciona";
             
 

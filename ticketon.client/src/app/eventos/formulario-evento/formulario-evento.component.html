@@ -1,16 +1,20 @@
 <form *ngIf="form" (submit)="guardarCambios()" [formGroup]="form">
   <mat-form-field appearance="outline">
     <mat-label>Nombre</mat-label>
-    <input [formControl]="form.controls.nombre" matInput />
+    <input formControlName="nombre" matInput />
     <mat-error>El campo nombre es requerido</mat-error>
   </mat-form-field>
+
+
   <h4>Ubicacion</h4>
 
-  <app-mapa *ngIf="coordenadasIniciales" (coordenadaSeleccionada)="coordenadaSeleccionada($event)" [coordenadasIniciales]="coordenadasIniciales"></app-mapa>
+  <app-mapa *ngIf="coordenadasIniciales" (coordenadaSeleccionada)="coordenadaSeleccionada($event)"
+            [coordenadasIniciales]="coordenadasIniciales" matInput>
+  </app-mapa>
 
   <mat-form-field appearance="outline">
     <mat-label>Fecha evento</mat-label>
-    <input matInput [matDatepicker]="picker" [formControl]="form.controls.fechaInicio" />
+    <input matInput [matDatepicker]="picker" formControlName="fechaInicio" />
     <mat-datepicker #picker></mat-datepicker>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-error *ngIf="form.controls['fechaInicio'].hasError('required')">
@@ -18,7 +22,9 @@
     </mat-error>
   </mat-form-field>
 
-  <app-input-img titulo="Foto del evento" [urlImagenActual]="modelo?.imagen" (archivoSeleccionado)="archivoSeleccionado($event)"></app-input-img>
+  <app-input-img titulo="Foto del evento" [urlImagenActual]="modelo?.imagen"
+                 (archivoSeleccionado)="archivoSeleccionado($event)" matInput>
+  </app-input-img>
 
   <div>
     <button mat-flat-button color="primary" [disabled]="form.invalid">

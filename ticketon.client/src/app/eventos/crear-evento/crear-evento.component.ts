@@ -37,8 +37,9 @@ export class CrearEventoComponent {
         console.log(evento);
         this.router.navigate(['/entradas/crear', evento.id]);
       },
-      
+
     })
   }
-  
 
+
+}

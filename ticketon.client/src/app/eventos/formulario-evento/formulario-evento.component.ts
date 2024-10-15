@@ -4,7 +4,6 @@ import { EventoCreacionDTO, EventoDTO } from '../evento';
 import { EventosService } from '../eventos.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
-/*import { MatNativeDateModule } from '@angular/material/core'; // Si usas fechas nativas*/
 import { MatMomentDateModule } from '@angular/material-moment-adapter'; // Si usas Moment.js
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field'; // Campo de formulario
@@ -24,7 +23,6 @@ import { Coordenada } from '../../utilidades/mapa/Coordenada';
     MatDatepickerModule,
     MatMomentDateModule,
     MatButtonModule,
-    /*MatNativeDateModule,*/
     MatFormFieldModule,
     InputImgComponent,
     MapaComponent,
