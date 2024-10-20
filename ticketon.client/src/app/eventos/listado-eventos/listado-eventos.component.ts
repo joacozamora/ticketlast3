@@ -27,19 +27,30 @@ export class ListadoEventosComponent  {
   @Output()
   borrado = new EventEmitter<void>();
 
+  usuarioEmail = this.seguridadService.obtenerCampoJWT('email');
+
   constructor() {
     this.cargarEventos();
   }
+
 
   borrar(id: number) {
     this.eventosService.borrar(id)
       .subscribe(() => this.borrado.emit())
   }
   cargarEventos() {
+    console.log("Correo del usuario:", this.usuarioEmail); // Agrega este log
+
     this.eventosService.obtenerLandingPage().subscribe(modelo => {
       this.publicados = modelo.publicados;
 
     });
+
+    this.eventosService.obtenerEventoPage(this.usuarioEmail).subscribe(modelo => {
+      this.creados = modelo.creados;
+    });
   }
   publicados!: any[];
+  creados!: any[];
+
 }

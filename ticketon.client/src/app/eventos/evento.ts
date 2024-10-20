@@ -17,3 +17,7 @@ export interface EventoDTO {
 export interface LandingPageDTO {
   publicados: EventoDTO[];
 }
+
+export interface EventosPageDTO {
+  creados: EventoDTO[];
+}

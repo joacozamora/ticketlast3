@@ -12,6 +12,7 @@ import { esAdminGuard } from './utilidades/guards/es-admin.guard';
 import { FiltroEventosComponent } from './eventos/filtro-eventos/filtro-eventos.component';
 import { CrearEntradaComponent } from './entradas/crear-entrada/crear-entrada.component';
 import { ListadoEventosComponent } from './eventos/listado-eventos/listado-eventos.component';
+import { IndiceEventosComponent } from './eventos/indice-eventos/indice-eventos.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -24,7 +25,7 @@ export const routes: Routes = [
   { path: 'registrar', component: RegistroComponent },
   { path: 'usuarios', component: IndiceUsuariosComponent, canActivate: [esAdminGuard] },
   { path: 'entradas/crear/:idEvento', component: CrearEntradaComponent },
-  {path: 'eventos', component: ListadoEventosComponent},
+  {path: 'eventos', component: IndiceEventosComponent},
   { path: '**', redirectTo: '' }
 ];
 

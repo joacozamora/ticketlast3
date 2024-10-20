@@ -26,7 +26,7 @@ namespace TicketOn.Server.Controllers
         private const string cacheTag = "eventos";
         private readonly string contenedor = "eventos";
 
-        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos,
+        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/, IAlmacenadorArchivos almacenadorArchivos,
             IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
@@ -50,6 +50,61 @@ namespace TicketOn.Server.Controllers
 
             return resultado;
         }
+
+
+        [HttpGet("eventosPage")]
+        public async Task<ActionResult<EventoPageDTO>> Get([FromQuery] string email) // Usamos [FromQuery] para que sepa que el parámetro viene de la query string
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest("El correo electrónico es requerido.");
+            }
+
+            // Buscar el usuario con el correo electrónico proporcionado
+            var usuario = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (usuario == null)
+            {
+                return BadRequest("No se encontró un usuario con ese correo electrónico.");
+            }
+
+            // Filtrar los eventos por el ID del usuario
+            var creados = await context.Eventos
+                .Where(e => e.UsuarioId == usuario.Id)
+                .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            var resultado = new EventoPageDTO
+            {
+                Creados = creados
+            };
+
+            return resultado;
+        }
+
+
+
+        //[HttpGet("eventosPage")]
+        //[AllowAnonymous]
+        //public async Task<ActionResult<EventoPageDTO>> Get(string id)
+        //{
+        //    //var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+        //    if (string.IsNullOrEmpty(id))
+        //    {
+        //        return BadRequest("ID de usuario no proporcionado.");
+        //    }
+        //    var creados = await context.Eventos
+        //.Where(e => e.UsuarioId == id) // Filtrar por el ID del usuario
+        //.ProjectTo<EventoDTO>(mapper.ConfigurationProvider) // Mapeamos usando AutoMapper
+        //.ToListAsync();
+        //    var resultado = new EventoPageDTO
+        //    {
+        //        Creados = creados
+        //    };
+
+        //    return resultado;
+        //}
 
         //[HttpGet("landing")]
         //[AllowAnonymous]
@@ -100,7 +155,7 @@ namespace TicketOn.Server.Controllers
 
             evento.UsuarioId = usuarioId;
             evento.Descripcion = "esto funciona";
-            
+
 
             context.Add(evento);
             await context.SaveChangesAsync();
@@ -110,7 +165,7 @@ namespace TicketOn.Server.Controllers
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }
-     
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
@@ -135,7 +190,7 @@ namespace TicketOn.Server.Controllers
             return NoContent();
         }
 
-      
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
