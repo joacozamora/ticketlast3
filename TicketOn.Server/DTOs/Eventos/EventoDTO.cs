@@ -4,13 +4,13 @@
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        //public string Ubicacion { get; set; }
+        
         public DateTime FechaInicio { get; set; }
         //public DateTime FechaFin { get; set; }
         public string Imagen { get; set; }
+        public decimal Latitud { get; set; }
+        public decimal Longitud { get; set; }
 
-        public required string UsuarioId { get; set; }
-
-
+        public string IdUsuario { get; set; }
     }
 }

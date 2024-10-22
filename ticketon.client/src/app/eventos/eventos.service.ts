@@ -18,9 +18,10 @@ export class EventosService {
     return this.http.get<LandingPageDTO>(`${this.apiURL}/landing`);
   }
 
-  //public crear(evento: EventoCreacionDTO) {
-  //  return this.http.post(this.apiUrl, evento);
-  //}
+  public obtenerPorId(id: number): Observable<EventoDTO> {
+    return this.http.get<EventoDTO>(`${this.apiUrl}/${id}`);
+  }
+
   public crear(evento: EventoCreacionDTO): Observable<EventoDTO> {
     const formData = this.construirFormData(evento);
     return this.http.post<EventoDTO>(this.apiURL, formData);
@@ -40,6 +41,8 @@ export class EventosService {
     const formData = new FormData();
     formData.append('nombre', evento.nombre);
     formData.append('fechaInicio', evento.fechaInicio.toISOString().split('T')[0]);
+    formData.append('latitud', evento.latitud.toString().replace('.', ','));
+    formData.append('longitud', evento.longitud.toString().replace('.', ','));
 
     if (evento.imagen) {
       formData.append('imagen', evento.imagen);
@@ -47,6 +50,10 @@ export class EventosService {
 
     return formData;
 
+  }
+
+  public obtenerTodos(): Observable<EventoDTO[]> {
+    return this.http.get<EventoDTO[]>(`${this.apiUrl}/todos`);
   }
   //createEvento(evento: any): Observable<any> {
   //  return this.http.post(this.apiUrl, evento);

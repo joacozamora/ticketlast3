@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventoCreacionDTO } from '../evento';
 import { FormularioEventoComponent } from '../formulario-evento/formulario-evento.component';
@@ -20,9 +20,17 @@ import { EventosService } from '../eventos.service';
 export class CrearEventoComponent {
   router = inject(Router);  // Usamos inject para el Router
   eventosServices = inject(EventosService);
+  route = inject(ActivatedRoute);
 
+  idUsuario!: string;
+
+  //ngOnInit(): void {
+  //  this.route.params.subscribe(params => {
+  //    this.idUsuario=params['']
+  //  })
+  //}
   /*constructor(private eventoServices: EventosService) { }*/
-  
+
   guardarCambios(evento: EventoCreacionDTO) {
     this.eventosServices.crear(evento).subscribe({
       next: evento => {
@@ -34,4 +42,3 @@ export class CrearEventoComponent {
   }
   
 
-}

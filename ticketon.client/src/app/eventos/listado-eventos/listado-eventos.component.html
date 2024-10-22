@@ -1,44 +1,4 @@
-<!--<div *ngIf="!eventos">
-  <img src="https://media3.giphy.com/media/xTk9ZvMnbIiIew7IpW/giphy.gif" />
-
-</div>
-<div *ngIf="eventos?.length === 0">
-  <p>No hay eventos cargados!</p>
-</div>
-
-<div *ngIf="eventos && eventos.length > 0">
-  <div class="eventos-contenedor">
-    <div *ngFor="let evento of eventos let index = index" class="evento-contenedor">-->
-<!--<div>Evento {{ index }}: {{ evento.titulo }}</div>
-<div>
-  {{evento.fechaEvento | date: "dd-MMMM-yyyy" | uppercase}}
-</div>
-<div>
-  {{evento.precio | currency}}
-</div>-->
-<!--<a>
-        <img [src]="evento.poster" alt="Poster"  class="imagen"/>
-      </a>
-      <p>
-        <a>{{evento.titulo}}</a>
-      </p>
-      <div>
-        <a mat-flat-button color="primary">
-          Editar
-        </a>
-        <button mat-flat-button
-                color="warn" type="button">
-          Borrar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>-->
-
-
-
-<!-- PRIMER HTML QUE FUNCIONA -->
-<!--<app-listado-generico [listado]="eventos">
+<app-listado-generico [listado]="eventos">
   <ng-container contenido>
     <div class="eventos-contenedor">
       @for (evento of eventos; track $index) {
@@ -50,6 +10,10 @@
           <img srcc="default.jpg" width="169" height="250" />
           }
         </a>
+        <a [href]="'https://www.google.com/maps?q=' + evento.latitud.toString().replace(',', '.') + ',' + evento.longitud.toString().replace(',', '.')" target="_blank">
+          Ver en Google Maps
+        </a>
+
         <p>
           <a [routerLink]="['/evento', evento.id]">{{evento.nombre}}</a>
         </p>

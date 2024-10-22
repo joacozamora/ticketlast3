@@ -35,6 +35,7 @@ import { SelectorMultipleComponent } from './utilidades/selector-multiple/select
 import { authInterceptor } from './seguridad/token-interceptor-http';
 
 
+
 // Configuración del formato de fecha
 export const MY_FORMATS = {
   parse: {
@@ -49,6 +50,9 @@ export const MY_FORMATS = {
   
 };
 
+//export function tokenGetter() {
+//  return localStorage.getItem('token');
+//}
 
 @NgModule({
   declarations: [
@@ -60,9 +64,7 @@ export const MY_FORMATS = {
     
 
     SelectorMultipleComponent,
-   
-
-  ],
+    ],
   imports: [
     SweetAlert2Module.forRoot(),
     BrowserModule, HttpClientModule,
@@ -70,6 +72,13 @@ export const MY_FORMATS = {
     MaterialModule,
     ReactiveFormsModule,
     MatMomentDateModule,  // Importa MatMomentDateModule
+    //JwtModule.forRoot({
+    //  config: {
+    //    tokenGetter: tokenGetter,
+    //    allowedDomains: ['localhost:4200'], // Cambia esto por tu dominio de API
+    //    disallowedRoutes: []
+    //  }
+    //}),
   ],
   providers: [
     provideAnimationsAsync(),

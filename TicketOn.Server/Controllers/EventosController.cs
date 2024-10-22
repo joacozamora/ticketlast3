@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using TicketOn.Server.DTOs;
 using TicketOn.Server.DTOs.Eventos;
+using TicketOn.Server.DTOs.Generos;
 using TicketOn.Server.Entidades;
 using TicketOn.Server.Servicios;
 
@@ -25,7 +26,8 @@ namespace TicketOn.Server.Controllers
         private const string cacheTag = "eventos";
         private readonly string contenedor = "eventos";
 
-        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos, IServicioUsuarios servicioUsuarios)
+        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos,
+            IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
             this.mapper = mapper;
@@ -51,7 +53,6 @@ namespace TicketOn.Server.Controllers
             return resultado;
         }
 
-        
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
         //[OutputCache(Tags = [cacheTag])]
@@ -82,10 +83,9 @@ namespace TicketOn.Server.Controllers
                 var url = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
                 evento.Imagen = url;
             }
-
+            evento.IdUsuario = await servicioUsuarios.ObtenerUsuarioId();
             evento.Descripcion = "esto funciona";
-            evento.Ubicacion = "";
-            evento.UsuarioId = usuarioId;
+            
 
             context.Add(evento);
             await context.SaveChangesAsync();
@@ -95,7 +95,40 @@ namespace TicketOn.Server.Controllers
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }
-        
+        //[HttpPost]
+        //public async Task<ActionResult<Evento>> Post(EventoDTO eventoDTO)
+        //{
+        //    if (eventoDTO == null)
+        //    {
+        //        return BadRequest("Error");
+        //    }
+
+        //    var evento = new Evento
+        //    {
+        //        Nombre = eventoDTO.Nombre,
+        //        Imagen = "",
+        //        Ubicacion ="",
+        //        Descripcion= "esto funciona"
+
+
+        //        /*Ubicacion = eventoDTO.Ubicacion*/,
+
+        //    };
+
+        //    context.Eventos.Add(evento);
+        //    await context.SaveChangesAsync();
+
+        //    return Ok(evento);
+
+        //}
+
+        //}
+
+        //[HttpPut("{id:int}")]
+        //public async Task<ActionResult> Put()
+        //{
+
+        //}
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
@@ -120,11 +153,7 @@ namespace TicketOn.Server.Controllers
             return NoContent();
         }
 
-        //[HttpDelete("{id:int}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    return await Delete<Evento>(id);
-        //}
+      
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
