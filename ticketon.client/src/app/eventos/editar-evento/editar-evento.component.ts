@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './editar-evento.component.html',
   styleUrl: './editar-evento.component.css'
 })
-export class EditarEventoComponent implements OnInit {
+export class EditarEventoComponent{
 
   //ngOnInit(): void {
   //  this.eventosService.obtenerPorId(this.id).subscribe(evento => {
