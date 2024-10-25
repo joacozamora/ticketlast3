@@ -13,19 +13,21 @@ import { FiltroEventosComponent } from './eventos/filtro-eventos/filtro-eventos.
 import { CrearEntradaComponent } from './entradas/crear-entrada/crear-entrada.component';
 import { ListadoEventosComponent } from './eventos/listado-eventos/listado-eventos.component';
 import { IndiceEventosComponent } from './eventos/indice-eventos/indice-eventos.component';
+import { EditarEventoComponent } from './eventos/editar-evento/editar-evento.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'generos', component: IndiceGenerosComponent },
   { path: 'generos/crear', component: CrearGeneroComponent },
-  { path: 'eventos/filtrar', component: FiltroEventosComponent},
-  { path: 'eventos/crear', component: CrearEventoComponent, canActivate: [esAdminGuard]},
+  { path: 'eventos/filtrar', component: FiltroEventosComponent },
+  { path: 'eventos/crear', component: CrearEventoComponent, canActivate: [esAdminGuard] },
   { path: 'generos/editar/:id', component: EditarGeneroComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registrar', component: RegistroComponent },
   { path: 'usuarios', component: IndiceUsuariosComponent, canActivate: [esAdminGuard] },
   { path: 'entradas/crear/:idEvento', component: CrearEntradaComponent },
-  {path: 'eventos', component: IndiceEventosComponent},
+  { path: 'eventos', component: IndiceEventosComponent },
+  { path: 'eventos/editar/:id', component: EditarEventoComponent },
   { path: '**', redirectTo: '' }
 ];
 
