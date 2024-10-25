@@ -1,8 +1,8 @@
-import { Component, Inject,  Input, OnInit, numberAttribute } from '@angular/core';
+import { Component, Inject,  Input, OnInit, inject, numberAttribute } from '@angular/core';
 import { EventoCreacionDTO, EventoDTO } from '../evento';
 import { FormularioEventoComponent } from '../formulario-evento/formulario-evento.component';
 import { EventosService } from '../eventos.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-editar-evento',
@@ -11,22 +11,40 @@ import { Router } from '@angular/router';
   templateUrl: './editar-evento.component.html',
   styleUrl: './editar-evento.component.css'
 })
-export class EditarEventoComponent implements OnInit {
+export class EditarEventoComponent{
 
-  //ngOnInit(): void {
-  //  this.eventosService.obtenerPorId(this.id).subscribe(evento => {
-  //    this.evento = evento;
-  //  });
-  //}
+  ngOnInit(): void {
+    // Captura el ID desde la URL
+    this.id = Number(this.route.snapshot.paramMap.get('id'));
+
+    if (this.id) {
+      this.eventosServices.obtenerPorId(this.id).subscribe({
+        next: (evento) => {
+          this.evento = evento;
+        },
+        error: (err) => {
+          console.error('Error al obtener el género:', err);
+        }
+      });
+    }
+  }
+
 
   @Input({ transform: numberAttribute })
   id!: number;
+
   evento?: EventoDTO;
-  eventosService = Inject(EventosService);
-  router = Inject(Router);
+  eventosServices = inject(EventosService);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   guardarCambios(evento: EventoCreacionDTO) {
-    console.log('editando el evento', evento);
-  }
 
+    this.eventosServices.actualizar(this.id, evento).subscribe({
+      next: () => {
+        console.log(evento);
+        this.router.navigate(['/eventos'])
+      } 
+    })
+  }
 }

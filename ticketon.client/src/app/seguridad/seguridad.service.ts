@@ -176,6 +176,7 @@ export class SeguridadService {
   getUserId(): string | null {
     return localStorage.getItem(this.llaveUserId);
   }
+ 
 
   estaLogueado(): boolean {
     const token = localStorage.getItem(this.llaveToken);

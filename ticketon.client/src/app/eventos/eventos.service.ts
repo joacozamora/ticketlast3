@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EventoCreacionDTO, EventoDTO, LandingPageDTO } from './evento';
 import { environment } from '../../environments/environment';
@@ -17,6 +17,12 @@ export class EventosService {
   public obtenerLandingPage(): Observable<LandingPageDTO> {
     return this.http.get<LandingPageDTO>(`${this.apiURL}/landing`);
   }
+
+  public obtenerEventoPage(email: string): Observable<EventosPageDTO> {
+    const params = new HttpParams().set('email', email); // Configura los parámetros
+    return this.http.get<EventosPageDTO>(`${this.apiUrl}/eventosPage`, { params });
+  }
+
 
   public obtenerPorId(id: number): Observable<EventoDTO> {
     return this.http.get<EventoDTO>(`${this.apiURL}/${id}`);

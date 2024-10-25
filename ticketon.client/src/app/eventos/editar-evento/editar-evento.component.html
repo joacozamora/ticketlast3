@@ -1,1 +1,14 @@
-<p>editar-evento works!</p>
+<h2>Editar Evento</h2>
+
+
+
+@if(evento){
+<app-formulario-evento [modelo]="evento" (posteoFormulario)="guardarCambios($event)"></app-formulario-evento>
+
+
+}
+<!--<h2>Editar Evento</h2>
+
+<ng-container *ngIf="evento">
+  <app-formulario-evento [modelo]="evento" (onSubmit)="guardarCambios($event)"></app-formulario-evento>
+</ng-container>-->

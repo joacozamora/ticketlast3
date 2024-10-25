@@ -5,20 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-/*import { ListadoEventosComponent } from './eventos/listado-eventos/listado-eventos.component';*/
 
 import {MaterialModule} from './material/material.module';
-/*import { MenuComponent } from './menu/menu.component';*/
-/*import { LandingPageComponent } from './landing-page/landing-page.component';*/
-/*import { IndiceGenerosComponent } from './generos/indice-generos/indice-generos.component';*/
-import { CrearGeneroComponent } from './generos/crear-genero/crear-genero.component';
-import { FormularioGeneroComponent } from './generos/formulario-genero/formulario-genero.component';
 import { ReactiveFormsModule } from '@angular/forms';
-/*import { CrearEventoComponent } from './eventos/crear-evento/crear-evento.component';*/
-/*import { FormularioEventoComponent } from './eventos/formulario-evento/formulario-evento.component';*/
-/*import { InputImgComponent } from './utilidades/input-img/input-img.component';*/
-/*import { ListadoGenericoComponent } from './utilidades/listado-generico/listado-generico.component';*/
-import { EditarGeneroComponent } from './generos/editar-genero/editar-genero.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { CrearEntradaComponent } from './entradas/crear-entrada/crear-entrada.component';
 import { FormularioEntradaComponent } from './entradas/formulario-entrada/formulario-entrada.component';
@@ -33,8 +22,8 @@ import { MostrarErroresComponent } from './utilidades/mostrar-errores/mostrar-er
 import { IndiceUsuariosComponent } from './seguridad/indice-usuarios/indice-usuarios.component';
 import { SelectorMultipleComponent } from './utilidades/selector-multiple/selector-multiple.component';
 import { authInterceptor } from './seguridad/token-interceptor-http';
-import { CarritoComponent } from './carrito/carrito.component';
-import { ComprarEntradasComponent } from './entradas/comprar-entradas/comprar-entradas.component';
+import { MatInputModule } from '@angular/material/input';
+import { IndiceEventosComponent } from './eventos/indice-eventos/indice-eventos.component';
 
 
 
@@ -57,17 +46,8 @@ export const MY_FORMATS = {
 //}
 
 @NgModule({
-  declarations: [
-    
-    CrearGeneroComponent,
-    FormularioGeneroComponent,
-    
-    EditarGeneroComponent,
-    
-
-    SelectorMultipleComponent,
-            
-            
+  declarations: [    
+    SelectorMultipleComponent, IndiceEventosComponent,
     ],
   imports: [
     SweetAlert2Module.forRoot(),
@@ -75,7 +55,8 @@ export const MY_FORMATS = {
     AppRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    MatMomentDateModule,  // Importa MatMomentDateModule
+    MatMomentDateModule,
+    MatInputModule
     //JwtModule.forRoot({
     //  config: {
     //    tokenGetter: tokenGetter,

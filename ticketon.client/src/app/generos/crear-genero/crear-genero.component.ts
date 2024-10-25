@@ -3,10 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GeneroCreacionDTO } from '../genero';
 import { GenerosService } from '../generos.service';
+import { FormularioGeneroComponent } from '../formulario-genero/formulario-genero.component';
 
 
 @Component({
   selector: 'app-crear-genero',
+  standalone: true,
+  imports: [FormularioGeneroComponent], 
   templateUrl: './crear-genero.component.html',
   styleUrls: ['./crear-genero.component.css']
 })
