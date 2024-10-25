@@ -15,4 +15,7 @@ import { AutorizadoComponent } from '../seguridad/autorizado/autorizado.componen
 })
 export class MenuComponent {
   seguridadService = inject(SeguridadService);
+
+
+
 }

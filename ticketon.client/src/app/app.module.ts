@@ -33,6 +33,8 @@ import { MostrarErroresComponent } from './utilidades/mostrar-errores/mostrar-er
 import { IndiceUsuariosComponent } from './seguridad/indice-usuarios/indice-usuarios.component';
 import { SelectorMultipleComponent } from './utilidades/selector-multiple/selector-multiple.component';
 import { authInterceptor } from './seguridad/token-interceptor-http';
+import { CarritoComponent } from './carrito/carrito.component';
+import { ComprarEntradasComponent } from './entradas/comprar-entradas/comprar-entradas.component';
 
 
 
@@ -64,6 +66,8 @@ export const MY_FORMATS = {
     
 
     SelectorMultipleComponent,
+            
+            
     ],
   imports: [
     SweetAlert2Module.forRoot(),

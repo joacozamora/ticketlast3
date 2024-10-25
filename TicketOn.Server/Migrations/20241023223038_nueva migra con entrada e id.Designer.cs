@@ -12,8 +12,8 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241013204246_otra migra")]
-    partial class otramigra
+    [Migration("20241023223038_nueva migra con entrada e id")]
+    partial class nuevamigraconentradaeid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -243,6 +243,10 @@ namespace TicketOn.Server.Migrations
                     b.Property<int?>("Stock")
                         .HasColumnType("int");
 
+                    b.Property<string>("UsuarioActualId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IdEvento");
@@ -272,11 +276,13 @@ namespace TicketOn.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Latitud")
+                        .HasColumnType("decimal(10, 8)");
 
-                    b.Property<string>("Ubicacion")
+                    b.Property<decimal>("Longitud")
+                        .HasColumnType("decimal(11, 8)");
+
+                    b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

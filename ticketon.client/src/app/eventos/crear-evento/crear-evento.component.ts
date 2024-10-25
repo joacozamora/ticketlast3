@@ -24,12 +24,7 @@ export class CrearEventoComponent {
 
   idUsuario!: string;
 
-  //ngOnInit(): void {
-  //  this.route.params.subscribe(params => {
-  //    this.idUsuario=params['']
-  //  })
-  //}
-  /*constructor(private eventoServices: EventosService) { }*/
+  
 
   guardarCambios(evento: EventoCreacionDTO) {
     this.eventosServices.crear(evento).subscribe({
@@ -37,8 +32,8 @@ export class CrearEventoComponent {
         console.log(evento);
         this.router.navigate(['/entradas/crear', evento.id]);
       },
-      
+
     })
   }
-  
 
+}

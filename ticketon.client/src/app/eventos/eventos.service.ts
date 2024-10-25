@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class EventosService {
-  //private apiUrl = 'https://localhost:7225/api/eventos';
+  
   private apiURL = environment.apiURL + '/eventos';
 
 
@@ -19,7 +19,7 @@ export class EventosService {
   }
 
   public obtenerPorId(id: number): Observable<EventoDTO> {
-    return this.http.get<EventoDTO>(`${this.apiUrl}/${id}`);
+    return this.http.get<EventoDTO>(`${this.apiURL}/${id}`);
   }
 
   public crear(evento: EventoCreacionDTO): Observable<EventoDTO> {
@@ -53,11 +53,9 @@ export class EventosService {
   }
 
   public obtenerTodos(): Observable<EventoDTO[]> {
-    return this.http.get<EventoDTO[]>(`${this.apiUrl}/todos`);
+    return this.http.get<EventoDTO[]>(`${this.apiURL}/todos`);
   }
-  //createEvento(evento: any): Observable<any> {
-  //  return this.http.post(this.apiUrl, evento);
-  //}
+  
 }
 
 

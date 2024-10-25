@@ -7,6 +7,7 @@ import { RegistroComponent } from './seguridad/registro/registro.component';
 import { AutorizadoComponent } from './seguridad/autorizado/autorizado.component';
 import { FormularioAutenticacionComponent } from './seguridad/formulario-autenticacion/formulario-autenticacion.component';
 import { MostrarErroresComponent } from './utilidades/mostrar-errores/mostrar-errores.component';
+//import { ComprarEntradasComponent } from './entradas/comprar-entradas/comprar-entradas.component';
 /*import { JwtHelperService } from '@auth0/angular-jwt';*/
 
 

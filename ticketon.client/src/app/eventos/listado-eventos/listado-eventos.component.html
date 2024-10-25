@@ -1,4 +1,4 @@
-<app-listado-generico [listado]="eventos">
+<!--<app-listado-generico [listado]="eventos">
   <ng-container contenido>
     <div class="eventos-contenedor">
       @for (evento of eventos; track $index) {
@@ -38,6 +38,112 @@
 
 <app-listado-generico [listado]="eventos">
   <ng-container contenido>
+    <!-- Carrusel de eventos -->
+    <div id="event-carousel" class="relative w-full">
+      <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+        <div *ngFor="let evento of eventos; let i = index" class="duration-700 ease-in-out" [class.hidden]="currentSlide !== i" data-carousel-item>
+          <img *ngIf="evento.imagen" [src]="evento.imagen" class="absolute block w-full h-[300px] object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="{{ evento.nombre }}">
+          <img *ngIf="!evento.imagen" src="default.jpg" class="absolute block w-full h-[300px] object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Imagen por defecto">
+        </div>
+      </div>
+
+      <!-- Indicadores de slider -->
+      <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+        <button *ngFor="let evento of eventos; let i = index" type="button" class="w-3 h-3 rounded-full" [class.bg-blue-500]="i === currentSlide" [class.bg-gray-500]="i !== currentSlide" [attr.aria-current]="i === currentSlide ? 'true' : 'false'" [attr.aria-label]="'Slide ' + (i + 1)" (click)="goToSlide(i)"></button>
+      </div>
+
+      <!-- Controles del slider -->
+      <button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" (click)="prevSlide()">
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50">
+          <svg class="w-4 h-4 text-white rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+          </svg>
+          <span class="sr-only">Previous</span>
+        </span>
+      </button>
+      <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" (click)="nextSlide()">
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50">
+          <svg class="w-4 h-4 text-white rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+          </svg>
+          <span class="sr-only">Next</span>
+        </span>
+      </button>
+    </div>
+
+    <!-- Listado de eventos -->
+    <div class="font-[sans-serif] bg-gray-100">
+      <div class="p-4 mx-auto lg:max-w-7xl sm:max-w-full">
+        <h2 class="text-4xl font-extrabold text-gray-800 mb-12">Listado de eventos</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div *ngFor="let evento of eventos; trackBy: trackByFn" class="bg-white rounded-2xl p-5 cursor-pointer hover:-translate-y-2 transition-all relative">
+            <div class="w-5/6 h-[210px] overflow-hidden mx-auto aspect-w-16 aspect-h-8 mb-4">
+              <img [src]="evento.imagen || 'default.jpg'" alt="Imagen del evento" class="h-full w-full object-cover">
+            </div>
+            <div>
+              <a [href]="'https://www.google.com/maps?q=' + evento.latitud + ',' + evento.longitud" target="_blank">Ver en Google Maps</a>
+            </div>
+            <div>
+              <h3 class="text-lg font-extrabold text-gray-800">{{evento.nombre}}</h3>
+              <p class="text-gray-600 text-sm mt-2">{{evento.fechaInicio}}</p>
+              <div class="p-5">
+                <a [routerLink]="['/comprar-entradas', evento.id]" class="px-5 py-2.5 rounded-full text-white text-sm bg-blue-700 hover:bg-blue-800">Comprar Tickets</a>
+              </div>
+
+              <app-autorizado rol="admin">
+                <ng-container autorizado>
+                  <div>
+                    <a mat-flat-button [routerLink]="['/eventos/editar', evento.id]">Editar</a>
+                    <button mat-flat-button type="button" color="warn" [swal]="{title: 'Confirmación', text: '¿Deseas borrar el registro?', showCancelButton: true}" (confirm)="borrar(evento.id)">
+                      Borrar
+                    </button>
+                  </div>
+                </ng-container>
+              </app-autorizado>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</app-listado-generico>
+
+
+<!--<app-listado-generico [listado]="eventos">
+  <ng-container contenido>
+    <div id="event-carousel" class="relative w-full">-->
+      <!-- Carousel wrapper -->
+      <!--<div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+        <div *ngFor="let evento of eventos; let i = index" class="duration-700 ease-in-out" [class.hidden]="currentSlide !== i" data-carousel-item>
+          <img *ngIf="evento.imagen" [src]="evento.imagen" class="absolute block w-full h-[300px] object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="{{ evento.nombre }}">
+          <img *ngIf="!evento.imagen" src="default.jpg" class="absolute block w-full h-[300px] object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="Imagen por defecto">
+        </div>
+      </div>-->
+
+      <!-- Slider indicators -->
+      <!--<div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+        <button *ngFor="let evento of eventos; let i = index" type="button" class="w-3 h-3 rounded-full" [class.bg-blue-500]="i === currentSlide" [class.bg-gray-500]="i !== currentSlide" [attr.aria-current]="i === currentSlide ? 'true' : 'false'" [attr.aria-label]="'Slide ' + (i + 1)" (click)="goToSlide(i)"></button>
+      </div>-->
+
+      <!-- Slider controls -->
+      <!--<button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" (click)="prevSlide()">
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+          <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+          </svg>
+          <span class="sr-only">Previous</span>
+        </span>
+      </button>
+      <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" (click)="nextSlide()">
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+          <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+          </svg>
+          <span class="sr-only">Next</span>
+        </span>
+      </button>
+    </div>
     <div class="font-[sans-serif] bg-gray-100">
       <div class="p-4 mx-auto lg:max-w-7xl sm:max-w-full">
         <h2 class="text-4xl font-extrabold text-gray-800 mb-12">Listado de eventos</h2>
@@ -56,18 +162,31 @@
                    class="h-full w-full object-contain object-cover" />
               }
             </div>
-
             <div>
-              <h3 class="text-lg font-extrabold text-gray-800">{{evento.nombre}}</h3>
-              <p class="text-gray-600 text-sm mt-2">{{evento.fechaInicio}}</p>
-              <div class="p-5">
-                <a [routerLink]="['/evento', evento.id]"
-                   class="px-5 py-2.5 rounded-full text-white text-sm tracking-wider font-medium border border-current outline-none bg-blue-700 hover:bg-blue-800 active:bg-blue-700">
-                  Ver Tickets
-                </a>
-              </div>
+              <a [href]="'https://www.google.com/maps?q=' + evento.latitud.toString().replace(',', '.') + ',' + evento.longitud.toString().replace(',', '.')" target="_blank">
+                Ver en Google Maps
+              </a>
+            </div>
+            <div>
+              <div *ngFor="let evento of eventos; let i = index">-->
+                <!-- Contenido de cada evento -->
+                <!--<div class="evento-card">
+                  <h3>{{ evento.nombre }}</h3>
+                  <p>ID del evento: {{ evento.id }}</p>
+                  <a [routerLink]="['/comprar-entradas', evento.id]">Comprar Tickets</a>
+                </div>
+              </div>-->
+              <!--<h3 class="text-lg font-extrabold text-gray-800">{{evento.nombre}}</h3>
+  <p class="text-gray-600 text-sm mt-2">{{evento.fechaInicio}}</p>
+  <div class="p-5">
 
-              <app-autorizado rol="admin">
+    <a [routerLink]="['/comprar-entradas', evento.id]"
+       class="px-5 py-2.5 rounded-full text-white text-sm tracking-wider font-medium border border-current outline-none bg-blue-700 hover:bg-blue-800 active:bg-blue-700">
+      Comprar Tickets
+    </a>
+  </div>-->
+
+              <!--<app-autorizado rol="admin">
                 <ng-container autorizado>
                   <div>
                     <a mat-flat-button [routerLink]="['/eventos/editar', evento.id]">Editar</a>
@@ -89,4 +208,4 @@
       </div>
     </div>
   </ng-container>
-</app-listado-generico>
+</app-listado-generico>-->

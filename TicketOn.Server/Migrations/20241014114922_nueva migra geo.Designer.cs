@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketOn.Server;
 
@@ -11,9 +12,11 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241014114922_nueva migra geo")]
+    partial class nuevamigrageo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,32 +223,6 @@ namespace TicketOn.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TicketOn.Server.Entidades.DetalleVenta", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EntradaId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("PrecioVenta")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("VentaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EntradaId");
-
-                    b.HasIndex("VentaId");
-
-                    b.ToTable("DetallesVenta");
-                });
-
             modelBuilder.Entity("TicketOn.Server.Entidades.Entrada", b =>
                 {
                     b.Property<int>("Id")
@@ -266,18 +243,9 @@ namespace TicketOn.Server.Migrations
                     b.Property<int?>("Stock")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsuarioActualId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UsuarioId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdEvento");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Entradas");
                 });
@@ -365,31 +333,6 @@ namespace TicketOn.Server.Migrations
                     b.ToTable("Tandas");
                 });
 
-            modelBuilder.Entity("TicketOn.Server.Entidades.Venta", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("FechaVenta")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("UsuarioId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Ventas");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -441,25 +384,6 @@ namespace TicketOn.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TicketOn.Server.Entidades.DetalleVenta", b =>
-                {
-                    b.HasOne("TicketOn.Server.Entidades.Entrada", "Entrada")
-                        .WithMany()
-                        .HasForeignKey("EntradaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TicketOn.Server.Entidades.Venta", "Venta")
-                        .WithMany("DetallesVenta")
-                        .HasForeignKey("VentaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Entrada");
-
-                    b.Navigation("Venta");
-                });
-
             modelBuilder.Entity("TicketOn.Server.Entidades.Entrada", b =>
                 {
                     b.HasOne("TicketOn.Server.Entidades.Evento", "Evento")
@@ -468,27 +392,10 @@ namespace TicketOn.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId");
-
                     b.Navigation("Evento");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("TicketOn.Server.Entidades.Evento", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("TicketOn.Server.Entidades.Venta", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
                         .WithMany()
@@ -502,11 +409,6 @@ namespace TicketOn.Server.Migrations
             modelBuilder.Entity("TicketOn.Server.Entidades.Evento", b =>
                 {
                     b.Navigation("EntradasVenta");
-                });
-
-            modelBuilder.Entity("TicketOn.Server.Entidades.Venta", b =>
-                {
-                    b.Navigation("DetallesVenta");
                 });
 #pragma warning restore 612, 618
         }

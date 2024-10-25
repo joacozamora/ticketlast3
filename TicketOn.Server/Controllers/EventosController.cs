@@ -15,23 +15,23 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/eventos")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
     public class EventosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
-        //private readonly IOutputCacheStore outputCacheStore;
+        
         private readonly IAlmacenadorArchivos almacenadorArchivos;
         private readonly IServicioUsuarios servicioUsuarios;
         private const string cacheTag = "eventos";
         private readonly string contenedor = "eventos";
 
-        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/,IAlmacenadorArchivos almacenadorArchivos,
+        public EventosController(ApplicationDbContext context, IMapper mapper,IAlmacenadorArchivos almacenadorArchivos,
             IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
             this.mapper = mapper;
-            //this.outputCacheStore = outputCacheStore;
+            
             this.almacenadorArchivos = almacenadorArchivos;
             this.servicioUsuarios = servicioUsuarios;
         }
@@ -55,7 +55,8 @@ namespace TicketOn.Server.Controllers
 
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
-        //[OutputCache(Tags = [cacheTag])]
+        [AllowAnonymous]
+        
         public async Task<ActionResult<EventoDTO>> Get(int id)
         {
             var evento = await context.Eventos
@@ -83,7 +84,7 @@ namespace TicketOn.Server.Controllers
                 var url = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
                 evento.Imagen = url;
             }
-            evento.IdUsuario = await servicioUsuarios.ObtenerUsuarioId();
+            evento.UsuarioId = await servicioUsuarios.ObtenerUsuarioId();
             evento.Descripcion = "esto funciona";
             
 
@@ -91,44 +92,11 @@ namespace TicketOn.Server.Controllers
             await context.SaveChangesAsync();
 
             var eventoDTO = mapper.Map<EventoDTO>(evento);
-            //await outputCacheStore.EvictByTagAsync(cacheTag, default);
+            
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }
-        //[HttpPost]
-        //public async Task<ActionResult<Evento>> Post(EventoDTO eventoDTO)
-        //{
-        //    if (eventoDTO == null)
-        //    {
-        //        return BadRequest("Error");
-        //    }
-
-        //    var evento = new Evento
-        //    {
-        //        Nombre = eventoDTO.Nombre,
-        //        Imagen = "",
-        //        Ubicacion ="",
-        //        Descripcion= "esto funciona"
-
-
-        //        /*Ubicacion = eventoDTO.Ubicacion*/,
-
-        //    };
-
-        //    context.Eventos.Add(evento);
-        //    await context.SaveChangesAsync();
-
-        //    return Ok(evento);
-
-        //}
-
-        //}
-
-        //[HttpPut("{id:int}")]
-        //public async Task<ActionResult> Put()
-        //{
-
-        //}
+        
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
@@ -148,7 +116,7 @@ namespace TicketOn.Server.Controllers
             }
 
             await context.SaveChangesAsync();
-            //await outputCacheStore.EvictByTagAsync(cacheTag, default);
+            
 
             return NoContent();
         }

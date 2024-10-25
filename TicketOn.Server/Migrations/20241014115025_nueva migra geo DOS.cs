@@ -5,7 +5,7 @@
 namespace TicketOn.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class otramigra : Migration
+    public partial class nuevamigrageoDOS : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
