@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EventoCreacionDTO, EventoDTO, EventosPageDTO, LandingPageDTO } from './evento';
-import { EventoCreacionDTO, EventoDTO, LandingPageDTO } from './evento';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -21,7 +20,7 @@ export class EventosService {
 
   public obtenerEventoPage(email: string): Observable<EventosPageDTO> {
     const params = new HttpParams().set('email', email); // Configura los par�metros
-    return this.http.get<EventosPageDTO>(`${this.apiUrl}/eventosPage`, { params });
+    return this.http.get<EventosPageDTO>(`${this.apiURL}/eventosPage`, { params });
   }
 
 
