@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TicketOn.Server.Entidades
 {
@@ -15,6 +16,11 @@ namespace TicketOn.Server.Entidades
         [ForeignKey("Evento")]
         public int IdEvento { get; set; }
         public Evento Evento { get; set; }
-        
+
+        public string UsuarioActualId { get; set; }
+
+        public IdentityUser Usuario { get; set; } = null!;
+
+
     }
 }

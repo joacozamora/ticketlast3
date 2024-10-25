@@ -31,6 +31,10 @@ export class EntradasService {
     return this.http.get<Entrada[]>(this.apiURL);
   }
 
+  obtenerEntradasPorEvento(eventoId: number): Observable<Entrada[]> {
+    return this.http.get<Entrada[]>(`${this.apiURL}/porEvento/${eventoId}`);
+  }
+
   obtenerPorId(id: number): Observable<Entrada> {
     return this.http.get<Entrada>(`${this.apiURL}/${id}`);
   }

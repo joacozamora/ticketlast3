@@ -20,18 +20,18 @@ namespace TicketOn.Server.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
-        //private readonly IOutputCacheStore outputCacheStore;
+        
         private readonly IAlmacenadorArchivos almacenadorArchivos;
         private readonly IServicioUsuarios servicioUsuarios;
         private const string cacheTag = "eventos";
         private readonly string contenedor = "eventos";
 
-        public EventosController(ApplicationDbContext context, IMapper mapper/*, IOutputCacheStore outputCacheStore*/, IAlmacenadorArchivos almacenadorArchivos,
+        public EventosController(ApplicationDbContext context, IMapper mapper,IAlmacenadorArchivos almacenadorArchivos,
             IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
             this.mapper = mapper;
-            //this.outputCacheStore = outputCacheStore;
+            
             this.almacenadorArchivos = almacenadorArchivos;
             this.servicioUsuarios = servicioUsuarios;
         }
@@ -125,7 +125,8 @@ namespace TicketOn.Server.Controllers
 
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
-        //[OutputCache(Tags = [cacheTag])]
+        [AllowAnonymous]
+        
         public async Task<ActionResult<EventoDTO>> Get(int id)
         {
             var evento = await context.Eventos
@@ -161,11 +162,11 @@ namespace TicketOn.Server.Controllers
             await context.SaveChangesAsync();
 
             var eventoDTO = mapper.Map<EventoDTO>(evento);
-            //await outputCacheStore.EvictByTagAsync(cacheTag, default);
+            
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }
-
+        
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
@@ -185,7 +186,7 @@ namespace TicketOn.Server.Controllers
             }
 
             await context.SaveChangesAsync();
-            //await outputCacheStore.EvictByTagAsync(cacheTag, default);
+            
 
             return NoContent();
         }

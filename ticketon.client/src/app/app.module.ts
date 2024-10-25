@@ -24,6 +24,8 @@ import { SelectorMultipleComponent } from './utilidades/selector-multiple/select
 import { authInterceptor } from './seguridad/token-interceptor-http';
 import { MatInputModule } from '@angular/material/input';
 import { IndiceEventosComponent } from './eventos/indice-eventos/indice-eventos.component';
+import { CarritoComponent } from './carrito/carrito.component';
+import { ComprarEntradasComponent } from './entradas/comprar-entradas/comprar-entradas.component';
 
 
 

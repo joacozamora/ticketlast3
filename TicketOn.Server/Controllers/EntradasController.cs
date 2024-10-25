@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketOn.Server.DTOs.EntradasDTO;
 using TicketOn.Server.Entidades;
+using TicketOn.Server.Servicios;
 
 namespace TicketOn.Server.Controllers
 {
@@ -12,13 +13,14 @@ namespace TicketOn.Server.Controllers
     public class EntradasController : ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly IServicioUsuarios servicioUsuarios;
         private readonly IMapper mapper;
 
-        public EntradasController(ApplicationDbContext context, IMapper mapper)
+        public EntradasController(ApplicationDbContext context, IMapper mapper, IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
             this.mapper = mapper;
-            
+            this.servicioUsuarios = servicioUsuarios;
         }
         
         [HttpGet]
@@ -37,6 +39,17 @@ namespace TicketOn.Server.Controllers
             return entradas;
         }
 
+        [HttpGet("porEvento/{eventoId:int}")]
+        public async Task<ActionResult<List<EntradaDTO>>> ObtenerEntradasPorEvento(int eventoId)
+        {
+            var entradas = await context.Entradas
+                .Where(e => e.IdEvento == eventoId)
+                .ProjectTo<EntradaDTO>(mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return Ok(entradas);
+        }
+
         [HttpGet("{id:int}", Name = "ObtenerEntradaPorId")]
         public async Task<ActionResult<EntradaDTO>> Get(int id)
         {
@@ -52,25 +65,39 @@ namespace TicketOn.Server.Controllers
             return entrada;
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] EntradaCreacionDTO entradaCreacionDTO)
         {
+            // Verificar que el evento existe
             var eventoExiste = await context.Eventos.AnyAsync(e => e.Id == entradaCreacionDTO.IdEvento);
             if (!eventoExiste)
             {
                 return BadRequest("El evento especificado no existe");
             }
 
+            // Mapear el DTO a la entidad Entrada
             var entrada = mapper.Map<Entrada>(entradaCreacionDTO);
+
+            // Obtener el Id del usuario actual
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+            // Asignar el UsuarioActualId al de la entrada basado en el creador del evento
+            entrada.UsuarioActualId = usuarioId;
+
+            // Guardar la entrada en la base de datos
             context.Add(entrada);
             await context.SaveChangesAsync();
-            return CreatedAtRoute("ObtenerEntradaPorId", new { id = entrada.Id }, entrada);
-            //var entrada = mapper.Map<Entrada>(entradaCreacionDTO);
-            //context.Add(entrada);
-            //await context.SaveChangesAsync();
-            //return CreatedAtRoute("ObtenerEntradaPorId", new { id = entrada.Id }, entrada);
+
+            // Mapear la entidad entrada a DTO si es necesario
+            var entradaDTO = mapper.Map<EntradaDTO>(entrada);
+
+            // Retornar la respuesta con la ruta del nuevo recurso
+            return CreatedAtRoute("ObtenerEntradaPorId", new { id = entrada.Id }, entradaDTO);
         }
 
+
+        
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromBody] EntradaDTO entradaDTO)
         {

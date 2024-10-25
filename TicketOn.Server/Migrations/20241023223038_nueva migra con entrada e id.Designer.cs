@@ -12,8 +12,8 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241024120912_facu")]
-    partial class facu
+    [Migration("20241023223038_nueva migra con entrada e id")]
+    partial class nuevamigraconentradaeid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,6 +242,10 @@ namespace TicketOn.Server.Migrations
 
                     b.Property<int?>("Stock")
                         .HasColumnType("int");
+
+                    b.Property<string>("UsuarioActualId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

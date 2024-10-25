@@ -1,0 +1,78 @@
+<!--<div *ngIf="carritoItems.length > 0">
+  <h2>Tu Carrito</h2>
+  <ul>
+    <li *ngFor="let item of carritoItems">
+      {{ item.nombreEntrada }} - {{ item.precio | currency }} x {{ item.cantidad }}
+      <button (click)="eliminarDelCarrito(item.entradaId)">Eliminar</button>
+    </li>
+  </ul>
+  <p>Total: {{ calcularTotal() | currency }}</p>
+  <button (click)="confirmarCompra()">Confirmar Compra</button>
+</div>
+
+<div *ngIf="carritoItems.length === 0">
+  <p>No tienes entradas en tu carrito.</p>
+</div>-->
+
+
+<div class="font-sans bg-white max-w-6xl mx-auto p-4">
+  <h2 class="text-3xl font-bold text-gray-800">Your Cart</h2>
+  <div class="overflow-x-auto">
+    <table class="mt-12 w-full border-collapse divide-y">
+      <thead class="whitespace-nowrap text-left">
+        <tr>
+          <th class="text-base text-gray-500 font-medium p-2">Description</th>
+          <th class="text-base text-gray-500 font-medium p-2">Quantity</th>
+          <th class="text-base text-gray-500 font-medium p-2">Remove</th>
+          <th class="text-base text-gray-500 font-medium p-2">Price</th>
+        </tr>
+      </thead>
+
+      <tbody class="whitespace-nowrap divide-y">
+        <tr *ngFor="let item of carritoItems">
+          <td class="px-2 py-4">
+            <div class="flex items-center gap-4 w-max">
+              <div class="h-32 shrink-0">
+                <!-- Usamos la propiedad imagenEvento en lugar del marcador de posición -->
+                <img [src]="item.imagenEvento" class="w-full h-full object-contain rounded-lg" alt="{{ item.nombreEvento }}" />
+              </div>
+              <div>
+                <p class="text-base font-bold text-gray-800">{{ item.nombreEntrada }}</p>
+              </div>
+            </div>
+          </td>
+
+          <td class="px-2 py-4">
+            <div class="flex overflow-hidden border w-max rounded-lg">
+              <span class="bg-transparent flex items-center justify-center w-11 h-10 font-semibold text-gray-800 text-base">
+                {{ item.cantidad }}
+              </span>
+            </div>
+          </td>
+
+          <td class="px-2 py-4">
+            <button type="button" class="bg-transparent border flex items-center justify-center w-11 h-10 rounded-lg" (click)="eliminarDelCarrito(item.entradaId)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-red-500" viewBox="0 0 24 24">
+                <path d="M19 7a1 1 0 0 0-1 1v11.191A1.92 1.92 0 0 1 15.99 21H8.01A1.92 1.92 0 0 1 6 19.191V8a1 1 0 0 0-2 0v11.191A3.918 3.918 0 0 0 8.01 23h7.98A3.918 3.918 0 0 0 20 19.191V8a1 1 0 0 0-1-1Zm1-3h-4V2a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v2H4a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM10 4V3h4v1Z"></path>
+                <path d="M11 17v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Zm4 0v-7a1 1 0 0 0-2 0v7a1 1 0 0 0 2 0Z"></path>
+              </svg>
+            </button>
+          </td>
+
+          <td class="px-2 py-4">
+            <h4 class="text-base font-bold text-gray-800">{{ item.precio | currency }}</h4>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="max-w-xl ml-auto mt-4">
+    <p class="text-lg font-semibold text-gray-800">Total: {{ calcularTotal() | currency }}</p>
+    <button class="bg-blue-600 text-white font-bold px-4 py-2 rounded mt-4" (click)="confirmarCompra()">Confirm Purchase</button>
+  </div>
+</div>
+
+<div *ngIf="carritoItems.length === 0" class="text-center mt-8">
+  <p class="text-gray-500">No tienes entradas en tu carrito.</p>
+</div>

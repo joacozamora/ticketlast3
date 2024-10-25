@@ -14,7 +14,7 @@ import { FormularioEntradaComponent } from '../formulario-entrada/formulario-ent
 
 export class CrearEntradaComponent {
   idEvento!: number; 
-
+  usuarioActualId!: string;
   
   route = inject(ActivatedRoute);
 

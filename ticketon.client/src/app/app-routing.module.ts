@@ -14,6 +14,8 @@ import { CrearEntradaComponent } from './entradas/crear-entrada/crear-entrada.co
 import { ListadoEventosComponent } from './eventos/listado-eventos/listado-eventos.component';
 import { IndiceEventosComponent } from './eventos/indice-eventos/indice-eventos.component';
 import { EditarEventoComponent } from './eventos/editar-evento/editar-evento.component';
+import { CarritoComponent } from './carrito/carrito.component';
+import { ComprarEntradasComponent } from './entradas/comprar-entradas/comprar-entradas.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -26,6 +28,9 @@ export const routes: Routes = [
   { path: 'registrar', component: RegistroComponent },
   { path: 'usuarios', component: IndiceUsuariosComponent, canActivate: [esAdminGuard] },
   { path: 'entradas/crear/:idEvento', component: CrearEntradaComponent },
+  { path: 'eventos', component: ListadoEventosComponent },
+  { path: 'comprar-entradas/:id', component: ComprarEntradasComponent },
+  { path: 'carrito', component: CarritoComponent },
   { path: 'eventos', component: IndiceEventosComponent },
   { path: 'eventos/editar/:id', component: EditarEventoComponent },
   { path: '**', redirectTo: '' }
