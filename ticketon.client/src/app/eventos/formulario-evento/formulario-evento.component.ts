@@ -33,13 +33,8 @@ import { Coordenada } from '../../utilidades/mapa/Coordenada';
 })
 export class FormularioEventoComponent implements OnInit {
 
+  urlImagenActual?: string;
 
-  //ngOnInit(): void {
-  //  if (this.modelo !== undefined) {
-  //    this.form.patchValue(this.modelo);
-  //    this.coordenadasIniciales.push({ latitud: this.modelo.latitud, longitud: this.modelo.longitud })
-  //  }
-  //}
   ngOnInit(): void {
     if (this.modelo !== undefined) {
       this.form.patchValue({
@@ -51,6 +46,8 @@ export class FormularioEventoComponent implements OnInit {
         latitud: this.modelo.latitud,
         longitud: this.modelo.longitud
       });
+      // Asigna la URL de la imagen actual
+      this.urlImagenActual = this.modelo.imagen as string;
     }
   }
 
@@ -71,41 +68,10 @@ export class FormularioEventoComponent implements OnInit {
     imagen: new FormControl<File | undefined>(undefined)
   });
 
-  //form = this.formBuilder.group({
-  //  nombre: ['', { validators: [Validators.required] }],
-  //  latitud: new FormControl<number | null>(null, [Validators.required]),
-  //  longitud: new FormControl<number | null>(null, [Validators.required]),
-  //  fechaInicio: new FormControl<Date | null>(null, { validators: [Validators.required] }),
-  //  imagen: new FormControl<File | string | null>(null)
-  //});
-
-
   archivoSeleccionado(archivo: File) {
     this.form.controls.imagen.setValue(archivo);
   }
 
-  //guardarCambios() {
-    
-  //  if (!this.form.valid) {
-  //    return;
-  //  }
-
-  //  const evento = {
-  //    ...this.form.value as EventoCreacionDTO,
-  //  };
-
-
-  //  // Verificar si los valores de latitud y longitud est�n presentes
-  //  if (this.form.controls.latitud.value === null || this.form.controls.longitud.value === null) {
-  //    console.error("Latitud y longitud no est�n definidas");
-  //    return;
-  //  }
-
-  //  evento.fechaInicio = moment(evento.fechaInicio).toDate();
-
-  //  console.log("Evento a guardar:", evento); // Para debug
-  //  this.posteoFormulario.emit(evento);
-  //}
   guardarCambios() {
     if (!this.form.valid) {
       return;

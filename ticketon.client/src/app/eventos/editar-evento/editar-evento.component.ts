@@ -21,6 +21,7 @@ export class EditarEventoComponent{
       this.eventosServices.obtenerPorId(this.id).subscribe({
         next: (evento) => {
           this.evento = evento;
+          this.imagenActual = evento.imagen as string;
         },
         error: (err) => {
           console.error('Error al obtener el género:', err);
@@ -37,6 +38,8 @@ export class EditarEventoComponent{
   eventosServices = inject(EventosService);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  imagenActual: string = '';
+
 
   guardarCambios(evento: EventoCreacionDTO) {
 
