@@ -9,15 +9,110 @@
 
 //}
 
+//import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+//import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+//import { Entrada } from '../entradas';
+//import { MatCommonModule } from '@angular/material/core';
+//import { CommonModule } from '@angular/common';
+//import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+//import { EntradasService } from '../entradas.service';
+//import { Router } from '@angular/router';
+//import { EventosService } from '../../eventos/eventos.service';
+
+//@Component({
+//  selector: 'app-formulario-entrada',
+//  standalone: true,
+//  imports: [CommonModule, MatFormField, MatLabel, MatError, ReactiveFormsModule],
+//  templateUrl: './formulario-entrada.component.html',
+//  styleUrls: ['./formulario-entrada.component.css']
+//})
+//export class FormularioEntradaComponent implements OnInit {
+//  @Input() idEvento!: number;
+//  private formBuilder = inject(FormBuilder);
+//  private entradasService = inject(EntradasService);
+//  private router = inject(Router);
+//  private eventoService = inject(EventosService);
+
+//  form: FormGroup = this.formBuilder.group({
+//    entradas: this.formBuilder.array([this.crearEntrada()])
+//  });
+
+//  ngOnInit(): void {
+//    this.router.params.subscribe(params => {
+//      const eventoId = +params['id'];
+//      if (eventoId > 0) {
+//        this.cargarEvento(eventoId);
+
+//      }
+//    });
+//  }
+
+//  get entradas(): FormArray {
+//    return this.form.get('entradas') as FormArray;
+//  }
+
+//  crearEntrada(): FormGroup {
+//    return this.formBuilder.group({
+//      nombreTanda: ['', Validators.required],
+//      stock: [null, [Validators.required, Validators.min(1)]],
+//      precio: [null, [Validators.required, Validators.min(0)]],
+//    });
+//  }
+
+//  cargarEvento(eventoId: number): void {
+//    this.eventoService.obtenerPorId(eventoId).subscribe(
+//      evento => {
+//        this.evento = evento;
+
+//      },
+//      error => {
+//        console.error('Error al cargar el evento:', error);
+//      }
+//    );
+//  }
+
+//  agregarEntrada(): void {
+//    this.entradas.push(this.crearEntrada());
+//  }
+
+//  eliminarEntrada(index: number): void {
+//    this.entradas.removeAt(index);
+//  }
+//  calcularTotalEntradas(): number {
+//    return this.entradas.controls.reduce((total, entrada) => {
+//      const cantidad = entrada.get('cantidad')?.value || 0;
+//      return total + cantidad;
+//    }, 0);
+//  }
+
+//  guardarCambios() {
+//    if (this.form.invalid) return;
+
+//    const entradas = this.entradas.value.map((entrada: any) => ({
+//      ...entrada,
+//      idEvento: this.idEvento
+//    }));
+
+//    this.entradasService.crear(entradas).subscribe({
+//      next: () => {
+//        this.router.navigate(['/eventos']);
+//      },
+//      error: (error) => {
+//        console.log("Error al guardar las entradas: ", error);
+//      }
+//    });
+//  }
+//}
+
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Entrada } from '../entradas';
 import { MatCommonModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { EntradasService } from '../entradas.service';
-import { Router } from '@angular/router';
-
+import { Router, ActivatedRoute } from '@angular/router';
+import { EventosService } from '../../eventos/eventos.service';
 
 @Component({
   selector: 'app-formulario-entrada',
@@ -27,39 +122,83 @@ import { Router } from '@angular/router';
   styleUrls: ['./formulario-entrada.component.css']
 })
 export class FormularioEntradaComponent implements OnInit {
-  @Input() idEvento!: number; 
+  @Input() idEvento!: number;
+  evento: any; // Define la propiedad evento para almacenar los datos del evento
+
   private formBuilder = inject(FormBuilder);
   private entradasService = inject(EntradasService);
-  private router = inject(Router);  
+  private router = inject(Router);
+  private eventoService = inject(EventosService);
+  private route = inject(ActivatedRoute);
 
   form: FormGroup = this.formBuilder.group({
-    nombreTanda: ['', Validators.required],
-    stock: [null, [Validators.required, Validators.min(1)]],
-    precio: [null, [Validators.required, Validators.min(0)]],
+    entradas: this.formBuilder.array([this.crearEntrada()])
   });
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const eventoId = +params['id'];
+      if (eventoId > 0) {
+        this.cargarEvento(eventoId);
+      }
+    });
+  }
+
+  get entradas(): FormArray {
+    return this.form.get('entradas') as FormArray;
+  }
+
+  crearEntrada(): FormGroup {
+    return this.formBuilder.group({
+      nombreTanda: ['', Validators.required],
+      stock: [null, [Validators.required, Validators.min(1)]],
+      precio: [null, [Validators.required, Validators.min(0)]],
+    });
+  }
+
+  cargarEvento(eventoId: number): void {
+    this.eventoService.obtenerPorId(eventoId).subscribe(
+      evento => {
+        this.evento = evento; // Asigna los datos del evento a la propiedad evento
+      },
+      error => {
+        console.error('Error al cargar el evento:', error);
+      }
+    );
+  }
+
+  agregarEntrada(): void {
+    this.entradas.push(this.crearEntrada());
+  }
+
+  eliminarEntrada(index: number): void {
+    this.entradas.removeAt(index);
+  }
 
   guardarCambios() {
     if (this.form.invalid) return;
 
-    const entrada = {
-      ...this.form.value,
-      idEvento: this.idEvento  
-    };
+    const entradas = this.entradas.value.map((entrada: any) => ({
+      nombreTanda: entrada.nombreTanda,
+      stock: entrada.stock,
+      precio: entrada.precio,
+      idEvento: this.idEvento  // Asegúrate de que idEvento es un valor válido y obligatorio
+    }));
 
-    
-    this.entradasService.crear(entrada).subscribe({
+    console.log("Datos enviados:", entradas);  // Confirma que los datos son correctos
+
+    this.entradasService.crear(entradas).subscribe({
       next: () => {
-       
-        this.router.navigate(['/eventos']);  
+        this.router.navigate(['/eventos']);
       },
       error: (error) => {
-        console.log("Error al guardar la entrada: ", error);
+        console.log("Error al guardar las entradas: ", error);
       }
     });
   }
 }
+
+
 
 //export class FormularioEntradaComponent {
 

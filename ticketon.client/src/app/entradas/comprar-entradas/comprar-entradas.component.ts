@@ -16,6 +16,7 @@ import { Entrada } from '../entradas';
 })
 export class ComprarEntradasComponent implements OnInit {
   evento: any;
+
   entradas: Entrada[] = [];
   cantidadEntradas: number = 1;
   precioTotal: number = 0;
@@ -70,6 +71,17 @@ export class ComprarEntradasComponent implements OnInit {
   calcularTotal(): void {
     if (this.entradaSeleccionada && this.entradaSeleccionada.precio) {
       this.precioTotal = this.cantidadEntradas * this.entradaSeleccionada.precio; // Usando la entrada seleccionada
+    }
+  }
+  
+
+  incrementarEntradas() {
+    this.cantidadEntradas++;
+  }
+
+  decrementarEntradas() {
+    if (this.cantidadEntradas > 1) {
+      this.cantidadEntradas--;
     }
   }
 

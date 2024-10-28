@@ -7,24 +7,65 @@
 
 //  constructor() { }
 //}
+//import { Injectable } from '@angular/core';
+//import { HttpClient } from '@angular/common/http';
+//import { Observable } from 'rxjs';
+//import { Entrada } from './entradas';
+//import { environment } from '../../environments/environment';
+
+
+//@Injectable({
+//  providedIn: 'root'
+//})
+//export class EntradasService {
+
+//  private apiURL = environment.apiURL + '/entradas'; // Ajusta el puerto y la URL si es necesario
+
+//  constructor(private http: HttpClient) { }
+
+//  crear(entrada: Entrada): Observable<Entrada> {
+//    return this.http.post<Entrada>(this.apiURL, entrada);
+//  }
+
+//  obtenerTodas(): Observable<Entrada[]> {
+//    return this.http.get<Entrada[]>(this.apiURL);
+//  }
+
+//  obtenerEntradasPorEvento(eventoId: number): Observable<Entrada[]> {
+//    return this.http.get<Entrada[]>(`${this.apiURL}/porEvento/${eventoId}`);
+//  }
+
+//  obtenerPorId(id: number): Observable<Entrada> {
+//    return this.http.get<Entrada>(`${this.apiURL}/${id}`);
+//  }
+
+//  editar(id: number, entrada: Entrada): Observable<void> {
+//    return this.http.put<void>(`${this.apiURL}/${id}`, entrada);
+//  }
+
+//  eliminar(id: number): Observable<void> {
+//    return this.http.delete<void>(`${this.apiURL}/${id}`);
+//  }
+//}
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Entrada } from './entradas';
 import { environment } from '../../environments/environment';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class EntradasService {
 
-  private apiURL = environment.apiURL + '/entradas'; // Ajusta el puerto y la URL si es necesario
+  private apiURL = environment.apiURL + '/entradas';
 
   constructor(private http: HttpClient) { }
 
-  crear(entrada: Entrada): Observable<Entrada> {
-    return this.http.post<Entrada>(this.apiURL, entrada);
+  // Modificación para aceptar un array de entradas
+  crear(entrada: Entrada): Observable<string> {
+    return this.http.post<string>(this.apiURL, entrada, { responseType: 'text' as 'json' });
   }
 
   obtenerTodas(): Observable<Entrada[]> {

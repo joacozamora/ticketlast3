@@ -66,12 +66,16 @@
     <p>No se encontró el evento o está cargando...</p>
   </ng-template>
 </ng-container>-->
-<div class="font-sans max-w-4xl max-md:max-w-xl mx-auto p-4">
+
+
+
+
+<!--<div class="font-sans max-w-4xl max-md:max-w-xl mx-auto p-4">
   <h1 class="text-2xl font-extrabold text-gray-800">Detalle del Evento</h1>
   <div *ngIf="evento; else noEvento" class="grid md:grid-cols-3 gap-4 mt-8">
-    <div class="md:col-span-2 space-y-4">
+    <div class="md:col-span-2 space-y-4">-->
       <!-- Información del evento -->
-      <div class="flex gap-4 bg-white px-4 py-6 rounded-md shadow-[0_2px_12px_-3px_rgba(6,81,237,0.3)]">
+      <!--<div class="flex gap-4 bg-white px-4 py-6 rounded-md shadow-[0_2px_12px_-3px_rgba(6,81,237,0.3)]">
         <div class="flex gap-4">
           <div class="w-28 h-28 max-sm:w-24 max-sm:h-24 shrink-0">
             <img [src]="evento.imagen" alt="{{ evento.nombre }}" class="w-full h-full object-contain" />
@@ -94,10 +98,10 @@
             Agregar al carrito
           </button>
         </div>
-      </div>
+      </div>-->
 
       <!-- Selección de entradas -->
-      <div *ngIf="entradas.length > 0" class="mt-6">
+      <!--<div *ngIf="entradas.length > 0" class="mt-6">
         <h3 class="text-xl font-semibold text-gray-800 mb-4">Selecciona una entrada</h3>
         <ul class="space-y-4">
           <li *ngFor="let entrada of entradas" class="flex justify-between items-center p-4 bg-white shadow-md rounded-lg">
@@ -118,6 +122,85 @@
           </li>
         </ul>
       </div>
+    </div>
+  </div>-->
+
+  <!-- Estado cuando no hay evento -->
+  <!--<ng-template #noEvento>
+    <div class="p-6 bg-gray-100 rounded-lg">
+      <p class="text-gray-500 text-lg">No se encontró el evento o está cargando...</p>
+    </div>
+  </ng-template>
+</div>-->
+
+
+
+<div class="font-sans max-w-5xl mx-auto pt-10">
+  <h1 class="text-2xl font-extrabold text-gray-800 mb-6">Detalle del Evento</h1>
+
+  <div *ngIf="evento; else noEvento" class="grid md:grid-cols-3 gap-6">
+    <!-- Sección de Evento -->
+    <div class="md:col-span-2 space-y-6">
+      <div class="bg-white p-6 rounded-lg shadow-lg flex gap-6">
+        <img [src]="evento.imagen" alt="{{ evento.nombre }}" class="w-40 h-40 object-contain rounded-lg" />
+        <div class="flex flex-col justify-between">
+          <h2 class="text-xl font-bold text-gray-900">{{ evento.nombre }}</h2>
+          <h1 class="text-xl font-bold text-gray-900">{{ evento.fechaInicio}}</h1>
+          <p class="text-gray-600">{{ evento.descripcion }}</p>
+          <!--<h3 class="text-lg font-bold text-gray-800">Total: {{ precioTotal | currency }}</h3>
+  <button (click)="agregarAlCarrito()"
+          class="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    Agregar al carrito
+  </button>-->
+        </div>
+      </div>
+
+      <!-- Selección de Entradas -->
+      <div *ngIf="entradas.length > 0">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Selecciona una entrada</h3>
+        <ul class="space-y-4">
+          <li *ngFor="let entrada of entradas" class="flex justify-between items-center p-4 bg-white rounded-lg shadow-lg">
+            <div class="flex items-center gap-4">
+              <h4 class="text-lg font-bold text-gray-800">{{ entrada.nombreTanda }}</h4>
+              <p class="text-gray-600">{{ entrada.precio | currency }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button (click)="decrementarEntradas()" class="px-3 py-1 rounded-l bg-gray-200">-</button>
+              <input type="number" [(ngModel)]="cantidadEntradas" min="1" [max]="entrada.stock">
+              <button (click)="incrementarEntradas()" class="px-3 py-1 rounded-r bg-gray-200">+</button>
+            </div>
+            <button (click)="seleccionarEntrada(entrada)"
+                    class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+              Seleccionar
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Detalles del Carrito -->
+    <div class="bg-white p-6 rounded-lg shadow-lg space-y-4">
+      <h3 class="text-lg font-bold text-gray-900">Detalles de la Compra</h3>
+      <div class="flex justify-between">
+        <p class="text-gray-700">Subtotal</p>
+        <p class="text-gray-700">{{ precioTotal | currency }}</p>
+      </div>
+      <div class="flex justify-between">
+        <p class="text-gray-700">Impuesto</p>
+        <p class="text-gray-700">{{ (precioTotal * 0.1) | currency }}</p>
+      </div>
+      <hr class="my-4" />
+      <div class="flex justify-between">
+        <p class="text-lg font-bold">Total</p>
+        <div>
+          <p class="text-lg font-bold">{{ (precioTotal * 1.1) | currency }}</p>
+          <p class="text-sm text-gray-500">incluye IVA</p>
+        </div>
+      </div>
+      <button (click)="agregarAlCarrito()"
+              class="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Agregar al carrito
+      </button>
     </div>
   </div>
 

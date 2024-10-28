@@ -6,8 +6,7 @@
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
   </mat-form-field>
 </form>-->
-
-<form [formGroup]="form" (ngSubmit)="guardarCambios()">
+<!--<form [formGroup]="form" (ngSubmit)="guardarCambios()">
   <mat-form-field appearance="outline">
     <mat-label>Nombre de la tanda</mat-label>
     <input matInput formControlName="nombreTanda" />
@@ -43,4 +42,93 @@
       Guardar Entrada
     </button>
   </div>
-</form>
+</form>-->
+<!--<div class="font-sans bg-white max-w-6xl mx-auto p-4">
+  <h2 class="text-3xl font-bold text-gray-800">Formulario de Entradas</h2>-->
+<!-- Imagen del evento -->
+<!--<div class="flex justify-center my-4">
+  <img [src]="evento.imagen" alt="Imagen del Evento" class="w-full h-60 object-cover rounded-lg">
+</div>
+
+<form [formGroup]="form" (ngSubmit)="guardarCambios()">
+  <div formArrayName="entradas">
+    <div *ngFor="let entrada of entradas.controls; let i = index" [formGroupName]="i" class="border-b py-4">
+
+      <div class="flex gap-4 items-center mb-4">-->
+<!-- Nombre Tanda -->
+<!--<div class="w-1/3">
+  <label class="block text-gray-700 font-bold mb-2">Nombre Tanda</label>
+  <input type="text" formControlName="nombreTanda" class="w-full px-3 py-2 border rounded">
+</div>-->
+<!-- Cantidad -->
+<!--<div class="w-1/4">
+  <label class="block text-gray-700 font-bold mb-2">Cantidad</label>
+  <input type="number" formControlName="stock" class="w-full px-3 py-2 border rounded" min="1">
+</div>-->
+<!-- Precio -->
+<!--<div class="w-1/4">
+  <label class="block text-gray-700 font-bold mb-2">Precio</label>
+  <input type="number" formControlName="precio" class="w-full px-3 py-2 border rounded" min="0">
+</div>-->
+<!-- Botón para eliminar entrada -->
+<!--<button type="button" class="text-red-500 font-bold" (click)="eliminarEntrada(i)">Eliminar</button>
+    </div>
+  </div>
+</div>-->
+<!-- Botón para agregar nueva entrada -->
+<!--<button type="button" (click)="agregarEntrada()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded">
+  Agregar Entrada
+</button>-->
+<!-- Botón para guardar cambios -->
+<!--<button type="submit" class="mt-4 px-4 py-2 bg-green-600 text-white rounded">
+      Guardar Cambios
+    </button>
+  </form>
+</div>-->
+<div class="font-sans bg-white max-w-6xl mx-auto p-4">
+  <h2 class="text-3xl font-bold text-gray-800">Formulario de Entradas</h2>
+
+  <!-- Imagen del evento -->
+  <div class="flex justify-center my-4">
+    <img *ngIf="evento?.imagen" [src]="evento.imagen" alt="Imagen del Evento" class="w-full h-60 object-cover rounded-lg">
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="guardarCambios()">
+    <div formArrayName="entradas">
+      <div *ngFor="let entrada of entradas.controls; let i = index" [formGroupName]="i" class="border-b py-4">
+        <div class="flex gap-4 items-center mb-4">
+          <!-- Nombre Tanda -->
+          <div class="w-1/3">
+            <label class="block text-gray-700 font-bold mb-2">Nombre Tanda</label>
+            <input type="text" formControlName="nombreTanda" class="w-full px-3 py-2 border rounded">
+          </div>
+
+          <!-- Cantidad -->
+          <div class="w-1/4">
+            <label class="block text-gray-700 font-bold mb-2">Cantidad</label>
+            <input type="number" formControlName="stock" class="w-full px-3 py-2 border rounded" min="1">
+          </div>
+
+          <!-- Precio -->
+          <div class="w-1/4">
+            <label class="block text-gray-700 font-bold mb-2">Precio</label>
+            <input type="number" formControlName="precio" class="w-full px-3 py-2 border rounded" min="0">
+          </div>
+
+          <!-- Botón para eliminar entrada -->
+          <button type="button" class="text-red-500 font-bold" (click)="eliminarEntrada(i)">Eliminar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón para agregar nueva entrada -->
+    <button type="button" (click)="agregarEntrada()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded">
+      Agregar Entrada
+    </button>
+
+    <!-- Botón para guardar cambios -->
+    <button type="submit" class="mt-4 px-4 py-2 bg-green-600 text-white rounded">
+      Guardar Cambios
+    </button>
+  </form>
+</div>

@@ -1,0 +1,69 @@
+/*.formulario-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+}*/
+
+  /* Estilos de los campos de entrada */
+  /*.formulario-container input[type="text"],
+  .formulario-container input[type="email"],
+  .formulario-container input[type="password"],
+  .formulario-container select,
+  .formulario-container textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }*/
+
+  /* Estilo del botón */
+  /*.formulario-container button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+    .formulario-container button[type="submit"]:hover {
+      background-color: #45a049;
+    }*/
+
+  /* Estilos para los labels */
+  /*.formulario-container label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+  }*/
+
+  /* Mensaje de error */
+  /*.formulario-container .error-message {
+    color: #ff0000;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }*/
+
+  /* Mensaje de éxito */
+  /*.formulario-container .success-message {
+    color: #4CAF50;
+    font-size: 14px;
+    margin-top: 20px;
+  }*/
+
+  /* Ajuste para el área de texto */
+  /*.formulario-container textarea {
+    resize: vertical;
+  }*/
