@@ -48,7 +48,6 @@
         <!-- Botón para menú móvil -->
         <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
           <span class="sr-only">Open main menu</span>
-          <!-- Icono de menú -->
           <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
@@ -70,7 +69,6 @@
               <ng-container autorizado>
                 <a routerLink="generos" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Géneros</a>
                 <a routerLink="eventos/crear" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Nuevo Evento</a>
-                <a routerLink="eventos" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Eventos</a>
                 <a routerLink="usuarios" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Usuarios</a>
               </ng-container>
             </app-autorizado>
@@ -78,33 +76,30 @@
         </div>
       </div>
 
-      <!-- Carrito de compras -->
-      <div class="flex items-center space-x-4">
-        <!-- Contenedor del ícono del carrito de compras con contador -->
-        <div class="relative">
-          <a [routerLink]="['/carrito']" class="inline-block">
-            <!-- Icono del carrito -->
-            <svg class="h-6 w-6 text-white hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18l-1.5 13.5h-15L3 3zm6 16.5a2.25 2.25 0 110 4.5 2.25 2.25 0 010-4.5zm9 0a2.25 2.25 0 110 4.5 2.25 2.25 0 010-4.5z" />
-            </svg>
-            <!-- Contador del carrito -->
-            <div class="absolute top-0 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">3</div>
-          </a>
-        </div>
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <app-autorizado>
+          <ng-container autorizado>
+            <!-- Botón del carrito -->
+            <button class="relative text-white focus:outline-none" (click)="irACarrito()">
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 13H5L3 3zm6 16a2 2 0 100 4 2 2 0 000-4zm8 0a2 2 0 100 4 2 2 0 000-4z" />
+              </svg>
+              
+            </button>
 
-        <!-- Usuario y Logout -->
-        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <app-autorizado>
-            <ng-container autorizado>
-              <span class="text-gray-300 mr-4">Hola, {{seguridadService.obtenerCampoJWT('email')}}</span>
-              <button (click)="seguridadService.logout()" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</button>
-            </ng-container>
-            <ng-container noAutorizado>
-              <a routerLink="login" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>
-              <a routerLink="registrar" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Registro</a>
-            </ng-container>
-          </app-autorizado>
-        </div>
+            <!-- Círculo con la primera letra del correo -->
+            <div class="ml-4 bg-gray-700 text-white rounded-full h-8 w-8 flex items-center justify-center">
+              {{ obtenerInicialUsuario() }}
+            </div>
+
+            <span class="text-gray-300 ml-2 mr-4">Hola, {{ seguridadService.obtenerCampoJWT('email') }}</span>
+            <button (click)="seguridadService.logout()" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</button>
+          </ng-container>
+          <ng-container noAutorizado>
+            <a routerLink="login" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>
+            <a routerLink="registrar" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Registro</a>
+          </ng-container>
+        </app-autorizado>
       </div>
     </div>
   </div>

@@ -63,6 +63,8 @@ export class CarritoService {
 
   constructor(private ventaService: VentaService) { }
 
+
+
   obtenerCarrito(): CarritoItem[] {
     const carritoString = localStorage.getItem(this.localStorageKey);
     return carritoString ? JSON.parse(carritoString) : [];

@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { EventoCreacionDTO, EventoDTO, LandingPageDTO } from './evento';
+import { EventoCreacionDTO, EventoDTO, LandingPageDTO, EventosPageDTO } from './evento';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventosService {
-  
   private apiURL = environment.apiURL + '/eventos';
-
 
   constructor(private http: HttpClient) { }
 
@@ -19,10 +17,9 @@ export class EventosService {
   }
 
   public obtenerEventoPage(email: string): Observable<EventosPageDTO> {
-    const params = new HttpParams().set('email', email); // Configura los parámetros
-    return this.http.get<EventosPageDTO>(`${this.apiUrl}/eventosPage`, { params });
+    const params = new HttpParams().set('email', email);
+    return this.http.get<EventosPageDTO>(`${this.apiURL}/eventosPage`, { params });
   }
-
 
   public obtenerPorId(id: number): Observable<EventoDTO> {
     return this.http.get<EventoDTO>(`${this.apiURL}/${id}`);
@@ -42,7 +39,6 @@ export class EventosService {
     return this.http.delete(`${this.apiURL}/${id}`);
   }
 
-
   private construirFormData(evento: EventoCreacionDTO): FormData {
     const formData = new FormData();
     formData.append('nombre', evento.nombre);
@@ -55,15 +51,12 @@ export class EventosService {
     }
 
     return formData;
-
   }
 
   public obtenerTodos(): Observable<EventoDTO[]> {
     return this.http.get<EventoDTO[]>(`${this.apiURL}/todos`);
   }
-  
 }
-
 
 
 

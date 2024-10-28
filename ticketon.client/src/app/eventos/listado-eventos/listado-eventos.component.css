@@ -24,5 +24,7 @@ p{
  button{
      margin-left: 1rem;
  }
-      
- 
+
+.carousel-inner {
+  transition: transform 0.7s ease-in-out;
+}
