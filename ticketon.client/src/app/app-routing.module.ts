@@ -16,9 +16,10 @@ import { IndiceEventosComponent } from './eventos/indice-eventos/indice-eventos.
 import { EditarEventoComponent } from './eventos/editar-evento/editar-evento.component';
 import { CarritoComponent } from './carrito/carrito.component';
 import { ComprarEntradasComponent } from './entradas/comprar-entradas/comprar-entradas.component';
+import { IndexComponent } from './index/index.component';
 
 export const routes: Routes = [
-  { path: '', component: LandingPageComponent },
+  { path: '', component: IndexComponent },
   { path: 'generos', component: IndiceGenerosComponent },
   { path: 'generos/crear', component: CrearGeneroComponent },
   { path: 'eventos/filtrar', component: FiltroEventosComponent },

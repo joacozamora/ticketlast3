@@ -1,0 +1,42 @@
+<!--<swiper-container loop="true" navigation="true">
+
+    <swiper-slide>
+      <img src="https://picsum.photos/200/300?random=1" />
+    </swiper-slide>
+    <swiper-slide>
+      <img src="https://picsum.photos/200/300?random=2" />
+    </swiper-slide>
+    <swiper-slide>
+      <img src="https://picsum.photos/200/300?random=3" />
+    </swiper-slide>
+    <swiper-slide>
+      <img src="https://picsum.photos/200/300?random=4" />
+    </swiper-slide>
+    <swiper-slide>
+      <img src="https://picsum.photos/200/300?random=5" />
+    </swiper-slide>
+
+</swiper-container>-->
+<swiper-container class="mySwiper"
+                  navigation="true"
+                  loop="true"
+                  autoplay="true"
+                  effect="coverflow"
+                  grab-cursor="true"
+                  centered-slides="true"
+                  slides-per-view="auto"
+                  coverflow-effect-rotate="30"
+                  coverflow-effect-stretch="10"
+                  coverflow-effect-depth="150"
+                  coverflow-effect-modifier="1"
+                  coverflow-effect-slide-shadows="true">
+  <!-- Cargar cada evento en un slide -->
+  <swiper-slide *ngFor="let evento of eventos">
+    <img [src]="evento.imagen || 'default.jpg'"
+         [alt]="evento.nombre"
+         class="w-full h-full object-cover rounded-lg" />
+  </swiper-slide>
+</swiper-container>
+
+<!-- Swiper CDN para elementos de Swiper -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>

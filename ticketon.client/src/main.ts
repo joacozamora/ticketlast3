@@ -14,7 +14,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './app/seguridad/token-interceptor-http';
+import {
+  register as registerSwiperElement
+} from 'swiper/element/bundle'
 
+registerSwiperElement();
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes), // Proveer las rutas

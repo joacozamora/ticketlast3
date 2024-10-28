@@ -66,58 +66,6 @@
 
 <app-listado-generico [listado]="eventos">
   <ng-container contenido>
-    <!-- Carrusel de eventos -->
-    <div id="event-carousel" class="relative w-full flex justify-center bg-gray-800 bg-opacity-50 py-4">
-      <div class="relative w-[60%] h-[300px] overflow-hidden rounded-lg">
-        <div class="carousel-inner flex transition-transform duration-700 ease-in-out"
-             [ngStyle]="{'transform': 'translateX(-' + (currentSlide * 33.33) + '%)'}">
-          <div *ngFor="let evento of eventos.concat(eventos); let i = index"
-               class="min-w-[33.33%] h-[300px] px-2 flex-shrink-0"
-               [class.opacity-50]="i % eventos.length !== currentSlide"
-               [class.opacity-100]="i % eventos.length === currentSlide">
-            <img *ngIf="evento.imagen" [src]="evento.imagen"
-                 class="w-full h-full object-cover rounded-lg transition-opacity duration-500"
-                 [class.scale-100]="i % eventos.length === currentSlide"
-                 [class.scale-90]="i % eventos.length !== currentSlide"
-                 alt="{{ evento.nombre }}">
-            <img *ngIf="!evento.imagen" src="default.jpg"
-                 class="w-full h-full object-cover rounded-lg transition-opacity duration-500"
-                 [class.scale-100]="i % eventos.length === currentSlide"
-                 [class.scale-90]="i % eventos.length !== currentSlide"
-                 alt="Imagen por defecto">
-          </div>
-        </div>
-      </div>
-
-      <!-- Indicadores de slider -->
-      <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-        <button *ngFor="let evento of eventos; let i = index" type="button"
-                class="w-3 h-3 rounded-full"
-                [class.bg-blue-500]="i === currentSlide"
-                [class.bg-gray-500]="i !== currentSlide"
-                [attr.aria-current]="i === currentSlide ? 'true' : 'false'"
-                [attr.aria-label]="'Slide ' + (i + 1)"
-                (click)="goToSlide(i)"></button>
-      </div>
-
-      <!-- Controles del slider -->
-      <button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" (click)="prevSlide()">
-        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50">
-          <svg class="w-4 h-4 text-white rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
-          </svg>
-          <span class="sr-only">Previous</span>
-        </span>
-      </button>
-      <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" (click)="nextSlide()">
-        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50">
-          <svg class="w-4 h-4 text-white rtl:rotate-180" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
-          </svg>
-          <span class="sr-only">Next</span>
-        </span>
-      </button>
-    </div>
 
     <!-- Listado de eventos -->
     <div class="font-[sans-serif] bg-gray-100">
@@ -130,11 +78,11 @@
               <img [src]="evento.imagen || 'default.jpg'" alt="Imagen del evento" class="h-full w-full object-cover">
             </div>
             <div>
-              <a [href]="'https://www.google.com/maps?q=' + evento.latitud + ',' + evento.longitud" target="_blank">Ver en Google Maps</a>
+              <a [href]="'https://www.google.com/maps?q=' + evento.latitud + ',' + evento.longitud" target="_blank" class="px-5 py-2.5 rounded-full text-white text-sm bg-blue-700 hover:bg-blue-800">Ver en Google Maps</a>
             </div>
             <div>
               <h3 class="text-lg font-extrabold text-gray-800">{{evento.nombre}}</h3>
-              <p class="text-gray-600 text-sm mt-2">{{evento.fechaInicio}}</p>
+              <p class="text-gray-600 text-sm mt-2">{{evento.fechaInicio | date:'dd/MM/yyyy' }}</p>
               <div class="p-5">
                 <a [routerLink]="['/comprar-entradas', evento.id]" class="px-5 py-2.5 rounded-full text-white text-sm bg-blue-700 hover:bg-blue-800">Comprar Tickets</a>
               </div>

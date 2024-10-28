@@ -1,0 +1,110 @@
+/*.mySwiper {
+  width: 80%;*/ /* Ancho personalizado para que se vea rectangular */
+  /*height: 250px;*/ /* Altura ajustada para que tenga un formato de rectángulo */
+/*}
+
+.swiper-slide img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  filter: brightness(0.8);
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.swiper-slide-active img {
+  transform: scale(1.05);*/ /* Amplía la imagen activa para destacarla */
+  /*filter: brightness(1);*/ /* Imagen activa con brillo normal */
+/*}
+
+.swiper-slide-prev img,
+.swiper-slide-next img {
+  filter: brightness(0.6) blur(3px);*/ /* Desenfoque y menor brillo en slides anterior y siguiente */
+/*}
+
+.swiper-pagination-bullet {
+  background-color: #ddd;*/ /* Color por defecto */
+  /*opacity: 0.7;*/ /* Transparencia leve */
+/*}
+
+.swiper-pagination-bullet-active {
+  background-color: #007bff;*/ /* Color azul para el punto activo */
+  /*opacity: 1;
+}*/
+/*html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+body {
+  background: #eee;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  padding: 0;
+}
+
+swiper-container {
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 300px;
+  height: 300px;
+}
+
+  swiper-slide img {
+    display: block;
+    width: 100%;
+  }
+*/
+
+html,
+body {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  background: #333333;
+  color: #000;
+}
+
+swiper-container {
+  width: 100vw;
+  height: 50vh; /* Altura completa para centrar y mostrar en tamaño original */
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: linear-gradient(135deg, #2b2b2b, #1a1a1a); /* Fondo gris metálico oscuro */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 70%; /* Ancho reducido para no ocupar todo el espacio horizontal */
+  height: 70vh; /* Altura específica para mantener la proporción sin cortes */
+  opacity: 0.85; /* Transparencia para slides no activos */
+  transition: opacity 0.3s ease-in-out; /* Suaviza la transición de opacidad */
+}
+
+.swiper-slide-active {
+  opacity: 1; /* Sin transparencia para el slide activo */
+}
+
+swiper-slide img {
+  display: block;
+  max-width: 100%; /* Asegura que la imagen no exceda el ancho del slide */
+  max-height: 65%; /* Asegura que la imagen no exceda la altura del slide */
+  object-fit: contain; /* Mantiene las proporciones de la imagen sin cortarla */
+}
