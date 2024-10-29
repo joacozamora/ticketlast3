@@ -166,10 +166,10 @@ namespace TicketOn.Server.Controllers
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
         }
-        
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
+            // Verifica si el evento existe
             var evento = await context.Eventos.FirstOrDefaultAsync(a => a.Id == id);
 
             if (evento is null)
@@ -177,19 +177,51 @@ namespace TicketOn.Server.Controllers
                 return NotFound();
             }
 
-            evento = mapper.Map(eventoCreacionDTO, evento);
-
-            if (eventoCreacionDTO.Imagen is not null)
+            try
             {
-                evento.Imagen = await almacenadorArchivos.Editar(evento.Imagen, contenedor,
-                    eventoCreacionDTO.Imagen);
+                // Mapea los datos de eventoCreacionDTO a evento existente
+                evento = mapper.Map(eventoCreacionDTO, evento);
+
+                // Manejo de la imagen, si hay una imagen en el DTO
+                if (eventoCreacionDTO.Imagen is not null)
+                {
+                    evento.Imagen = await almacenadorArchivos.Editar(evento.Imagen, contenedor, eventoCreacionDTO.Imagen);
+                }
+
+                await context.SaveChangesAsync();
+                return NoContent();
             }
-
-            await context.SaveChangesAsync();
-            
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                // Log del error para diagnóstico
+                Console.WriteLine($"Error al editar evento: {ex.Message}");
+                return StatusCode(500, "Hubo un error en el servidor al editar el evento.");
+            }
         }
+
+        //[HttpPut("{id:int}")]
+        //public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
+        //{
+        //    var evento = await context.Eventos.FirstOrDefaultAsync(a => a.Id == id);
+
+        //    if (evento is null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    evento = mapper.Map(eventoCreacionDTO, evento);
+
+        //    if (eventoCreacionDTO.Imagen is not null)
+        //    {
+        //        evento.Imagen = await almacenadorArchivos.Editar(evento.Imagen, contenedor,
+        //            eventoCreacionDTO.Imagen);
+        //    }
+
+        //    await context.SaveChangesAsync();
+
+
+        //    return NoContent();
+        //}
 
 
 

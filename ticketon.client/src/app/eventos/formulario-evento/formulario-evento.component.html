@@ -22,15 +22,19 @@
     </mat-error>
   </mat-form-field>
 
-  <app-input-img titulo="Foto del evento" [urlImagenActual]="modelo?.imagen"
-                 (archivoSeleccionado)="archivoSeleccionado($event)" matInput>
+  <app-input-img [titulo]="'Imagen del Evento'"
+                 [urlImagenActual]="urlImagenActual"
+                 (archivoSeleccionado)="archivoSeleccionado($event)">
   </app-input-img>
+  <!--<app-input-img titulo="Foto del evento" [urlImagenActual]="modelo?.imagen"
+                 (archivoSeleccionado)="archivoSeleccionado($event)" matInput>
+  </app-input-img>-->
 
   <div>
     <button mat-flat-button color="primary" [disabled]="form.invalid">
-    Guardar Cambios
+      Guardar Cambios
     </button>
-    
+
     <a mat-stroked-button routerLink="/">Cancelar</a>
   </div>
 </form>
