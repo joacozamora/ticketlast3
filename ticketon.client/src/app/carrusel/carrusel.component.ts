@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, Input, CUSTOM_ELEMENTS_SCHEMA, AfterViewInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
@@ -10,24 +10,37 @@ import { RouterOutlet } from '@angular/router';
   styleUrls: ['./carrusel.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class CarruselComponent {
+export class CarruselComponent implements AfterViewInit, OnChanges {
   @Input() eventos: { nombre: string; imagen: string }[] = [];
 
-
   ngAfterViewInit() {
-    const swiperElement = document.querySelector('.mySwiper') as any;
-
-    if (swiperElement && swiperElement.swiper) {
-      swiperElement.swiper.params.autoplay = {
-        delay: 3000,
-        disableOnInteraction: false,
-      };
-      swiperElement.swiper.autoplay.start();
+    if (this.eventos.length > 0) {
+      this.iniciarAutoplay();
     }
   }
+
+  ngOnChanges() {
+    if (this.eventos && this.eventos.length > 0) {
+      this.iniciarAutoplay();
+    }
+  }
+
+  iniciarAutoplay() {
+    setTimeout(() => {
+      const swiperElement = document.querySelector('.mySwiper') as any;
+      if (swiperElement && swiperElement.swiper) {
+        swiperElement.swiper.params.loop = true;
+        swiperElement.swiper.params.autoplay = {
+          delay: 3000,
+          disableOnInteraction: false,
+        };
+        swiperElement.swiper.update();
+        swiperElement.swiper.autoplay.start();
+        swiperElement.swiper.loop.start();
+      }
+    }, 0);
+  }
 }
-
-
 //  ngAfterViewInit() {
 //    const swiper = document.querySelector('.mySwiper') as any;
 

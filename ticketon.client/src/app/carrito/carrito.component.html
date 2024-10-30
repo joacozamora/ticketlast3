@@ -1,20 +1,3 @@
-<!--<div *ngIf="carritoItems.length > 0">
-  <h2>Tu Carrito</h2>
-  <ul>
-    <li *ngFor="let item of carritoItems">
-      {{ item.nombreEntrada }} - {{ item.precio | currency }} x {{ item.cantidad }}
-      <button (click)="eliminarDelCarrito(item.entradaId)">Eliminar</button>
-    </li>
-  </ul>
-  <p>Total: {{ calcularTotal() | currency }}</p>
-  <button (click)="confirmarCompra()">Confirmar Compra</button>
-</div>
-
-<div *ngIf="carritoItems.length === 0">
-  <p>No tienes entradas en tu carrito.</p>
-</div>-->
-
-
 <div class="font-sans bg-white max-w-6xl mx-auto p-4">
   <h2 class="text-3xl font-bold text-gray-800">Your Cart</h2>
   <div class="overflow-x-auto">
@@ -24,7 +7,7 @@
           <th class="text-base text-gray-500 font-medium p-2">Description</th>
           <th class="text-base text-gray-500 font-medium p-2">Quantity</th>
           <th class="text-base text-gray-500 font-medium p-2">Remove</th>
-          <th class="text-base text-gray-500 font-medium p-2">Price</th>
+          <th class="text-base text-gray-500 font-medium p-2">Total Price</th>
         </tr>
       </thead>
 
@@ -33,7 +16,6 @@
           <td class="px-2 py-4">
             <div class="flex items-center gap-4 w-max">
               <div class="h-32 shrink-0">
-                <!-- Usamos la propiedad imagenEvento en lugar del marcador de posición -->
                 <img [src]="item.imagenEvento" class="w-full h-full object-contain rounded-lg" alt="{{ item.nombreEvento }}" />
               </div>
               <div>
@@ -60,7 +42,7 @@
           </td>
 
           <td class="px-2 py-4">
-            <h4 class="text-base font-bold text-gray-800">{{ item.precio | currency }}</h4>
+            <h4 class="text-base font-bold text-gray-800">{{ item.total | currency }}</h4>
           </td>
         </tr>
       </tbody>

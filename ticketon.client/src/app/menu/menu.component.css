@@ -10,12 +10,40 @@ app-autorizado {
   display: flex;
 }
 
-
 .espacio {
-  flex: 1 1 auto
+  flex: 1 1 auto;
 }
 
 .saludo {
   font-size: 18px;
-  display: inline
+  display: inline;
+}
+
+::ng-deep .mat-dialog-container {
+  width: 500px;
+  max-height: 700px;
+  border-radius: 35px;
+  overflow: hidden;
+  padding: 20px;
+}
+
+/* Ajuste de la clase Login dentro del modal */
+.Login {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  overflow: hidden;
+  background-color: transparent; /* Fondo transparente para evitar capas */
+}
+
+.mat-dialog-container {
+  border-radius: 35px;
+  overflow: hidden;
+  color: aqua;
+}
+
+.custom-dialog-container {
+  border-radius: 35px;
+  overflow: hidden;
+  background-color: #2A878C; /* Asegura que el color sea consistente */
 }

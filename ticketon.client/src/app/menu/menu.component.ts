@@ -7,6 +7,10 @@ import { Router, RouterLink } from '@angular/router';
 import { AutorizadoComponent } from '../seguridad/autorizado/autorizado.component';
 import { CommonModule } from '@angular/common';
 import { CarritoService } from '../carrito/carrito.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { FormularioAutenticacionComponent } from '../seguridad/formulario-autenticacion/formulario-autenticacion.component';
+import { LoginComponent } from '../seguridad/login/login.component';
+import { RegistroComponent } from '../seguridad/registro/registro.component';
 
 @Component({
   selector: 'app-menu',
@@ -16,9 +20,13 @@ import { CarritoService } from '../carrito/carrito.service';
   styleUrl: './menu.component.css'
 })
 export class MenuComponent {
-  //seguridadService = inject(SeguridadService);
-  
-  constructor(public seguridadService: SeguridadService, public carritoService: CarritoService, private router: Router)  { }
+
+  constructor(
+    public seguridadService: SeguridadService,
+    public carritoService: CarritoService,
+    private router: Router,
+    private dialog: MatDialog
+  ) { }
 
   obtenerInicialUsuario(): string {
     const email = this.seguridadService.obtenerCampoJWT('email');
@@ -27,7 +35,27 @@ export class MenuComponent {
 
   irACarrito(): void {
     this.router.navigate(['/carrito']);
-    console.log("Ir al carrito");
   }
 
+  abrirLogin(): void {
+    const dialogRef = this.dialog.open(LoginComponent, {
+      width: '550px', 
+      height: '700px', 
+      panelClass: 'custom-dialog-container',
+      disableClose: false,
+
+      autoFocus: false,
+      data: { titulo: 'Login' }
+    });
+  }
+
+  abrirRegistro(): void {
+    this.dialog.open(RegistroComponent, {
+      width: '550px', 
+      height: '700px',
+      panelClass: 'custom-dialog-container',
+      disableClose: false,
+      data: { titulo: 'Registro' }
+    });
+  }
 }

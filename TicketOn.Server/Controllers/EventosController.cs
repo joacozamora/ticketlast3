@@ -84,44 +84,7 @@ namespace TicketOn.Server.Controllers
 
 
 
-        //[HttpGet("eventosPage")]
-        //[AllowAnonymous]
-        //public async Task<ActionResult<EventoPageDTO>> Get(string id)
-        //{
-        //    //var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-
-        //    if (string.IsNullOrEmpty(id))
-        //    {
-        //        return BadRequest("ID de usuario no proporcionado.");
-        //    }
-        //    var creados = await context.Eventos
-        //.Where(e => e.UsuarioId == id) // Filtrar por el ID del usuario
-        //.ProjectTo<EventoDTO>(mapper.ConfigurationProvider) // Mapeamos usando AutoMapper
-        //.ToListAsync();
-        //    var resultado = new EventoPageDTO
-        //    {
-        //        Creados = creados
-        //    };
-
-        //    return resultado;
-        //}
-
-        //[HttpGet("landing")]
-        //[AllowAnonymous]
-        //public async Task<ActionResult<LandingPageDTO>> Get()
-        //{
-
-        //    var publicados = await context.Eventos
-        //        .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
-        //        .ToListAsync();
-
-
-
-        //    var resultado = new LandingPageDTO();
-        //    resultado.Publicados = publicados;
-
-        //    return resultado;
-        //}
+        
 
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
@@ -199,30 +162,7 @@ namespace TicketOn.Server.Controllers
             }
         }
 
-        //[HttpPut("{id:int}")]
-        //public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
-        //{
-        //    var evento = await context.Eventos.FirstOrDefaultAsync(a => a.Id == id);
-
-        //    if (evento is null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    evento = mapper.Map(eventoCreacionDTO, evento);
-
-        //    if (eventoCreacionDTO.Imagen is not null)
-        //    {
-        //        evento.Imagen = await almacenadorArchivos.Editar(evento.Imagen, contenedor,
-        //            eventoCreacionDTO.Imagen);
-        //    }
-
-        //    await context.SaveChangesAsync();
-
-
-        //    return NoContent();
-        //}
-
+        
 
 
         [HttpDelete("{id:int}")]

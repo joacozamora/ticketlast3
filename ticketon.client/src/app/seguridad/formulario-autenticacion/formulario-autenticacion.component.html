@@ -1,24 +1,49 @@
-<h2>{{titulo}}</h2>
-<body>
-  <app-mostrar-errores [errores]="errores"></app-mostrar-errores>
+<div class="Login w-[479px] h-[656px] relative">
+  <!-- Fondo y estilo principal del modal -->
+  <div class="Rectangle3 w-[479px] h-[656px] absolute bg-teal-600 rounded-[35px]"></div>
 
-  <form (submit)="guardarCambios()" [formGroup]="form">
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input matInput [formControl]="form.controls.email" />
-      <mat-error>{{obtenerMensajeErrorEmail()}}</mat-error>
-    </mat-form-field>
+  <!-- Título -->
+  <h2 class="Ticketon absolute w-[403px] h-16 left-[38px] top-[51px] text-center text-white text-[64px] font-['Righteous']">
+    TicketOn
+  </h2>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input matInput type="password" [formControl]="form.controls.password" />
-      <mat-error>{{obtenerMensajeErrorPassword()}}</mat-error>
-    </mat-form-field>
+  <!-- Mostrar errores -->
+  <app-mostrar-errores [errores]="errores" class="absolute top-[120px] left-[20px]"></app-mostrar-errores>
 
-    <div class="contenedor-botones">
-      <button mat-flat-button type="submit" [disabled]="form.invalid">Guardar cambios</button>
+  <!-- Formulario de autenticación -->
+  <form (ngSubmit)="guardarCambios()" [formGroup]="form" class="absolute w-full">
+    <!-- Campo de correo electrónico -->
+    <div class="Correo w-[402px] h-[52px] left-[38px] top-[253px] absolute">
+      <input type="email"
+             formControlName="email"
+             placeholder="Correo electrónico"
+             class="w-full h-full bg-white rounded-[20px] text-black text-2xl p-4 placeholder-black/30 outline-none" />
+      <div *ngIf="form.controls['email'].hasError('required')" class="text-red-500 text-sm mt-1">El campo de correo es requerido.</div>
+      <div *ngIf="form.controls['email'].hasError('email')" class="text-red-500 text-sm mt-1">El correo ingresado no es válido.</div>
     </div>
 
+    <!-- Campo de contraseña -->
+    <div class="ContraseA w-[402px] h-[52px] left-[38px] top-[329px] absolute">
+      <input type="password"
+             formControlName="password"
+             placeholder="Contraseña"
+             class="w-full h-full bg-white rounded-[20px] text-black text-2xl p-4 placeholder-black/30 outline-none" />
+      <div *ngIf="form.controls['password'].hasError('required')" class="text-red-500 text-sm mt-1">La contraseña es requerida.</div>
+    </div>
+
+    <!-- Botón para enviar (Ingresar/Registrarse) -->
+    <div class="Ingresar w-[312px] h-[53px] left-[83px] top-[488px] absolute">
+      <button type="submit" class="w-full h-full bg-white text-cyan-800 text-[32px] font-semibold rounded-[30px]" [disabled]="form.invalid">
+        {{ titulo === 'Login' ? 'Ingresar' : 'Registrarse' }}
+      </button>
+    </div>
   </form>
 
-</body>
+  <!-- Enlaces para Recuperar Cuenta y Cambiar a Registro/Login -->
+  <div class="RecuperarCuenta left-[144px] top-[553px] absolute text-center text-white text-2xl font-normal font-['Roboto'] cursor-pointer">
+    Recuperar Cuenta
+  </div>
+  <div class="Registrarme left-[174px] top-[583px] absolute text-center text-white text-2xl font-normal font-['Roboto'] cursor-pointer" (click)="cambiarARegistro()">
+    {{ titulo === 'Login' ? 'Registrarme' : 'Volver a Login' }}
+  </div>
+</div>

@@ -11,5 +11,8 @@
         public Entrada Entrada { get; set; }
 
         public decimal PrecioVenta { get; set; }
+
+        // Nuevo campo para almacenar el código QR cifrado
+        public string CodigoQR { get; set; } = string.Empty;
     }
 }

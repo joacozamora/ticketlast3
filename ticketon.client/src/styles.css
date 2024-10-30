@@ -1,13 +1,36 @@
 
 
+/* Estilo global para mat-dialog-container con borde redondeado y fondo transparente */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.indice-elementos{
-    margin-top: 1rem;
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
-.indice-elementos a{
-  margin-right: 1rem;
+
+/* Estilos específicos para el modal */
+.mat-mdc-dialog-surface {
+  --mdc-dialog-container-color: transparent !important; /* Cambia el fondo a transparente */
+  background-color: transparent !important; /* Asegura que el fondo sea transparente */
+  border-radius: 35px !important; /* Aplica el redondeo deseado */
+  box-shadow: none !important; /* Opcional: elimina el sombreado */
+  
 }
+
+
+
+.custom-dialog-container .mat-dialog-container {
+  border-radius: 35px;
+  background-color: none;
+  box-shadow: none;
+  padding: 20px;
+}
+
+/* Remueve la sombra de Swiper en modo Coverflow, si es necesario */
+.swiper-slide-shadow-coverflow {
+  display: none;
+}
+
+/* Remueve la sombra de Swiper en modo Coverflow, si es necesario */

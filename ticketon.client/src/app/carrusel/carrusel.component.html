@@ -19,8 +19,7 @@
 </swiper-container>-->
 <swiper-container class="mySwiper"
                   navigation="true"
-                  loop="true"
-                  autoplay="true"
+                  
                   effect="coverflow"
                   grab-cursor="true"
                   centered-slides="true"
@@ -30,13 +29,9 @@
                   coverflow-effect-depth="150"
                   coverflow-effect-modifier="1"
                   coverflow-effect-slide-shadows="true">
-  <!-- Cargar cada evento en un slide -->
   <swiper-slide *ngFor="let evento of eventos">
     <img [src]="evento.imagen || 'default.jpg'"
          [alt]="evento.nombre"
          class="w-full h-full object-cover rounded-lg" />
   </swiper-slide>
 </swiper-container>
-
-<!-- Swiper CDN para elementos de Swiper -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
