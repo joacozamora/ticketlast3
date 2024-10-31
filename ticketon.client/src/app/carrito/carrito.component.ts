@@ -3,6 +3,7 @@ import { CarritoService } from './carrito.service';
 import { CarritoItem } from './carrito-item';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { VentaService } from '../venta/venta.service';
 
 @Component({
   selector: 'app-carrito',
@@ -16,6 +17,7 @@ export class CarritoComponent implements OnInit {
 
   constructor(
     private carritoService: CarritoService,
+    private ventaService: VentaService,  // Inyectamos el servicio de ventas
     private route: ActivatedRoute
   ) { }
 
@@ -33,13 +35,20 @@ export class CarritoComponent implements OnInit {
   }
 
   calcularTotal(): number {
-    return this.carritoItems.reduce((total, item) => total + item.total, 0);
+    return this.carritoItems.reduce((total, item) => total + item.precio * item.cantidad, 0);
   }
 
   confirmarCompra(): void {
-    this.carritoService.confirmarCompra().subscribe(() => {
-      this.carritoService.vaciarCarrito();
-      this.cargarCarrito();
-    });
+    this.ventaService.crearVenta(this.carritoItems).subscribe(
+      () => {
+        this.carritoService.vaciarCarrito();
+        this.cargarCarrito();
+        alert('Compra confirmada y entradas agregadas a la billetera.');
+      },
+      (error) => {
+        console.error('Error al confirmar la compra:', error);
+        alert('Hubo un error al procesar la compra.');
+      }
+    );
   }
 }

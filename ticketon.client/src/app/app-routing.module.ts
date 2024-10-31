@@ -17,6 +17,7 @@ import { EditarEventoComponent } from './eventos/editar-evento/editar-evento.com
 import { CarritoComponent } from './carrito/carrito.component';
 import { ComprarEntradasComponent } from './entradas/comprar-entradas/comprar-entradas.component';
 import { IndexComponent } from './index/index.component';
+import { BilleteraComponent } from './billetera/billetera.component';
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'eventos', component: ListadoEventosComponent },
   { path: 'comprar-entradas/:id', component: ComprarEntradasComponent },
   { path: 'carrito', component: CarritoComponent },
+  { path: 'billetera', component: BilleteraComponent },
   { path: '**', redirectTo: '' }
 ];
 

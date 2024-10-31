@@ -26,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
 import { IndiceEventosComponent } from './eventos/indice-eventos/indice-eventos.component';
 import { CarruselComponent } from './carrusel/carrusel.component';
 import { IndexComponent } from './index/index.component';
+import { BilleteraComponent } from './billetera/billetera.component';
 
 
 

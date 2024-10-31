@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using TicketOn.Server.Entidades;
 
 namespace TicketOn.Server
@@ -17,6 +18,7 @@ namespace TicketOn.Server
         public DbSet<Tanda> Tandas { get; set; }
         public DbSet<Venta> Ventas { get; set; }
         public DbSet<DetalleVenta> DetallesVenta { get; set; }
+        public DbSet<Billetera> Billeteras { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

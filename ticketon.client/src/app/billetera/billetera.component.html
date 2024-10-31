@@ -1,0 +1,17 @@
+<div class="container mx-auto">
+  <h2 class="text-2xl font-bold mb-4">Billetera</h2>
+
+  <div *ngIf="entradasBilletera.length > 0; else noEntradas">
+    <div *ngFor="let entrada of entradasBilletera" class="p-4 mb-4 bg-white shadow-md rounded">
+      <h3 class="text-lg font-semibold">{{ entrada.nombreEntrada }}</h3>
+      <p class="text-gray-600">Fecha de Asignación: {{ entrada.fechaAsignacion | date }}</p>
+
+      <!-- Generar el código QR -->
+      <qrcode [qrdata]="entrada.codigoQR" [width]="150" [errorCorrectionLevel]="'M'"></qrcode>
+    </div>
+  </div>
+
+  <ng-template #noEntradas>
+    <p class="text-gray-500">No tienes entradas en tu billetera.</p>
+  </ng-template>
+</div>

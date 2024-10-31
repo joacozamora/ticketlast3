@@ -27,43 +27,69 @@ namespace TicketOn.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<VentaDTO>> Post(VentaCreacionDTO ventaCreacionDTO)
         {
-            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-
-            var venta = mapper.Map<Venta>(ventaCreacionDTO);
-            venta.UsuarioId = usuarioId;
-            venta.FechaVenta = DateTime.UtcNow;
-
-            foreach (var detalle in venta.DetallesVenta)
+            if (ventaCreacionDTO == null || ventaCreacionDTO.DetallesVenta == null || !ventaCreacionDTO.DetallesVenta.Any())
             {
-                var entrada = await context.Entradas.Include(e => e.Evento).FirstOrDefaultAsync(e => e.Id == detalle.EntradaId);
-
-                if (entrada == null)
-                {
-                    return NotFound($"No se encontró la entrada con ID {detalle.EntradaId}");
-                }
-
-                detalle.PrecioVenta = entrada.Precio ?? 0;
-                detalle.Entrada = entrada;
-
-                // Generar y asignar el código QR cifrado para cada DetalleVenta
-                detalle.CodigoQR = GenerarCodigoQR(entrada);
+                return BadRequest("Los detalles de la venta están vacíos o el formato es incorrecto.");
             }
 
-            context.Add(venta);
-            await context.SaveChangesAsync();
-
-            var ventaDTO = mapper.Map<VentaDTO>(venta);
-
-            foreach (var detalleDTO in ventaDTO.DetallesVenta)
+            try
             {
-                var entrada = await context.Entradas.Include(e => e.Evento).FirstOrDefaultAsync(e => e.Id == detalleDTO.EntradaId);
-                if (entrada != null)
-                {
-                    detalleDTO.NombreEntrada = entrada.NombreTanda ?? entrada.Evento.Nombre;
-                }
-            }
+                var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
-            return CreatedAtAction(nameof(GetById), new { id = venta.Id }, ventaDTO);
+                // Mapear a la entidad Venta y asignar datos adicionales
+                var venta = mapper.Map<Venta>(ventaCreacionDTO);
+                venta.UsuarioId = usuarioId;
+                venta.FechaVenta = DateTime.UtcNow;
+
+                // Asegurarse de que la lista DetallesVenta esté inicializada
+                if (venta.DetallesVenta == null)
+                {
+                    venta.DetallesVenta = new List<DetalleVenta>();
+                }
+
+                foreach (var detalle in venta.DetallesVenta)
+                {
+                    var entrada = await context.Entradas.Include(e => e.Evento).FirstOrDefaultAsync(e => e.Id == detalle.EntradaId);
+
+                    if (entrada == null)
+                    {
+                        return NotFound($"No se encontró la entrada con ID {detalle.EntradaId}");
+                    }
+
+                    detalle.PrecioVenta = entrada.Precio ?? 0;
+                    detalle.Entrada = entrada;
+                    detalle.CodigoQR = GenerarCodigoQR(entrada);
+                }
+
+                context.Add(venta);
+                await context.SaveChangesAsync();
+
+                // Registrar entradas en la billetera del usuario
+                foreach (var detalle in venta.DetallesVenta)
+                {
+                    var billetera = new Billetera
+                    {
+                        EntradaId = detalle.EntradaId,
+                        DetalleVentaId = detalle.Id,
+                        UsuarioId = usuarioId,
+                        CodigoQR = detalle.CodigoQR,
+                        FechaAsignacion = DateTime.UtcNow
+                    };
+
+                    context.Billeteras.Add(billetera);
+                }
+
+                await context.SaveChangesAsync();
+
+                var ventaDTO = mapper.Map<VentaDTO>(venta);
+
+                return CreatedAtAction(nameof(GetById), new { id = venta.Id }, ventaDTO);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al confirmar la compra: {ex.Message}");
+                return StatusCode(500, "Ocurrió un error al confirmar la compra.");
+            }
         }
 
         [HttpGet("{id}")]
@@ -94,11 +120,9 @@ namespace TicketOn.Server.Controllers
         // Función para generar el código QR cifrado
         private string GenerarCodigoQR(Entrada entrada)
         {
-            // Construir el string del QR con la información relevante
             var codigoBase = $"Evento: {entrada.Evento.Nombre}, Fecha: {DateTime.UtcNow}, ID Evento: {entrada.IdEvento}, " +
                              $"ID Entrada: {entrada.Id}, Tanda: {entrada.NombreTanda}";
 
-            // Cifrar el código con SHA256 y convertirlo a string
             using (var sha256 = SHA256.Create())
             {
                 var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(codigoBase));
