@@ -27,6 +27,7 @@ export class VentaService {
       total: items.reduce((total, item) => total + item.precio * item.cantidad, 0),
       detallesVenta: items.map(item => ({
         entradaId: item.entradaId,
+        cantidad: item.cantidad,
         precioVenta: item.precio
       }))
     };

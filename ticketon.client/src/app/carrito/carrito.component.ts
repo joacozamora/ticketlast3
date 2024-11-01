@@ -4,6 +4,7 @@ import { CarritoItem } from './carrito-item';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { VentaService } from '../venta/venta.service';
+declare var MercadoPago: any;
 
 @Component({
   selector: 'app-carrito',
@@ -23,6 +24,21 @@ export class CarritoComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCarrito();
+    const mp = new MercadoPago('APP_USR-64585ae8-8796-44db-8f01-af9f6a1ed9ee');
+  }
+
+  pagarConMercadoPago(preferenceId: string): void {
+    const mp = new MercadoPago('APP_USR-64585ae8-8796-44db-8f01-af9f6a1ed9ee'); // Reemplaza con tu clave pública
+    mp.checkout({
+      preference: {
+        id: preferenceId // Usa el preferenceId del backend
+      },
+      autoOpen: true, // Abre automáticamente el Checkout Pro
+      onError: (error: any) => {
+        console.error('Error en el pago:', error);
+        alert('Hubo un error al procesar el pago.');
+      }
+    });
   }
 
   cargarCarrito(): void {
@@ -40,10 +56,8 @@ export class CarritoComponent implements OnInit {
 
   confirmarCompra(): void {
     this.ventaService.crearVenta(this.carritoItems).subscribe(
-      () => {
-        this.carritoService.vaciarCarrito();
-        this.cargarCarrito();
-        alert('Compra confirmada y entradas agregadas a la billetera.');
+      (response: any) => {
+        this.pagarConMercadoPago(response.preferenceId);
       },
       (error) => {
         console.error('Error al confirmar la compra:', error);

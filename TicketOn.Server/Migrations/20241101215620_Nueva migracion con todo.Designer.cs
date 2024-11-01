@@ -12,8 +12,8 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241030212429_codigoQR")]
-    partial class codigoQR
+    [Migration("20241101215620_Nueva migracion con todo")]
+    partial class Nuevamigracioncontodo
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,6 +223,42 @@ namespace TicketOn.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TicketOn.Server.Entidades.Billetera", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodigoQR")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DetalleVentaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntradaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaAsignacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DetalleVentaId");
+
+                    b.HasIndex("EntradaId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Billeteras");
+                });
+
             modelBuilder.Entity("TicketOn.Server.Entidades.DetalleVenta", b =>
                 {
                     b.Property<int>("Id")
@@ -230,6 +266,10 @@ namespace TicketOn.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodigoQR")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EntradaId")
                         .HasColumnType("int");
@@ -275,6 +315,9 @@ namespace TicketOn.Server.Migrations
 
                     b.Property<string>("UsuarioId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("codigoQR")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -442,6 +485,33 @@ namespace TicketOn.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TicketOn.Server.Entidades.Billetera", b =>
+                {
+                    b.HasOne("TicketOn.Server.Entidades.DetalleVenta", "DetalleVenta")
+                        .WithMany()
+                        .HasForeignKey("DetalleVentaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TicketOn.Server.Entidades.Entrada", "Entrada")
+                        .WithMany()
+                        .HasForeignKey("EntradaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DetalleVenta");
+
+                    b.Navigation("Entrada");
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("TicketOn.Server.Entidades.DetalleVenta", b =>

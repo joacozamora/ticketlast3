@@ -44,9 +44,7 @@ export const MY_FORMATS = {
   
 };
 
-//export function tokenGetter() {
-//  return localStorage.getItem('token');
-//}
+
 
 @NgModule({
   declarations: [    
@@ -60,20 +58,14 @@ export const MY_FORMATS = {
     ReactiveFormsModule,
     MatMomentDateModule,
     MatInputModule
-    //JwtModule.forRoot({
-    //  config: {
-    //    tokenGetter: tokenGetter,
-    //    allowedDomains: ['localhost:4200'], // Cambia esto por tu dominio de API
-    //    disallowedRoutes: []
-    //  }
-    //}),
+    
   ],
   providers: [
     provideAnimationsAsync(),
      { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },  // Configura el idioma
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },  // Configura Moment para usar UTC
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },  // Configura los formatos de fecha
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([authInterceptor])),
   ],
   bootstrap: [AppComponent]
 })
