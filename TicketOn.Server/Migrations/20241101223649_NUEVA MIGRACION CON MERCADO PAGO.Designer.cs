@@ -12,8 +12,8 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241101215620_Nueva migracion con todo")]
-    partial class Nuevamigracioncontodo
+    [Migration("20241101223649_NUEVA MIGRACION CON MERCADO PAGO")]
+    partial class NUEVAMIGRACIONCONMERCADOPAGO
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

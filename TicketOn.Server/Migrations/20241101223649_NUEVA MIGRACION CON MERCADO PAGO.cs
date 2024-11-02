@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TicketOn.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Nuevamigracioncontodo : Migration
+    public partial class NUEVAMIGRACIONCONMERCADOPAGO : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

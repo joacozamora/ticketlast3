@@ -38,15 +38,16 @@ namespace TicketOn.Server.Controllers
             {
                 var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
+                // Mapear a la entidad Venta y asignar datos adicionales
                 var venta = mapper.Map<Venta>(ventaCreacionDTO);
                 venta.UsuarioId = usuarioId;
                 venta.FechaVenta = DateTime.UtcNow;
 
                 context.Add(venta);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(); // Guardar la venta antes de crear la preferencia
 
-                var items = venta.DetallesVenta.Select(detalle =>
-                {
+                // Crear items para Mercado Pago
+                var items = venta.DetallesVenta.Select(detalle => {
                     var entrada = context.Entradas.Include(e => e.Evento).FirstOrDefault(e => e.Id == detalle.EntradaId);
                     if (entrada == null)
                     {
@@ -76,6 +77,22 @@ namespace TicketOn.Server.Controllers
                 var client = new PreferenceClient();
                 Preference preference = await client.CreateAsync(preferenceRequest);
 
+                // Agregar entradas a la billetera
+                foreach (var detalle in venta.DetallesVenta)
+                {
+                    var billetera = new Billetera
+                    {
+                        EntradaId = detalle.EntradaId,
+                        DetalleVentaId = detalle.Id,
+                        UsuarioId = usuarioId,
+                        CodigoQR = GenerarCodigoQR(detalle.Entrada),
+                        FechaAsignacion = DateTime.UtcNow
+                    };
+
+                    context.Billeteras.Add(billetera);
+                }
+                await context.SaveChangesAsync(); // Guardar la billetera después de agregar entradas
+
                 return Ok(new { Venta = mapper.Map<VentaDTO>(venta), PreferenceId = preference.Id });
             }
             catch (Exception ex)
@@ -84,7 +101,6 @@ namespace TicketOn.Server.Controllers
             }
         }
 
-        
 
         [HttpGet("{id}")]
         public async Task<ActionResult<VentaDTO>> GetById(int id)
@@ -105,13 +121,11 @@ namespace TicketOn.Server.Controllers
 
         private string GenerarCodigoQR(Entrada entrada)
         {
-            var datos = $"Evento: {entrada.Evento.Nombre}, Fecha: {DateTime.UtcNow}, ID Evento: {entrada.IdEvento}, " +
-                        $"ID Entrada: {entrada.Id}, Tanda: {entrada.NombreTanda}";
-
+            var datos = $"Evento: {entrada.Evento.Nombre}, ID Entrada: {entrada.Id}";
             using (var sha256 = SHA256.Create())
             {
-                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(datos));
-                return BitConverter.ToString(bytes).Replace("-", "");
+                var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(datos));
+                return BitConverter.ToString(hash).Replace("-", "");
             }
         }
     }
@@ -266,73 +280,73 @@ namespace TicketOn.Server.Controllers
 //            this.servicioUsuarios = servicioUsuarios;
 //        }
 
-//        [HttpPost]
-//        public async Task<ActionResult<VentaDTO>> Post(VentaCreacionDTO ventaCreacionDTO)
+//[HttpPost]
+//public async Task<ActionResult<VentaDTO>> Post(VentaCreacionDTO ventaCreacionDTO)
+//{
+//    if (ventaCreacionDTO == null || ventaCreacionDTO.DetallesVenta == null || !ventaCreacionDTO.DetallesVenta.Any())
+//    {
+//        return BadRequest("Los detalles de la venta están vacíos o el formato es incorrecto.");
+//    }
+
+//    try
+//    {
+//        var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+//        // Mapear a la entidad Venta y asignar datos adicionales
+//        var venta = mapper.Map<Venta>(ventaCreacionDTO);
+//        venta.UsuarioId = usuarioId;
+//        venta.FechaVenta = DateTime.UtcNow;
+
+//        // Asegurarse de que la lista DetallesVenta esté inicializada
+//        if (venta.DetallesVenta == null)
 //        {
-//            if (ventaCreacionDTO == null || ventaCreacionDTO.DetallesVenta == null || !ventaCreacionDTO.DetallesVenta.Any())
-//            {
-//                return BadRequest("Los detalles de la venta están vacíos o el formato es incorrecto.");
-//            }
-
-//            try
-//            {
-//                var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-
-//                // Mapear a la entidad Venta y asignar datos adicionales
-//                var venta = mapper.Map<Venta>(ventaCreacionDTO);
-//                venta.UsuarioId = usuarioId;
-//                venta.FechaVenta = DateTime.UtcNow;
-
-//                // Asegurarse de que la lista DetallesVenta esté inicializada
-//                if (venta.DetallesVenta == null)
-//                {
-//                    venta.DetallesVenta = new List<DetalleVenta>();
-//                }
-
-//                foreach (var detalle in venta.DetallesVenta)
-//                {
-//                    var entrada = await context.Entradas.Include(e => e.Evento).FirstOrDefaultAsync(e => e.Id == detalle.EntradaId);
-
-//                    if (entrada == null)
-//                    {
-//                        return NotFound($"No se encontró la entrada con ID {detalle.EntradaId}");
-//                    }
-
-//                    detalle.PrecioVenta = entrada.Precio ?? 0;
-//                    detalle.Entrada = entrada;
-//                    detalle.CodigoQR = GenerarCodigoQR(entrada);
-//                }
-
-//                context.Add(venta);
-//                await context.SaveChangesAsync();
-
-//                // Registrar entradas en la billetera del usuario
-//                foreach (var detalle in venta.DetallesVenta)
-//                {
-//                    var billetera = new Billetera
-//                    {
-//                        EntradaId = detalle.EntradaId,
-//                        DetalleVentaId = detalle.Id,
-//                        UsuarioId = usuarioId,
-//                        CodigoQR = detalle.CodigoQR,
-//                        FechaAsignacion = DateTime.UtcNow
-//                    };
-
-//                    context.Billeteras.Add(billetera);
-//                }
-
-//                await context.SaveChangesAsync();
-
-//                var ventaDTO = mapper.Map<VentaDTO>(venta);
-
-//                return CreatedAtAction(nameof(GetById), new { id = venta.Id }, ventaDTO);
-//            }
-//            catch (Exception ex)
-//            {
-//                Console.WriteLine($"Error al confirmar la compra: {ex.Message}");
-//                return StatusCode(500, "Ocurrió un error al confirmar la compra.");
-//            }
+//            venta.DetallesVenta = new List<DetalleVenta>();
 //        }
+
+//        foreach (var detalle in venta.DetallesVenta)
+//        {
+//            var entrada = await context.Entradas.Include(e => e.Evento).FirstOrDefaultAsync(e => e.Id == detalle.EntradaId);
+
+//            if (entrada == null)
+//            {
+//                return NotFound($"No se encontró la entrada con ID {detalle.EntradaId}");
+//            }
+
+//            detalle.PrecioVenta = entrada.Precio ?? 0;
+//            detalle.Entrada = entrada;
+//            detalle.CodigoQR = GenerarCodigoQR(entrada);
+//        }
+
+//        context.Add(venta);
+//        await context.SaveChangesAsync();
+
+//        // Registrar entradas en la billetera del usuario
+//        foreach (var detalle in venta.DetallesVenta)
+//        {
+//            var billetera = new Billetera
+//            {
+//                EntradaId = detalle.EntradaId,
+//                DetalleVentaId = detalle.Id,
+//                UsuarioId = usuarioId,
+//                CodigoQR = detalle.CodigoQR,
+//                FechaAsignacion = DateTime.UtcNow
+//            };
+
+//            context.Billeteras.Add(billetera);
+//        }
+
+//        await context.SaveChangesAsync();
+
+//        var ventaDTO = mapper.Map<VentaDTO>(venta);
+
+//        return CreatedAtAction(nameof(GetById), new { id = venta.Id }, ventaDTO);
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine($"Error al confirmar la compra: {ex.Message}");
+//        return StatusCode(500, "Ocurrió un error al confirmar la compra.");
+//    }
+//}
 
 //        [HttpGet("{id}")]
 //        public async Task<ActionResult<VentaDTO>> GetById(int id)

@@ -23,34 +23,34 @@ namespace TicketOn.Server.Controllers
         }
 
         // Método para agregar una entrada a la billetera
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] BilleteraCreacionDTO billeteraCreacionDTO)
-        {
-            // Verificar que la entrada y el detalle de venta existan
-            var entrada = await context.Entradas.FindAsync(billeteraCreacionDTO.EntradaId);
-            var detalleVenta = await context.DetallesVenta.FindAsync(billeteraCreacionDTO.DetalleVentaId);
+        //[HttpPost]
+        //public async Task<IActionResult> Post([FromBody] BilleteraCreacionDTO billeteraCreacionDTO)
+        //{
+        //    // Verificar que la entrada y el detalle de venta existan
+        //    var entrada = await context.Entradas.FindAsync(billeteraCreacionDTO.EntradaId);
+        //    var detalleVenta = await context.DetallesVenta.FindAsync(billeteraCreacionDTO.DetalleVentaId);
 
-            if (entrada == null || detalleVenta == null)
-            {
-                return BadRequest("La entrada o el detalle de venta especificados no existen.");
-            }
+        //    if (entrada == null || detalleVenta == null)
+        //    {
+        //        return BadRequest("La entrada o el detalle de venta especificados no existen.");
+        //    }
 
-            // Mapear el DTO a la entidad Billetera
-            var billetera = new Billetera
-            {
-                EntradaId = billeteraCreacionDTO.EntradaId,
-                DetalleVentaId = billeteraCreacionDTO.DetalleVentaId,
-                UsuarioId = billeteraCreacionDTO.UsuarioId,
-                CodigoQR = billeteraCreacionDTO.CodigoQR,
-                FechaAsignacion = DateTime.UtcNow
-            };
+        //    // Mapear el DTO a la entidad Billetera
+        //    var billetera = new Billetera
+        //    {
+        //        EntradaId = billeteraCreacionDTO.EntradaId,
+        //        DetalleVentaId = billeteraCreacionDTO.DetalleVentaId,
+        //        UsuarioId = billeteraCreacionDTO.UsuarioId,
+        //        CodigoQR = billeteraCreacionDTO.CodigoQR,
+        //        FechaAsignacion = DateTime.UtcNow
+        //    };
 
-            context.Billeteras.Add(billetera);
-            await context.SaveChangesAsync();
+        //    context.Billeteras.Add(billetera);
+        //    await context.SaveChangesAsync();
 
-            return Ok("Entrada agregada a la billetera correctamente.");
-        }
-
+        //    return Ok("Entrada agregada a la billetera correctamente.");
+        //}
+        
         [HttpGet("correo/{correo}")]
         public async Task<ActionResult<List<BilleteraDTO>>> GetBilleteraPorCorreo(string correo)
         {
