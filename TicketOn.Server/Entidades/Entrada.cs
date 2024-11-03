@@ -13,15 +13,13 @@ namespace TicketOn.Server.Entidades
 
         public decimal? Precio { get; set; }
 
-        public string? codigoQR { get; set; }
+        
 
         [ForeignKey("Evento")]
         public int IdEvento { get; set; }
         public Evento Evento { get; set; }
 
-        public string UsuarioActualId { get; set; }
-
-        public IdentityUser Usuario { get; set; } = null!;
+        
 
 
     }
