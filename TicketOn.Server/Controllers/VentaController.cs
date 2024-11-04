@@ -83,6 +83,9 @@ public class VentaController : ControllerBase
                     entradaVenta.CodigoQR = GenerarCodigoQR(entrada, entradaVenta.Id, venta.Id); // Generar QR
                     context.EntradasVenta.Update(entradaVenta); // Actualizar la entrada venta con el código QR
                 }
+                entrada.Stock -= detalle.Cantidad; // Restar la cantidad vendida
+                context.Entradas.Update(entrada); // Actualizar la entrada en la base de datos
+
             }
 
             await context.SaveChangesAsync(); // Guardar cambios después de actualizar los QR
