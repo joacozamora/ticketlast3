@@ -12,8 +12,8 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241101223649_NUEVA MIGRACION CON MERCADO PAGO")]
-    partial class NUEVAMIGRACIONCONMERCADOPAGO
+    [Migration("20241104023914_qr multiples")]
+    partial class qrmultiples
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,42 +223,6 @@ namespace TicketOn.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TicketOn.Server.Entidades.Billetera", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CodigoQR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DetalleVentaId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EntradaId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaAsignacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UsuarioId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DetalleVentaId");
-
-                    b.HasIndex("EntradaId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("Billeteras");
-                });
-
             modelBuilder.Entity("TicketOn.Server.Entidades.DetalleVenta", b =>
                 {
                     b.Property<int>("Id")
@@ -266,6 +230,9 @@ namespace TicketOn.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
 
                     b.Property<string>("CodigoQR")
                         .IsRequired()
@@ -309,23 +276,46 @@ namespace TicketOn.Server.Migrations
                     b.Property<int?>("Stock")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsuarioActualId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UsuarioId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("codigoQR")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IdEvento");
 
+                    b.ToTable("Entradas");
+                });
+
+            modelBuilder.Entity("TicketOn.Server.Entidades.EntradaVenta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodigoQR")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EntradaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaAsignacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("VentaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntradaId");
+
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Entradas");
+                    b.HasIndex("VentaId");
+
+                    b.ToTable("EntradasVenta");
                 });
 
             modelBuilder.Entity("TicketOn.Server.Entidades.Evento", b =>
@@ -487,33 +477,6 @@ namespace TicketOn.Server.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TicketOn.Server.Entidades.Billetera", b =>
-                {
-                    b.HasOne("TicketOn.Server.Entidades.DetalleVenta", "DetalleVenta")
-                        .WithMany()
-                        .HasForeignKey("DetalleVentaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("TicketOn.Server.Entidades.Entrada", "Entrada")
-                        .WithMany()
-                        .HasForeignKey("EntradaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("DetalleVenta");
-
-                    b.Navigation("Entrada");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("TicketOn.Server.Entidades.DetalleVenta", b =>
                 {
                     b.HasOne("TicketOn.Server.Entidades.Entrada", "Entrada")
@@ -541,13 +504,34 @@ namespace TicketOn.Server.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Evento");
+                });
+
+            modelBuilder.Entity("TicketOn.Server.Entidades.EntradaVenta", b =>
+                {
+                    b.HasOne("TicketOn.Server.Entidades.Entrada", "Entrada")
+                        .WithMany()
+                        .HasForeignKey("EntradaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioId");
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("Evento");
+                    b.HasOne("TicketOn.Server.Entidades.Venta", "Venta")
+                        .WithMany()
+                        .HasForeignKey("VentaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Entrada");
 
                     b.Navigation("Usuario");
+
+                    b.Navigation("Venta");
                 });
 
             modelBuilder.Entity("TicketOn.Server.Entidades.Evento", b =>

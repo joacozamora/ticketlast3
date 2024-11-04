@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int VentaId { get; set; }
+        public int Cantidad { get; set; }
         public Venta Venta { get; set; }
 
         // Relación con Entrada

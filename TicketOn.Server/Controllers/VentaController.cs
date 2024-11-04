@@ -8,128 +8,281 @@ using TicketOn.Server.Entidades;
 using TicketOn.Server.Servicios;
 using MercadoPago.Client.Preference;
 using MercadoPago.Resource.Preference;
+using TicketOn.Server;
 
-namespace TicketOn.Server.Controllers
+[ApiController]
+[Route("api/ventas")]
+public class VentaController : ControllerBase
 {
-    [ApiController]
-    [Route("api/ventas")]
-    public class VentaController : ControllerBase
-    {
-        private readonly ApplicationDbContext context;
-        private readonly IMapper mapper;
-        private readonly IServicioUsuarios servicioUsuarios;
+    private readonly ApplicationDbContext context;
+    private readonly IMapper mapper;
+    private readonly IServicioUsuarios servicioUsuarios;
 
-        public VentaController(ApplicationDbContext context, IMapper mapper, IServicioUsuarios servicioUsuarios)
+    public VentaController(ApplicationDbContext context, IMapper mapper, IServicioUsuarios servicioUsuarios)
+    {
+        this.context = context;
+        this.mapper = mapper;
+        this.servicioUsuarios = servicioUsuarios;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<VentaDTO>> Post(VentaCreacionDTO ventaCreacionDTO)
+    {
+        if (ventaCreacionDTO == null || ventaCreacionDTO.DetallesVenta == null || !ventaCreacionDTO.DetallesVenta.Any())
         {
-            this.context = context;
-            this.mapper = mapper;
-            this.servicioUsuarios = servicioUsuarios;
+            return BadRequest("Los detalles de la venta están vacíos o el formato es incorrecto.");
         }
 
-        [HttpPost]
-        public async Task<ActionResult<VentaDTO>> Post(VentaCreacionDTO ventaCreacionDTO)
+        try
         {
-            if (ventaCreacionDTO == null || ventaCreacionDTO.DetallesVenta == null || !ventaCreacionDTO.DetallesVenta.Any())
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+            var venta = mapper.Map<Venta>(ventaCreacionDTO);
+            venta.UsuarioId = usuarioId;
+            venta.FechaVenta = DateTime.UtcNow;
+
+            context.Add(venta);
+            await context.SaveChangesAsync(); // Guardar la venta antes de crear las entradas
+
+            var items = new List<PreferenceItemRequest>();
+
+            foreach (var detalle in venta.DetallesVenta)
             {
-                return BadRequest("Los detalles de la venta están vacíos o el formato es incorrecto.");
-            }
-
-            try
-            {
-                var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-
-                // Mapear a la entidad Venta y asignar datos adicionales
-                var venta = mapper.Map<Venta>(ventaCreacionDTO);
-                venta.UsuarioId = usuarioId;
-                venta.FechaVenta = DateTime.UtcNow;
-
-                context.Add(venta);
-                await context.SaveChangesAsync(); // Guardar la venta antes de crear la preferencia
-
-                // Crear items para Mercado Pago
-                var items = venta.DetallesVenta.Select(detalle => {
-                    var entrada = context.Entradas.Include(e => e.Evento).FirstOrDefault(e => e.Id == detalle.EntradaId);
-                    if (entrada == null)
-                    {
-                        throw new Exception($"No se encontró la entrada con ID {detalle.EntradaId}");
-                    }
-                    return new PreferenceItemRequest
-                    {
-                        Title = entrada.Evento.Nombre,
-                        Quantity = 1,
-                        CurrencyId = "ARS",
-                        UnitPrice = entrada.Precio ?? 0m
-                    };
-                }).ToList();
-
-                var preferenceRequest = new PreferenceRequest
+                var entrada = await context.Entradas.Include(e => e.Evento).FirstOrDefaultAsync(e => e.Id == detalle.EntradaId);
+                if (entrada == null)
                 {
-                    Items = items,
-                    BackUrls = new PreferenceBackUrlsRequest
-                    {
-                        Success = "http://tu-url-de-success.com",
-                        Failure = "http://tu-url-de-failure.com",
-                        Pending = "http://tu-url-de-pending.com"
-                    },
-                    AutoReturn = "approved"
-                };
+                    throw new Exception($"No se encontró la entrada con ID {detalle.EntradaId}");
+                }
 
-                var client = new PreferenceClient();
-                Preference preference = await client.CreateAsync(preferenceRequest);
-
-                // Agregar entradas a la billetera
-                foreach (var detalle in venta.DetallesVenta)
+                // Añadir al total para Mercado Pago
+                items.Add(new PreferenceItemRequest
                 {
-                    var billetera = new Billetera
+                    Title = entrada.Evento.Nombre,
+                    Quantity = detalle.Cantidad,
+                    CurrencyId = "ARS",
+                    UnitPrice = entrada.Precio ?? 0m
+                });
+
+                // Crear múltiples instancias de EntradaVenta basadas en la cantidad
+                for (int i = 0; i < detalle.Cantidad; i++)
+                {
+                    var entradaVenta = new EntradaVenta
                     {
                         EntradaId = detalle.EntradaId,
-                        DetalleVentaId = detalle.Id,
+                        VentaId = venta.Id,
                         UsuarioId = usuarioId,
-                        CodigoQR = GenerarCodigoQR(detalle.Entrada),
+                        CodigoQR = string.Empty, // Inicialmente vacío
                         FechaAsignacion = DateTime.UtcNow
                     };
 
-                    context.Billeteras.Add(billetera);
+                    context.EntradasVenta.Add(entradaVenta); // Añadir a la base de datos
+                    await context.SaveChangesAsync(); // Guardar inmediatamente para obtener el ID generado
+
+
+
+                    // Generar el QR para la EntradaVenta recién creada
+                    entradaVenta.CodigoQR = GenerarCodigoQR(entrada, entradaVenta.Id, venta.Id); // Generar QR
+                    context.EntradasVenta.Update(entradaVenta); // Actualizar la entrada venta con el código QR
                 }
-                await context.SaveChangesAsync(); // Guardar la billetera después de agregar entradas
+            }
 
-                return Ok(new { Venta = mapper.Map<VentaDTO>(venta), PreferenceId = preference.Id });
-            }
-            catch (Exception ex)
+            await context.SaveChangesAsync(); // Guardar cambios después de actualizar los QR
+
+            var preferenceRequest = new PreferenceRequest
             {
-                return StatusCode(500, "Error al procesar la venta: " + ex.Message);
-            }
+                Items = items,
+                BackUrls = new PreferenceBackUrlsRequest
+                {
+                    Success = "http://tu-url-de-success.com",
+                    Failure = "http://tu-url-de-failure.com",
+                    Pending = "http://tu-url-de-pending.com"
+                },
+                AutoReturn = "approved"
+            };
+
+            var client = new PreferenceClient();
+            Preference preference = await client.CreateAsync(preferenceRequest);
+
+            return Ok(new { Venta = mapper.Map<VentaDTO>(venta), PreferenceId = preference.Id });
         }
-
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<VentaDTO>> GetById(int id)
+        catch (Exception ex)
         {
-            var venta = await context.Ventas
-                .Include(v => v.DetallesVenta)
-                .ThenInclude(d => d.Entrada)
-                .ThenInclude(e => e.Evento)
-                .FirstOrDefaultAsync(v => v.Id == id);
-
-            if (venta == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(mapper.Map<VentaDTO>(venta));
-        }
-
-        private string GenerarCodigoQR(Entrada entrada)
-        {
-            var datos = $"Evento: {entrada.Evento.Nombre}, ID Entrada: {entrada.Id}";
-            using (var sha256 = SHA256.Create())
-            {
-                var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(datos));
-                return BitConverter.ToString(hash).Replace("-", "");
-            }
+            return StatusCode(500, "Error al procesar la venta: " + ex.Message);
         }
     }
+
+    private string GenerarCodigoQR(Entrada entrada, int entradaVentaId, int ventaId)
+    {
+        var datos = $"Evento: {entrada.Evento.Nombre}, ID Entrada: {entrada.Id}, ID Venta: {ventaId}, ID EntradaVenta: {entradaVentaId}";
+        using (var sha256 = SHA256.Create())
+        {
+            var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(datos));
+            return BitConverter.ToString(hash).Replace("-", "");
+        }
+    }
+
+
+
+
+
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<VentaDTO>> GetById(int id)
+    {
+        var venta = await context.Ventas
+            .Include(v => v.DetallesVenta)
+            .ThenInclude(d => d.Entrada)
+            .ThenInclude(e => e.Evento)
+            .FirstOrDefaultAsync(v => v.Id == id);
+
+        if (venta == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(mapper.Map<VentaDTO>(venta));
+    }
+
+    
+
 }
+
+
+
+
+
+
+//using AutoMapper;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using System.Security.Cryptography;
+//using System.Text;
+//using TicketOn.Server.DTOs.Venta;
+//using TicketOn.Server.Entidades;
+//using TicketOn.Server.Servicios;
+//using MercadoPago.Client.Preference;
+//using MercadoPago.Resource.Preference;
+
+//namespace TicketOn.Server.Controllers
+//{
+//    [ApiController]
+//    [Route("api/ventas")]
+//    public class VentaController : ControllerBase
+//    {
+//        private readonly ApplicationDbContext context;
+//        private readonly IMapper mapper;
+//        private readonly IServicioUsuarios servicioUsuarios;
+
+//        public VentaController(ApplicationDbContext context, IMapper mapper, IServicioUsuarios servicioUsuarios)
+//        {
+//            this.context = context;
+//            this.mapper = mapper;
+//            this.servicioUsuarios = servicioUsuarios;
+//        }
+
+//        [HttpPost]
+//        public async Task<ActionResult<VentaDTO>> Post(VentaCreacionDTO ventaCreacionDTO)
+//        {
+//            if (ventaCreacionDTO == null || ventaCreacionDTO.DetallesVenta == null || !ventaCreacionDTO.DetallesVenta.Any())
+//            {
+//                return BadRequest("Los detalles de la venta están vacíos o el formato es incorrecto.");
+//            }
+
+//            try
+//            {
+//                var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+//                // Mapear a la entidad Venta y asignar datos adicionales
+//                var venta = mapper.Map<Venta>(ventaCreacionDTO);
+//                venta.UsuarioId = usuarioId;
+//                venta.FechaVenta = DateTime.UtcNow;
+
+//                context.Add(venta);
+//                await context.SaveChangesAsync(); // Guardar la venta antes de crear la preferencia
+
+//                // Crear items para Mercado Pago
+//                var items = venta.DetallesVenta.Select(detalle => {
+//                    var entrada = context.Entradas.Include(e => e.Evento).FirstOrDefault(e => e.Id == detalle.EntradaId);
+//                    if (entrada == null)
+//                    {
+//                        throw new Exception($"No se encontró la entrada con ID {detalle.EntradaId}");
+//                    }
+//                    return new PreferenceItemRequest
+//                    {
+//                        Title = entrada.Evento.Nombre,
+//                        Quantity = 1,
+//                        CurrencyId = "ARS",
+//                        UnitPrice = entrada.Precio ?? 0m
+//                    };
+//                }).ToList();
+
+//                var preferenceRequest = new PreferenceRequest
+//                {
+//                    Items = items,
+//                    BackUrls = new PreferenceBackUrlsRequest
+//                    {
+//                        Success = "http://tu-url-de-success.com",
+//                        Failure = "http://tu-url-de-failure.com",
+//                        Pending = "http://tu-url-de-pending.com"
+//                    },
+//                    AutoReturn = "approved"
+//                };
+
+//                var client = new PreferenceClient();
+//                Preference preference = await client.CreateAsync(preferenceRequest);
+
+//                // Agregar entradas a la billetera
+//                foreach (var detalle in venta.DetallesVenta)
+//                {
+//                    var billetera = new Billetera
+//                    {
+//                        EntradaId = detalle.EntradaId,
+//                        DetalleVentaId = detalle.Id,
+//                        UsuarioId = usuarioId,
+//                        CodigoQR = GenerarCodigoQR(detalle.Entrada),
+//                        FechaAsignacion = DateTime.UtcNow
+//                    };
+
+//                    context.Billeteras.Add(billetera);
+//                }
+//                await context.SaveChangesAsync(); // Guardar la billetera después de agregar entradas
+
+//                return Ok(new { Venta = mapper.Map<VentaDTO>(venta), PreferenceId = preference.Id });
+//            }
+//            catch (Exception ex)
+//            {
+//                return StatusCode(500, "Error al procesar la venta: " + ex.Message);
+//            }
+//        }
+
+
+//        [HttpGet("{id}")]
+//        public async Task<ActionResult<VentaDTO>> GetById(int id)
+//        {
+//            var venta = await context.Ventas
+//                .Include(v => v.DetallesVenta)
+//                .ThenInclude(d => d.Entrada)
+//                .ThenInclude(e => e.Evento)
+//                .FirstOrDefaultAsync(v => v.Id == id);
+
+//            if (venta == null)
+//            {
+//                return NotFound();
+//            }
+
+//            return Ok(mapper.Map<VentaDTO>(venta));
+//        }
+
+//        private string GenerarCodigoQR(Entrada entrada)
+//        {
+//            var datos = $"Evento: {entrada.Evento.Nombre}, ID Entrada: {entrada.Id}";
+//            using (var sha256 = SHA256.Create())
+//            {
+//                var hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(datos));
+//                return BitConverter.ToString(hash).Replace("-", "");
+//            }
+//        }
+//    }
+//}
 
 
 

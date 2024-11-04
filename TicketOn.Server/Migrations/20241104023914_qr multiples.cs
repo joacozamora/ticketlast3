@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TicketOn.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class NUEVAMIGRACIONCONMERCADOPAGO : Migration
+    public partial class qrmultiples : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -240,19 +240,11 @@ namespace TicketOn.Server.Migrations
                     NombreTanda = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Stock = table.Column<int>(type: "int", nullable: true),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    codigoQR = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IdEvento = table.Column<int>(type: "int", nullable: false),
-                    UsuarioActualId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    IdEvento = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Entradas", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Entradas_AspNetUsers_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Entradas_Eventos_IdEvento",
                         column: x => x.IdEvento,
@@ -268,6 +260,7 @@ namespace TicketOn.Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     VentaId = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
                     EntradaId = table.Column<int>(type: "int", nullable: false),
                     PrecioVenta = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CodigoQR = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -290,36 +283,36 @@ namespace TicketOn.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Billeteras",
+                name: "EntradasVenta",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EntradaId = table.Column<int>(type: "int", nullable: false),
-                    DetalleVentaId = table.Column<int>(type: "int", nullable: false),
+                    VentaId = table.Column<int>(type: "int", nullable: false),
                     UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CodigoQR = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CodigoQR = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FechaAsignacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Billeteras", x => x.Id);
+                    table.PrimaryKey("PK_EntradasVenta", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Billeteras_AspNetUsers_UsuarioId",
+                        name: "FK_EntradasVenta_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Billeteras_DetallesVenta_DetalleVentaId",
-                        column: x => x.DetalleVentaId,
-                        principalTable: "DetallesVenta",
+                        name: "FK_EntradasVenta_Entradas_EntradaId",
+                        column: x => x.EntradaId,
+                        principalTable: "Entradas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Billeteras_Entradas_EntradaId",
-                        column: x => x.EntradaId,
-                        principalTable: "Entradas",
+                        name: "FK_EntradasVenta_Ventas_VentaId",
+                        column: x => x.VentaId,
+                        principalTable: "Ventas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -364,21 +357,6 @@ namespace TicketOn.Server.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Billeteras_DetalleVentaId",
-                table: "Billeteras",
-                column: "DetalleVentaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Billeteras_EntradaId",
-                table: "Billeteras",
-                column: "EntradaId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Billeteras_UsuarioId",
-                table: "Billeteras",
-                column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DetallesVenta_EntradaId",
                 table: "DetallesVenta",
                 column: "EntradaId");
@@ -394,9 +372,19 @@ namespace TicketOn.Server.Migrations
                 column: "IdEvento");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Entradas_UsuarioId",
-                table: "Entradas",
+                name: "IX_EntradasVenta_EntradaId",
+                table: "EntradasVenta",
+                column: "EntradaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EntradasVenta_UsuarioId",
+                table: "EntradasVenta",
                 column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EntradasVenta_VentaId",
+                table: "EntradasVenta",
+                column: "VentaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Eventos_UsuarioId",
@@ -428,7 +416,10 @@ namespace TicketOn.Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Billeteras");
+                name: "DetallesVenta");
+
+            migrationBuilder.DropTable(
+                name: "EntradasVenta");
 
             migrationBuilder.DropTable(
                 name: "Generos");
@@ -438,9 +429,6 @@ namespace TicketOn.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "DetallesVenta");
 
             migrationBuilder.DropTable(
                 name: "Entradas");

@@ -15,7 +15,7 @@ namespace TicketOn.Server.Entidades
         public string UsuarioId { get; set; }  // ID del usuario que compró la entrada
         public IdentityUser Usuario { get; set; }  // Relación con el usuario
 
-        public string CodigoQR { get; set; }  // Código QR asociado a la venta
+        public string? CodigoQR { get; set; }  // Código QR asociado a la venta
         public DateTime FechaAsignacion { get; set; } = DateTime.UtcNow;  // Fecha en que se realizó la venta
     }
 }

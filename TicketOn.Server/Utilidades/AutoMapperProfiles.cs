@@ -5,9 +5,9 @@ using TicketOn.Server.DTOs.Eventos;
 using TicketOn.Server.DTOs.Generos;
 using TicketOn.Server.DTOs.Usuario;
 using TicketOn.Server.DTOs.Venta;
-using TicketOn.Server.DTOs.Billetera;
 using TicketOn.Server.DTOs.DetalleVenta;
 using TicketOn.Server.Entidades;
+using TicketOn.Server.DTOs.EntradasVenta;
 
 namespace TicketOn.Server.Utilidades
 {
@@ -20,7 +20,8 @@ namespace TicketOn.Server.Utilidades
             ConfigurarMapeoUsuarios();
             ConfigurarMapeoEntradas();
             ConfigurarMapeoVentas();
-            ConfigurarMapeoBilletera();
+            ConfigurarMapeoEntradaVenta();
+
         }
 
         private void ConfigurarMapeoEntradas()
@@ -60,13 +61,11 @@ namespace TicketOn.Server.Utilidades
             CreateMap<DetalleVentaCreacionDTO, DetalleVenta>();
         }
 
-        private void ConfigurarMapeoBilletera()
+        private void ConfigurarMapeoEntradaVenta() // Nuevo método para EntradaVenta
         {
-            // Mapeo de Billetera
-            CreateMap<Billetera, BilleteraDTO>()
-                .ForMember(dest => dest.NombreEntrada, opt => opt.MapFrom(src => src.Entrada.NombreTanda))
-                .ForMember(dest => dest.FechaAsignacion, opt => opt.MapFrom(src => src.FechaAsignacion));
-            CreateMap<BilleteraCreacionDTO, Billetera>();
+            CreateMap<EntradaVenta, EntradaVentaDTO>(); // Mapeo de EntradaVenta a EntradaVentaDTO
+            CreateMap<EntradaVentaCreacionDTO, EntradaVenta>(); // Mapeo para crear EntradaVenta
         }
+
     }
 }

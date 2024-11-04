@@ -18,7 +18,7 @@ namespace TicketOn.Server
         public DbSet<Tanda> Tandas { get; set; }
         public DbSet<Venta> Ventas { get; set; }
         public DbSet<DetalleVenta> DetallesVenta { get; set; }
-        public DbSet<Billetera> Billeteras { get; set; }
+        public DbSet<EntradaVenta> EntradasVenta { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
