@@ -1,0 +1,27 @@
+.container {
+  max-width: 600px; /* Puedes ajustar el tamaño */
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.text-gray-600 {
+  color: #4b5563; /* Color de texto gris */
+}
+
+.text-gray-800 {
+  color: #1f2937; /* Color de texto más oscuro */
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-lg {
+  border-radius: 0.5rem; /* Estilo de bordes redondeados */
+}
+
+.object-cover {
+  object-fit: cover; /* Mantiene la proporción de la imagen */
+}

@@ -8,6 +8,7 @@ using TicketOn.Server.DTOs.Venta;
 using TicketOn.Server.DTOs.DetalleVenta;
 using TicketOn.Server.Entidades;
 using TicketOn.Server.DTOs.EntradasVenta;
+using TicketOn.Server.DTOs.Reventas;
 
 namespace TicketOn.Server.Utilidades
 {
@@ -21,6 +22,7 @@ namespace TicketOn.Server.Utilidades
             ConfigurarMapeoEntradas();
             ConfigurarMapeoVentas();
             ConfigurarMapeoEntradaVenta();
+            ConfigurarMapeoReventa();
 
         }
 
@@ -65,6 +67,12 @@ namespace TicketOn.Server.Utilidades
         {
             CreateMap<EntradaVenta, EntradaVentaDTO>(); // Mapeo de EntradaVenta a EntradaVentaDTO
             CreateMap<EntradaVentaCreacionDTO, EntradaVenta>(); // Mapeo para crear EntradaVenta
+        }
+
+        private void ConfigurarMapeoReventa() // Nuevo método para Reventa
+        {
+            CreateMap<Reventa, ReventaDTO>(); // Mapeo de Reventa a ReventaDTO
+            CreateMap<ReventaCreacionDTO, Reventa>(); // Mapeo para crear Reventa
         }
 
     }

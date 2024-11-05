@@ -1,0 +1,22 @@
+<div class="container mx-auto">
+  <h2 class="text-2xl font-bold mb-4">Crear Reventa</h2>
+  <form [formGroup]="reventaForm" (ngSubmit)="crearReventa()">
+    <div class="mb-4">
+      <label for="precioReventa" class="block text-sm font-medium text-gray-700">Precio de Reventa:</label>
+      <input type="number" id="precioReventa" formControlName="precioReventa" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50" />
+      <div *ngIf="reventaForm.get('precioReventa')?.invalid && reventaForm.get('precioReventa')?.touched" class="text-red-500 text-sm">
+        El precio de reventa es requerido y debe ser mayor que cero.
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label for="accessToken" class="block text-sm font-medium text-gray-700">Access Token de MercadoPago:</label>
+      <input type="text" id="accessToken" formControlName="accessToken" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50" />
+      <div *ngIf="reventaForm.get('accessToken')?.invalid && reventaForm.get('accessToken')?.touched" class="text-red-500 text-sm">
+        El access token es requerido.
+      </div>
+    </div>
+
+    <button type="submit" class="mt-4 bg-blue-500 text-white rounded px-4 py-2" [disabled]="reventaForm.invalid">Crear Reventa</button>
+  </form>
+</div>

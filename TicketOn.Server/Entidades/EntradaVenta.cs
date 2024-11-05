@@ -17,5 +17,7 @@ namespace TicketOn.Server.Entidades
 
         public string? CodigoQR { get; set; }  // Código QR asociado a la venta
         public DateTime FechaAsignacion { get; set; } = DateTime.UtcNow;  // Fecha en que se realizó la venta
+        public decimal? PrecioVenta { get; set; }
+    
     }
 }

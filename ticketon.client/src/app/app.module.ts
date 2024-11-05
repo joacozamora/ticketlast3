@@ -27,6 +27,7 @@ import { IndiceEventosComponent } from './eventos/indice-eventos/indice-eventos.
 import { CarruselComponent } from './carrusel/carrusel.component';
 import { IndexComponent } from './index/index.component';
 import { BilleteraComponent } from './billetera/billetera.component';
+import { ReventaComponent } from './reventa/reventa/reventa.component';
 
 
 
@@ -48,7 +49,7 @@ export const MY_FORMATS = {
 
 @NgModule({
   declarations: [    
-    SelectorMultipleComponent, IndiceEventosComponent,
+    SelectorMultipleComponent, IndiceEventosComponent, ReventaComponent, 
     ],
   imports: [
     SweetAlert2Module.forRoot(),

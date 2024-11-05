@@ -18,6 +18,9 @@ import { CarritoComponent } from './carrito/carrito.component';
 import { ComprarEntradasComponent } from './entradas/comprar-entradas/comprar-entradas.component';
 import { IndexComponent } from './index/index.component';
 import { BilleteraComponent } from './billetera/billetera.component';
+import { ReventaComponent } from './reventa/reventa/reventa.component';
+import { CrearReventaComponent } from './reventa/crear-reventa/crear-reventa.component';
+
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -36,6 +39,8 @@ export const routes: Routes = [
   { path: 'comprar-entradas/:id', component: ComprarEntradasComponent },
   { path: 'carrito', component: CarritoComponent },
   { path: 'billetera', component: BilleteraComponent },
+  { path: 'reventa', component: ReventaComponent },
+  { path: 'crear-reventa/:id', component: CrearReventaComponent },
   { path: '**', redirectTo: '' }
 ];
 

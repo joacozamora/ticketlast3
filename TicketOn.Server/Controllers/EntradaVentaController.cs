@@ -22,7 +22,7 @@ namespace TicketOn.Server.Controllers
             this.servicioUsuarios = servicioUsuarios;
         }
 
-        
+
 
         [HttpGet("correo/{correo}")]
         public async Task<ActionResult<List<EntradaVentaDTO>>> ObtenerEntradasPorCorreo(string correo)
@@ -35,8 +35,8 @@ namespace TicketOn.Server.Controllers
 
             var entradasVenta = await context.EntradasVenta
                 .Where(ev => ev.UsuarioId == usuario.Id)
-                .Include(ev => ev.Entrada)
-                .ThenInclude(e => e.Evento)
+                .Include(ev => ev.Entrada) // Incluimos la entrada
+                    .ThenInclude(e => e.Evento) // Y luego el evento
                 .ToListAsync();
 
             if (!entradasVenta.Any())
@@ -51,11 +51,15 @@ namespace TicketOn.Server.Controllers
                 VentaId = ev.VentaId,
                 UsuarioId = ev.UsuarioId,
                 CodigoQR = ev.CodigoQR,
-                FechaAsignacion = ev.FechaAsignacion
+                FechaAsignacion = ev.FechaAsignacion,
+                NombreEntrada = ev.Entrada.NombreTanda, // Asignamos el nombre de la entrada
+                ImagenEvento = ev.Entrada.Evento.Imagen, // Asignamos la imagen del evento
+                Correo = usuario.Email // También incluimos el correo
             }).ToList();
 
             return Ok(entradasVentaDTO);
         }
+
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<EntradaVentaDTO>> GetById(int id)

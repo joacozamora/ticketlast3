@@ -1,0 +1,19 @@
+html
+Copiar código
+<div class="container mx-auto">
+  <h2 class="text-2xl font-bold mb-4">Reventas Disponibles</h2>
+
+  <div *ngIf="reventas.length > 0; else noReventas">
+    <div *ngFor="let reventa of reventas" class="p-4 mb-4 bg-white shadow-md rounded">
+      <h3 class="text-lg font-semibold">{{ reventa.nombreEvento }}</h3>
+      <p class="text-gray-600">Precio de Reventa: {{ reventa.precioReventa | currency:'ARS' }}</p>
+      <p class="text-gray-600">Usuario: {{ reventa.usuarioId }}</p>
+      <img [src]="reventa.imagenEvento" alt="Evento" class="w-32 h-32 object-cover" />
+      <p class="text-gray-600">Fecha de Publicación: {{ reventa.fechaPublicacion | date }}</p>
+    </div>
+  </div>
+
+  <ng-template #noReventas>
+    <p class="text-gray-500">No hay reventas disponibles en este momento.</p>
+  </ng-template>
+</div>
