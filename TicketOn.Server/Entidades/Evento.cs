@@ -11,16 +11,12 @@ namespace TicketOn.Server.Entidades
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public string Imagen { get; set; }
-
         [Column(TypeName = "decimal(10, 8)")]
         public decimal Latitud { get; set; }
-
         [Column(TypeName = "decimal(11, 8)")] 
         public decimal Longitud { get; set; }
         public string Descripcion { get; set; }
-
         public ICollection<Entrada> EntradasVenta { get; set; }
-
         public required string UsuarioId { get; set; }
         public IdentityUser Usuario { get; set; }
     }

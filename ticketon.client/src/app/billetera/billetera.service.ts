@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class BilleteraService {
-  private apiURL = environment.apiURL + '/entradas-venta'; // Ajusta la URL a la configuración de tu backend
+  private apiURL = environment.apiURL + '/entradas-venta'; 
   
   constructor(private http: HttpClient) { }
 

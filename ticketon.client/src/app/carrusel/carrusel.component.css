@@ -78,10 +78,10 @@ body {
 
 swiper-container {
   width: 100vw;
-  height: 50vh; /* Altura completa para centrar y mostrar en tamaño original */
+  height: 50vh; 
   padding-top: 20px;
   padding-bottom: 20px;
-  background: linear-gradient(135deg, #2b2b2b, #1a1a1a); /* Fondo gris metálico oscuro */
+  background: linear-gradient(135deg, #2b2b2b, #1a1a1a);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -92,19 +92,19 @@ swiper-container {
 swiper-slide {
   background-position: center;
   background-size: cover;
-  width: 70%; /* Ancho reducido para no ocupar todo el espacio horizontal */
-  height: 70vh; /* Altura específica para mantener la proporción sin cortes */
-  opacity: 0.85; /* Transparencia para slides no activos */
-  transition: opacity 0.3s ease-in-out; /* Suaviza la transición de opacidad */
+  width: 70%;
+  height: 70vh; 
+  opacity: 0.85; 
+  transition: opacity 0.3s ease-in-out; 
 }
 
 .swiper-slide-active {
-  opacity: 1; /* Sin transparencia para el slide activo */
+  opacity: 1; 
 }
 
 swiper-slide img {
   display: block;
-  max-width: 100%; /* Asegura que la imagen no exceda el ancho del slide */
-  max-height: 65%; /* Asegura que la imagen no exceda la altura del slide */
-  object-fit: contain; /* Mantiene las proporciones de la imagen sin cortarla */
+  max-width: 100%;
+  max-height: 65%; 
+  object-fit: contain; 
 }

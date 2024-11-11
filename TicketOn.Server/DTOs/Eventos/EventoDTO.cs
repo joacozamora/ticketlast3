@@ -6,11 +6,9 @@
         public string Nombre { get; set; }
         
         public DateTime FechaInicio { get; set; }
-        //public DateTime FechaFin { get; set; }
         public string Imagen { get; set; }
         public decimal Latitud { get; set; }
         public decimal Longitud { get; set; }
-
         public string IdUsuario { get; set; }
     }
 }

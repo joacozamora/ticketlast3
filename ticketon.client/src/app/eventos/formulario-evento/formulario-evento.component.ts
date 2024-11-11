@@ -4,9 +4,9 @@ import { EventoCreacionDTO, EventoDTO } from '../evento';
 import { EventosService } from '../eventos.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
-import { MatMomentDateModule } from '@angular/material-moment-adapter'; // Si usas Moment.js
+import { MatMomentDateModule } from '@angular/material-moment-adapter'; 
 import { CommonModule } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field'; // Campo de formulario
+import { MatFormFieldModule } from '@angular/material/form-field'; 
 import { InputImgComponent } from '../../utilidades/input-img/input-img.component';
 import { MatButtonModule } from '@angular/material/button';
 import moment from 'moment';

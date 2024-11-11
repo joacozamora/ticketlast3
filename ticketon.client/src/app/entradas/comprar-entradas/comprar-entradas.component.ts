@@ -20,7 +20,7 @@ export class ComprarEntradasComponent implements OnInit {
   precioTotal: number = 0;
   seleccionResumen: { nombre: string, cantidad: number, precio: number }[] = [];
 
-  // Objeto para almacenar la cantidad seleccionada por entrada
+  
   cantidadSeleccionada: { [entradaId: number]: number } = {};
 
   constructor(
@@ -89,7 +89,7 @@ export class ComprarEntradasComponent implements OnInit {
 
     // Actualizamos el resumen de la selección
     this.seleccionResumen = this.entradas
-      .filter(entrada => this.cantidadSeleccionada[entrada.id] > 0) // Solo incluimos las entradas seleccionadas
+      .filter(entrada => this.cantidadSeleccionada[entrada.id] > 0) 
       .map(entrada => ({
         nombre: entrada.nombreTanda,
         cantidad: this.cantidadSeleccionada[entrada.id],

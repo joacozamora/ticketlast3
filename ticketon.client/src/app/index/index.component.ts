@@ -24,10 +24,10 @@ export class IndexComponent implements OnInit {
   ngOnInit() {
     this.eventosService.obtenerLandingPage().subscribe({
       next: (data) => {
-        // Mapea los eventos para que tengan sólo nombre e imagen.
+        
         this.eventos = data.publicados.map(evento => ({
           nombre: evento.nombre,
-          imagen: evento.imagen || 'default.jpg'  // Imagen por defecto si no está definida.
+          imagen: evento.imagen || 'default.jpg'  
         }));
       },
       error: (err) => console.error('Error al cargar eventos:', err)

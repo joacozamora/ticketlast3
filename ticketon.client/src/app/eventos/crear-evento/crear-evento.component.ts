@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EventoCreacionDTO } from '../evento';
 import { FormularioEventoComponent } from '../formulario-evento/formulario-evento.component';
-import { CommonModule } from '@angular/common'; // Si es necesario para otros elementos
-import { RouterModule } from '@angular/router'; // Si estás usando enrutamiento en este componente
+import { CommonModule } from '@angular/common'; 
+import { RouterModule } from '@angular/router'; 
 import { EventosService } from '../eventos.service';
 
 
@@ -13,12 +13,12 @@ import { EventosService } from '../eventos.service';
 @Component({
   selector: 'app-crear-evento',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormularioEventoComponent],  // Importas el componente standalone
+  imports: [CommonModule, RouterModule, FormularioEventoComponent],  
   templateUrl: './crear-evento.component.html',
   styleUrls: ['./crear-evento.component.css']
 })
 export class CrearEventoComponent {
-  router = inject(Router);  // Usamos inject para el Router
+  router = inject(Router);  
   eventosServices = inject(EventosService);
   route = inject(ActivatedRoute);
 

@@ -31,21 +31,21 @@ namespace TicketOn.Server.Controllers
                 return BadRequest("Los datos de la reventa están vacíos.");
             }
 
-            // Obtener el usuario actual
+            
             var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
-            // Verificar que la entrada de venta existe
+            
             var entradaVenta = await context.EntradasVenta.FindAsync(reventaCreacionDTO.EntradaVentaId);
             if (entradaVenta == null)
             {
                 return NotFound("La entrada a revender no existe.");
             }
 
-            // Crear una nueva reventa
+            
             var reventa = new Reventa
             {
-                EntradaId = entradaVenta.EntradaId, // Obtener el ID de entrada de la entrada venta
-                UsuarioId = usuarioId, // Asignar el ID del usuario actual
+                EntradaId = entradaVenta.EntradaId, 
+                UsuarioId = usuarioId, 
                 PrecioReventa = reventaCreacionDTO.PrecioReventa,
                 FechaPublicacion = DateTime.UtcNow
             };
@@ -71,7 +71,7 @@ namespace TicketOn.Server.Controllers
         public async Task<ActionResult<List<ReventaDTO>>> GetAll()
         {
             var reventas = await context.Reventas
-                                        .Include(r => r.Entrada) // Incluye la relación con Entrada si es necesario
+                                        .Include(r => r.Entrada) 
                                         .ToListAsync();
 
             return Ok(mapper.Map<List<ReventaDTO>>(reventas));

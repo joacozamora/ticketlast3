@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/TicketOnServer20241106002819/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsCadenaSQL_B72C10E709",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/ticketonserverdbserver1126/databases/TicketOn.Server_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:CadenaSQL"
+    }
+  }
+}

@@ -28,9 +28,7 @@ body {
   padding: 20px;
 }
 
-/* Remueve la sombra de Swiper en modo Coverflow, si es necesario */
 .swiper-slide-shadow-coverflow {
   display: none;
 }
 
-/* Remueve la sombra de Swiper en modo Coverflow, si es necesario */

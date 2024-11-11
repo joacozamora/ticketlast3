@@ -18,7 +18,7 @@ export class CarritoComponent implements OnInit {
 
   constructor(
     private carritoService: CarritoService,
-    private ventaService: VentaService,  // Inyectamos el servicio de ventas
+    private ventaService: VentaService,  
     private route: ActivatedRoute
   ) { }
 
@@ -28,7 +28,7 @@ export class CarritoComponent implements OnInit {
   }
 
   pagarConMercadoPago(preferenceId: string): void {
-    const mp = new MercadoPago('APP_USR-64585ae8-8796-44db-8f01-af9f6a1ed9ee'); // Reemplaza con tu clave pública
+    const mp = new MercadoPago('APP_USR-64585ae8-8796-44db-8f01-af9f6a1ed9ee'); 
     mp.checkout({
       preference: {
         id: preferenceId // Usa el preferenceId del backend

@@ -17,15 +17,15 @@
 }
 
 .Txtcorreo input, .TxtcontraseA input {
-  background-color: white; /* Fondo blanco */
-  border: none; /* Elimina el borde negro */
-  outline: none; /* Evita los bordes al enfocarse */
-  box-shadow: none; /* Elimina cualquier sombra */
+  background-color: white; 
+  border: none; 
+  outline: none; 
+  box-shadow: none; 
 }
 
-/* Ajusta el estilo del contenedor del campo para que se vea bien en el diseño */
+
 .mat-form-field-appearance-outline .mat-form-field-outline {
-  color: transparent; /* Elimina el contorno de los campos */
+  color: transparent; 
   display: none;
 }
 
@@ -35,7 +35,6 @@
   display: none;
 }
 
-/* Ajusta el fondo y los bordes de los campos de entrada para que coincidan */
 .mat-mdc-form-field .mat-form-field-wrapper {
   background-color: transparent;
   border-radius: 20px;

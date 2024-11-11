@@ -20,7 +20,7 @@ export class CarritoService {
   agregarAlCarrito(item: CarritoItem): void {
     const carrito = this.obtenerCarrito();
 
-    // Calcular el total del item y agregarlo al carrito
+    
     item.total = item.precio * item.cantidad;
     carrito.push(item);
 
