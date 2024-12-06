@@ -41,47 +41,7 @@ namespace TicketOn.Server.Controllers
             return detalleVentaDTO;
         }
 
-        // Este endpoint puede mantenerse para verificar el código QR
-        [HttpPost("verificar-codigoQR")]
-        public async Task<ActionResult> VerificarCodigoQR([FromBody] string codigoQR)
-        {
-            var detalleVenta = await context.DetallesVenta
-                .Include(d => d.Entrada)
-                .ThenInclude(e => e.Evento)
-                .Include(d => d.Venta)
-                .FirstOrDefaultAsync(d => d.CodigoQR == codigoQR);
-
-            if (detalleVenta == null)
-            {
-                return NotFound("El código QR no es válido o no corresponde a una entrada vendida.");
-            }
-
-            // Validación de fechas del evento
-            var evento = detalleVenta.Entrada.Evento;
-            if (evento.FechaInicio > DateTime.UtcNow)
-            {
-                return BadRequest("El evento aún no ha comenzado.");
-            }
-            if (evento.FechaFin < DateTime.UtcNow)
-            {
-                return BadRequest("El evento ya ha finalizado.");
-            }
-
-            // Validar que el usuario autenticado sea el propietario de la entrada
-            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-            if (detalleVenta.Venta.UsuarioId != usuarioId)
-            {
-                return Unauthorized("Este código QR no pertenece al usuario autenticado.");
-            }
-
-            return Ok(new
-            {
-                Mensaje = "El código QR es válido.",
-                Evento = evento.Nombre,
-                FechaEvento = evento.FechaInicio,
-                NombreTanda = detalleVenta.Entrada.NombreTanda
-            });
-        }
+        
     }
 }
 

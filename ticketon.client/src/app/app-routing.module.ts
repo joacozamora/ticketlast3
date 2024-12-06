@@ -20,6 +20,7 @@ import { IndexComponent } from './index/index.component';
 import { BilleteraComponent } from './billetera/billetera.component';
 import { ReventaComponent } from './reventa/reventa/reventa.component';
 import { CrearReventaComponent } from './reventa/crear-reventa/crear-reventa.component';
+import { ConfirmacionComponent } from './confirmacion/confirmacion.component';
 
 
 export const routes: Routes = [
@@ -41,6 +42,7 @@ export const routes: Routes = [
   { path: 'billetera', component: BilleteraComponent },
   { path: 'reventa', component: ReventaComponent },
   { path: 'crear-reventa/:id', component: CrearReventaComponent },
+  { path: 'confirmacion', component: ConfirmacionComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '' }
 ];
 

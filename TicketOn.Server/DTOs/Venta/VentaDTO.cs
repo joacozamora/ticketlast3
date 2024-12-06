@@ -7,7 +7,9 @@ namespace TicketOn.Server.DTOs.Venta
         public int Id { get; set; }
         public DateTime FechaVenta { get; set; }
         public decimal Total { get; set; }
-        
+
+        public string Estado { get; set; }
+
         public string UsuarioId { get; set; }
         public List<DetalleVentaDTO> DetallesVenta { get; set; }
     }

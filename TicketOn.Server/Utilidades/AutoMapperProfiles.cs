@@ -55,8 +55,8 @@ namespace TicketOn.Server.Utilidades
             // Mapeo de Venta y DetalleVenta
             CreateMap<Venta, VentaDTO>()
                 .ForMember(dest => dest.DetallesVenta, opt => opt.MapFrom(src => src.DetallesVenta));
-            CreateMap<VentaCreacionDTO, Venta>();
-                 // Ignorar DetallesVenta en creación
+            CreateMap<VentaCreacionDTO, Venta>()
+                .ForMember(dest => dest.DetallesVenta, opt => opt.Ignore()); // Ignorar DetallesVenta en la creación
 
             CreateMap<DetalleVenta, DetalleVentaDTO>()
                 .ForMember(dest => dest.NombreEntrada, opt => opt.MapFrom(src => src.Entrada.NombreTanda));

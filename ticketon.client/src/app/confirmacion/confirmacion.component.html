@@ -1,0 +1,20 @@
+<div class="confirmacion-container">
+  <h1>Confirmación de Compra</h1>
+
+  <!-- Mensaje de carga -->
+  <div *ngIf="isProcessing" class="estado mensaje-carga">
+    <p>Procesando tu compra, por favor espera...</p>
+  </div>
+
+  <!-- Mensaje de éxito -->
+  <div *ngIf="!isProcessing && isSuccess" class="estado mensaje-exito">
+    <p>¡Compra confirmada!</p>
+    <p>Las entradas se han generado y están listas en tu billetera.</p>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="!isProcessing && !isSuccess" class="estado mensaje-error">
+    <p>Hubo un problema al procesar tu compra.</p>
+    <p>Por favor, inténtalo de nuevo más tarde.</p>
+  </div>
+</div>
