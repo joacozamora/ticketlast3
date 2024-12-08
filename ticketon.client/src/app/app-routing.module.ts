@@ -41,7 +41,7 @@ export const routes: Routes = [
   { path: 'carrito', component: CarritoComponent },
   { path: 'billetera', component: BilleteraComponent },
   { path: 'reventa', component: ReventaComponent },
-  { path: 'crear-reventa/:id', component: CrearReventaComponent },
+  { path: 'crear-reventa', component: CrearReventaComponent },
   { path: 'confirmacion', component: ConfirmacionComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '' }
 ];

@@ -50,8 +50,10 @@ export class BilleteraComponent implements OnInit {
     );
   }
 
+  
   irAReventa(entrada: EntradaVentaDTO): void {
-    this.router.navigate([`/crear-reventa/${entrada.id}`]);
+    console.log('Redirigiendo con EntradaVentaId:', entrada.id); // Para verificar el ID antes de redirigir
+    this.router.navigate(['/crear-reventa'], { queryParams: { entradaVentaId: entrada.id } });
   }
 
   irAlEvento(entrada: EntradaVentaDTO): void {

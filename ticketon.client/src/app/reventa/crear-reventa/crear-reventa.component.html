@@ -9,13 +9,13 @@
       </div>
     </div>
 
-    <div class="mb-4">
+    <!--<div class="mb-4">
       <label for="accessToken" class="block text-sm font-medium text-gray-700">Access Token de MercadoPago:</label>
       <input type="text" id="accessToken" formControlName="accessToken" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50" />
       <div *ngIf="reventaForm.get('accessToken')?.invalid && reventaForm.get('accessToken')?.touched" class="text-red-500 text-sm">
         El access token es requerido.
       </div>
-    </div>
+    </div>-->
 
     <button type="submit" class="mt-4 bg-blue-500 text-white rounded px-4 py-2" [disabled]="reventaForm.invalid">Crear Reventa</button>
   </form>

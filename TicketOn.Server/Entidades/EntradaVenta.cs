@@ -15,5 +15,8 @@ namespace TicketOn.Server.Entidades
         public string? CodigoQR { get; set; }  
         public DateTime FechaAsignacion { get; set; } = DateTime.UtcNow;  
         public decimal? PrecioVenta { get; set; }
+        public bool EnReventa { get; set; } = false;
+
+    
     }
 }

@@ -23,7 +23,6 @@ namespace TicketOn.Server.Controllers
             this.servicioUsuarios = servicioUsuarios;
         }
 
-        // Publicar una reventa
         [HttpPost]
         public async Task<ActionResult<ReventaDTO>> PublicarReventa(ReventaCreacionDTO reventaCreacionDTO)
         {
@@ -32,31 +31,29 @@ namespace TicketOn.Server.Controllers
                 return BadRequest("Los datos de la reventa están vacíos.");
             }
 
+            if (reventaCreacionDTO.EntradaVentaId <= 0)
+            {
+                return BadRequest("El ID de la entrada a revender no es válido.");
+            }
+
             var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
-            // Validar que la entrada exista
             var entradaVenta = await context.EntradasVenta.FindAsync(reventaCreacionDTO.EntradaVentaId);
             if (entradaVenta == null)
             {
                 return NotFound("La entrada a revender no existe.");
             }
 
-            // Validar que la entrada pertenezca al usuario actual
             if (entradaVenta.UsuarioId != usuarioId)
             {
                 return BadRequest("No puedes revender una entrada que no te pertenece.");
             }
 
-            // Validar que no esté ya en una reventa activa
-            var reventaExistente = await context.Reventas
-                .FirstOrDefaultAsync(r => r.EntradaId == entradaVenta.EntradaId && r.Estado == "Disponible");
-
-            if (reventaExistente != null)
+            if (entradaVenta.EnReventa)
             {
                 return BadRequest("La entrada ya está en una reventa activa.");
             }
 
-            // Crear la reventa
             var reventa = new Reventa
             {
                 EntradaId = entradaVenta.EntradaId,
@@ -66,11 +63,69 @@ namespace TicketOn.Server.Controllers
                 FechaPublicacion = DateTime.UtcNow
             };
 
+            entradaVenta.EnReventa = true;
+            context.EntradasVenta.Update(entradaVenta);
+
             context.Reventas.Add(reventa);
             await context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetById), new { id = reventa.Id }, mapper.Map<ReventaDTO>(reventa));
         }
+        /* // Publicar una reventa
+         [HttpPost]
+         public async Task<ActionResult<ReventaDTO>> PublicarReventa(ReventaCreacionDTO reventaCreacionDTO)
+         {
+             if (reventaCreacionDTO == null)
+             {
+                 return BadRequest("Los datos de la reventa están vacíos.");
+             }
+
+             var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+             // Validar que la entrada exista
+             var entradaVenta = await context.EntradasVenta.FindAsync(reventaCreacionDTO.EntradaVentaId);
+             if (entradaVenta == null)
+             {
+                 return NotFound("La entrada a revender no existe.");
+             }
+
+             if (reventaCreacionDTO.EntradaVentaId <= 0)
+             {
+                 return BadRequest("El ID de la entrada a revender no es válido.");
+             }
+             // Validar que la entrada pertenezca al usuario actual
+             if (entradaVenta.UsuarioId != usuarioId)
+             {
+                 return BadRequest("No puedes revender una entrada que no te pertenece.");
+             }
+
+             // Validar que no esté ya en una reventa activa
+             var reventaExistente = await context.Reventas
+                 .FirstOrDefaultAsync(r => r.EntradaId == entradaVenta.EntradaId && r.Estado == "Disponible");
+
+             if (reventaExistente != null)
+             {
+                 return BadRequest("La entrada ya está en una reventa activa.");
+             }
+
+             // Crear la reventa
+             var reventa = new Reventa
+             {
+                 EntradaId = entradaVenta.EntradaId,
+                 UsuarioId = usuarioId,
+                 PrecioReventa = reventaCreacionDTO.PrecioReventa,
+                 Estado = "Disponible",
+                 FechaPublicacion = DateTime.UtcNow
+             };
+
+             entradaVenta.EnReventa = true;
+             context.EntradasVenta.Update(entradaVenta);
+
+             context.Reventas.Add(reventa);
+             await context.SaveChangesAsync();
+
+             return CreatedAtAction(nameof(GetById), new { id = reventa.Id }, mapper.Map<ReventaDTO>(reventa));
+         }*/
 
         // Obtener una reventa específica
         [HttpGet("{id}")]
@@ -85,7 +140,7 @@ namespace TicketOn.Server.Controllers
                 return NotFound();
             }
 
-            return Ok(mapper.Map<ReventaDTO>(reventa));
+            return CreatedAtAction(nameof(GetById), new { id = reventa.Id }, mapper.Map<ReventaDTO>(reventa));
         }
 
         // Listar reventas disponibles
@@ -126,6 +181,7 @@ namespace TicketOn.Server.Controllers
             }
 
             entradaVenta.UsuarioId = usuarioCompradorId; // Asignar al nuevo dueño
+            entradaVenta.EnReventa = false; // Marcar como no en reventa
             context.EntradasVenta.Update(entradaVenta);
 
             // Actualizar la reventa
@@ -139,6 +195,7 @@ namespace TicketOn.Server.Controllers
             return Ok("Reventa completada con éxito.");
         }
 
+
         // Cancelar una reventa
         [HttpPut("{id}/cancelar")]
         public async Task<ActionResult> CancelarReventa(int id)
@@ -146,7 +203,9 @@ namespace TicketOn.Server.Controllers
             var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
             // Obtener la reventa
-            var reventa = await context.Reventas.FirstOrDefaultAsync(r => r.Id == id && r.UsuarioId == usuarioId);
+            var reventa = await context.Reventas
+                .FirstOrDefaultAsync(r => r.Id == id && r.UsuarioId == usuarioId);
+
             if (reventa == null)
             {
                 return NotFound("La reventa no existe o no te pertenece.");
@@ -155,6 +214,17 @@ namespace TicketOn.Server.Controllers
             // Actualizar el estado de la reventa
             reventa.Estado = "Cancelada";
             context.Reventas.Update(reventa);
+
+            // Cambiar el estado de la entrada
+            var entradaVenta = await context.EntradasVenta
+                .FirstOrDefaultAsync(e => e.EntradaId == reventa.EntradaId);
+
+            if (entradaVenta != null)
+            {
+                entradaVenta.EnReventa = false;
+                context.EntradasVenta.Update(entradaVenta);
+            }
+
             await context.SaveChangesAsync();
 
             return NoContent();

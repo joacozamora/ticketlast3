@@ -13,5 +13,6 @@
         public string ImagenEvento { get; set; } 
         public string Correo { get; set; } 
         public string NombreEvento { get; set; }
+        public bool EnReventa { get; set; }
     }
 }
