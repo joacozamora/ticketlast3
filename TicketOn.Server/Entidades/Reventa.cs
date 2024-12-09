@@ -7,8 +7,8 @@ namespace TicketOn.Server.Entidades
     {
         public int Id { get; set; }  // ID de la reventa
         public string Estado {  get; set; } = "Disponible";
-        public int EntradaId { get; set; }  // ID de la entrada que se está revendiendo
-        public Entrada Entrada { get; set; }  // Relación con la entrada
+        public int EntradaVentaId { get; set; }  // ID de la entrada venta
+        public EntradaVenta EntradaVenta { get; set; }
 
         public string UsuarioId { get; set; }  // ID del usuario que está revendiendo
         public IdentityUser Usuario { get; set; }  // Relación con el usuario

@@ -21,6 +21,7 @@ import { BilleteraComponent } from './billetera/billetera.component';
 import { ReventaComponent } from './reventa/reventa/reventa.component';
 import { CrearReventaComponent } from './reventa/crear-reventa/crear-reventa.component';
 import { ConfirmacionComponent } from './confirmacion/confirmacion.component';
+import { ConfirmacionReventaComponent } from './confirmacion-reventa/confirmacion-reventa.component';
 
 
 export const routes: Routes = [
@@ -42,6 +43,7 @@ export const routes: Routes = [
   { path: 'billetera', component: BilleteraComponent },
   { path: 'reventa', component: ReventaComponent },
   { path: 'crear-reventa', component: CrearReventaComponent },
+  { path: 'confirmacion-reventa', component: ConfirmacionReventaComponent },
   { path: 'confirmacion', component: ConfirmacionComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '' }
 ];

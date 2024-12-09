@@ -71,8 +71,9 @@ namespace TicketOn.Server.Utilidades
 
         private void ConfigurarMapeoReventa() // Nuevo método para Reventa
         {
-            CreateMap<Reventa, ReventaDTO>(); // Mapeo de Reventa a ReventaDTO
-            CreateMap<ReventaCreacionDTO, Reventa>(); // Mapeo para crear Reventa
+            CreateMap<ReventaCreacionDTO, Reventa>()
+    .ForMember(dest => dest.EntradaVentaId, opt => opt.MapFrom(src => src.EntradaVentaId));
+            CreateMap<Reventa, ReventaDTO>();
         }
 
     }

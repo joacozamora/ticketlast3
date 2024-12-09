@@ -16,4 +16,6 @@ export class BilleteraService {
   obtenerEntradasPorCorreo(correo: string): Observable<EntradaVentaDTO[]> {
     return this.http.get<EntradaVentaDTO[]>(`${this.apiURL}/correo/${correo}`);
   }
+
+  
 }

@@ -1,0 +1,15 @@
+.container {
+  margin-top: 2rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-green-500 {
+  color: #22c55e; /* Verde éxito */
+}
+
+.text-red-500 {
+  color: #ef4444; /* Rojo error */
+}

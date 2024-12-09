@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketOn.Server;
 
@@ -11,9 +12,11 @@ using TicketOn.Server;
 namespace TicketOn.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241208175350_tabla moauthp")]
+    partial class tablamoauthp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -389,7 +392,7 @@ namespace TicketOn.Server.Migrations
                     b.Property<string>("CompradorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("EntradaVentaId")
+                    b.Property<int>("EntradaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Estado")
@@ -413,7 +416,7 @@ namespace TicketOn.Server.Migrations
 
                     b.HasIndex("CompradorId");
 
-                    b.HasIndex("EntradaVentaId");
+                    b.HasIndex("EntradaId");
 
                     b.HasIndex("UsuarioId");
 
@@ -624,9 +627,9 @@ namespace TicketOn.Server.Migrations
                         .WithMany()
                         .HasForeignKey("CompradorId");
 
-                    b.HasOne("TicketOn.Server.Entidades.EntradaVenta", "EntradaVenta")
+                    b.HasOne("TicketOn.Server.Entidades.Entrada", "Entrada")
                         .WithMany()
-                        .HasForeignKey("EntradaVentaId")
+                        .HasForeignKey("EntradaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -638,7 +641,7 @@ namespace TicketOn.Server.Migrations
 
                     b.Navigation("Comprador");
 
-                    b.Navigation("EntradaVenta");
+                    b.Navigation("Entrada");
 
                     b.Navigation("Usuario");
                 });

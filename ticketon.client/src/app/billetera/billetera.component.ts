@@ -8,6 +8,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import * as QRCode from 'qrcode';
+import { ReventaService } from '../reventa/reventa.service';
 
 @Component({
   selector: 'app-billetera',
@@ -22,6 +23,7 @@ export class BilleteraComponent implements OnInit {
   constructor(
     private billeteraService: BilleteraService,
     private seguridadService: SeguridadService,
+    private reventaService: ReventaService,
     private router: Router
   ) { }
 
@@ -50,7 +52,26 @@ export class BilleteraComponent implements OnInit {
     );
   }
 
-  
+  /*irAReventa(entrada: EntradaVentaDTO): void {
+    this.reventaService.verificarVinculacion().subscribe(
+      () => {
+        // Si la cuenta está vinculada, redirigir al formulario de reventa
+        console.log('Cuenta vinculada, redirigiendo al formulario de reventa.');
+        this.router.navigate(['/crear-reventa'], { queryParams: { entradaVentaId: entrada.id } });
+      },
+      (error) => {
+        if (error.status === 404) {
+          // Si no está vinculado, redirigir al flujo de MercadoPago OAuth
+          alert('Necesitas vincular tu cuenta de MercadoPago para publicar una reventa.');
+          const authUrl = 'https://localhost:7225/api/mercadopago/autorizar'; // Cambia esto a tu URL de producción
+          window.location.href = authUrl;
+        } else {
+          console.error('Error al verificar la vinculación:', error);
+          alert('Hubo un problema al verificar tu cuenta de MercadoPago.');
+        }
+      }
+    );
+  }*/
   irAReventa(entrada: EntradaVentaDTO): void {
     console.log('Redirigiendo con EntradaVentaId:', entrada.id); // Para verificar el ID antes de redirigir
     this.router.navigate(['/crear-reventa'], { queryParams: { entradaVentaId: entrada.id } });

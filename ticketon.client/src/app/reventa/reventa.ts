@@ -17,11 +17,12 @@ export interface ReventaCreacionDTO {
 
 export interface ReventaDTO {
   id: number;
-  entradaId: number;
-  precioReventa: number;  // Precio de reventa
-  usuarioId: string;      // ID del usuario que realizó la reventa
-  nombreEvento: string;   // Nombre del evento
-  imagenEvento: string;   // URL de la imagen del evento
-  fechaPublicacion: Date; // Fecha de publicación de la reventa
+  entradaVentaId: number;
+  precioReventa: number;
+  usuarioId: string;
+  estado: string;
+  fechaPublicacion: Date;
+  nombreEvento: string;  // Nuevo campo
+  imagenEvento: string; // Fecha de publicación de la reventa
 }
 
