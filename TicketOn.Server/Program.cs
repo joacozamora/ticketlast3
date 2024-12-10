@@ -7,6 +7,8 @@ using System.Text;
 using TicketOn.Server.Servicios;
 using MercadoPago.Config;
 using Microsoft.OpenApi.Models;
+using CloudinaryDotNet;
+using TicketOn.Server.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,8 +83,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CadenaSQL"));
 });
 
-
-
 builder.Services.AddCors(opciones =>
 {
     opciones.AddDefaultPolicy(opcionesCORS =>
@@ -92,15 +92,29 @@ builder.Services.AddCors(opciones =>
     });
 });
 
-builder.Services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
-builder.Services.AddHttpContextAccessor();
+var cultureInfo = new System.Globalization.CultureInfo("en-US");
+System.Globalization.CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+
+// Agregar configuración de Cloudinary
+var cloudinaryConfig = new Account(
+    builder.Configuration["Cloudinary:CloudName"],
+    builder.Configuration["Cloudinary:ApiKey"],
+    builder.Configuration["Cloudinary:ApiSecret"]
+);
+builder.Services.AddSingleton(cloudinaryConfig);
+
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+// Reemplazar AlmacenadorArchivosLocal con CloudinaryService
+builder.Services.AddTransient<IAlmacenadorArchivos, CloudinaryService>();
+
 builder.Services.AddTransient<IServicioUsuarios, ServicioUsuarios>();
 
 var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
-
 
 app.UseSwagger();
 app.UseSwaggerUI();

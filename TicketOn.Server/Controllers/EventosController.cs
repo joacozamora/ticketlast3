@@ -107,28 +107,44 @@ namespace TicketOn.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
+            var culture = System.Globalization.CultureInfo.InvariantCulture;
+
+            // Mapeo inicial de DTO a entidad
             var evento = mapper.Map<Evento>(eventoCreacionDTO);
             var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
+            // Manejo de la imagen (subida a Cloudinary)
             if (eventoCreacionDTO.Imagen is not null)
             {
                 var url = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
                 evento.Imagen = url;
             }
 
-
+            // Asignación del ID del usuario
             evento.UsuarioId = usuarioId;
-            evento.Descripcion = "esto funciona";
 
+            // Asegurar formato correcto para Latitud y Longitud
+            evento.Latitud = decimal.Parse(eventoCreacionDTO.Latitud.ToString(culture), culture);
+            evento.Longitud = decimal.Parse(eventoCreacionDTO.Longitud.ToString(culture), culture);
 
+            // Asignar valor predeterminado a Descripcion si está vacío
+            evento.Descripcion ??= "Descripción predeterminada"; // Cambia este texto según corresponda
+
+            // Log para verificar los valores
+            Console.WriteLine($"Latitud: {evento.Latitud}, Longitud: {evento.Longitud}, Descripcion: {evento.Descripcion}");
+
+            // Agregar el evento a la base de datos
             context.Add(evento);
             await context.SaveChangesAsync();
 
+            // Mapeo de la entidad creada a DTO
             var eventoDTO = mapper.Map<EventoDTO>(evento);
-            
-            return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, evento);
 
+            // Respuesta con CreatedAtRoute
+            return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, eventoDTO);
         }
+
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
@@ -178,6 +194,13 @@ namespace TicketOn.Server.Controllers
             await context.SaveChangesAsync();
 
             return Ok($"Se elimino correctamente el evento de id {id}");
+        }
+
+        [HttpPost("subirImagen")]
+        public async Task<ActionResult<string>> SubirImagen([FromForm] IFormFile archivo)
+        {
+            var url = await almacenadorArchivos.Almacenar("eventos", archivo);
+            return Ok(url);
         }
     }
 }

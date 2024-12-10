@@ -28,7 +28,7 @@ export class InputImgComponent {
     if (input.files && input.files.length > 0) {
       const file: File = input.files[0];
       toBase64(file).then((valor: string) => this.imagenBase64 = valor)
-        .catch(error => console.log(error));
+        .catch(error => console.error('Error al convertir a Base64:', error));
 
       this.archivoSeleccionado.emit(file);
       this.urlImagenActual = undefined;
