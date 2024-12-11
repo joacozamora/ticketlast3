@@ -33,21 +33,43 @@ namespace TicketOn.Server.Controllers
         [HttpGet("callback")]
         public async Task<IActionResult> CallbackMercadoPago(string code, string receivedUsuarioId)
         {
+            Console.WriteLine("Callback recibido de MercadoPago");
+            Console.WriteLine($"Código recibido: {code}");
+            Console.WriteLine($"Usuario ID recibido en la URL: {receivedUsuarioId}");
+
             if (string.IsNullOrEmpty(code))
             {
+                Console.WriteLine("Error: No se recibió el código de autorización");
                 return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se recibió el código de autorización.");
             }
 
+            // Intentar obtener el usuarioId desde el servicio si no se recibe
             if (string.IsNullOrEmpty(receivedUsuarioId))
             {
-                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se recibió el ID del usuario.");
+                Console.WriteLine("No se recibió el ID del usuario en la URL. Intentando obtenerlo desde el servicio...");
+                try
+                {
+                    receivedUsuarioId = await servicioUsuarios.ObtenerUsuarioId();
+                    Console.WriteLine($"Usuario ID obtenido desde el servicio: {receivedUsuarioId}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error al intentar obtener el ID del usuario desde el servicio: {ex.Message}");
+                    return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Error interno al obtener el usuario.");
+                }
+
+                if (string.IsNullOrEmpty(receivedUsuarioId))
+                {
+                    Console.WriteLine("Error: No se pudo obtener el ID del usuario desde el servicio");
+                    return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se recibió el ID del usuario.");
+                }
             }
 
             try
             {
-                // Aquí usas el `receivedUsuarioId` que viene del frontend
-                var clientId = "6998459718331446"; // Tu Client ID
-                var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf"; // Tu Client Secret
+                Console.WriteLine("Preparando solicitud para obtener el token de acceso desde MercadoPago");
+                var clientId = "6998459718331446";
+                var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf";
                 var redirectUri = $"https://ticketlast3.onrender.com/api/mercadopago/callback";
 
                 using var httpClient = new HttpClient();
@@ -63,19 +85,22 @@ namespace TicketOn.Server.Controllers
                 var response = await httpClient.PostAsync("https://api.mercadopago.com/oauth/token", requestContent);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
+                Console.WriteLine($"Respuesta de MercadoPago: {responseBody}");
+
                 if (!response.IsSuccessStatusCode)
                 {
+                    Console.WriteLine("Error al obtener el token de acceso desde MercadoPago");
                     return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Error al obtener el token de acceso.");
                 }
 
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseBody);
-
                 if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.AccessToken))
                 {
+                    Console.WriteLine("Error: El token de acceso obtenido es inválido");
                     return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=El token de acceso obtenido es inválido.");
                 }
 
-                // Usa el usuarioId recibido en lugar de obtenerlo de otra manera
+                Console.WriteLine("Guardando el token de MercadoPago en la base de datos...");
                 var usuarioMP = new UsuarioMercadoPago
                 {
                     UsuarioId = receivedUsuarioId,
@@ -87,6 +112,7 @@ namespace TicketOn.Server.Controllers
                 var registroExistente = await context.UsuarioMercadoPago.FirstOrDefaultAsync(u => u.UsuarioId == receivedUsuarioId);
                 if (registroExistente != null)
                 {
+                    Console.WriteLine("Actualizando registro existente...");
                     registroExistente.AccessToken = usuarioMP.AccessToken;
                     registroExistente.RefreshToken = usuarioMP.RefreshToken;
                     registroExistente.FechaExpiracion = usuarioMP.FechaExpiracion;
@@ -94,18 +120,22 @@ namespace TicketOn.Server.Controllers
                 }
                 else
                 {
+                    Console.WriteLine("Creando nuevo registro...");
                     context.UsuarioMercadoPago.Add(usuarioMP);
                 }
 
                 await context.SaveChangesAsync();
+                Console.WriteLine("Token guardado correctamente");
 
                 return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=exito");
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error interno durante el proceso: {ex.Message}");
                 return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Error interno: {Uri.EscapeDataString(ex.Message)}");
             }
         }
+
 
 
         [HttpGet("vinculado")]
