@@ -23,27 +23,27 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpGet("autorizar")]
-        public IActionResult AutorizarMercadoPago()
+        public IActionResult AutorizarMercadoPago(int entradaVentaId)
         {
             logger.LogInformation("Iniciando autorización para MercadoPago");
 
             var clientId = "6998459718331446";
             var redirectUri = $"https://ticketlast3.onrender.com/api/mercadopago/callback";
-            var authUrl = $"https://auth.mercadopago.com.ar/authorization?response_type=code&client_id={clientId}&redirect_uri={Uri.EscapeDataString(redirectUri)}&scope=offline_access";
+            var authUrl = $"https://auth.mercadopago.com.ar/authorization?response_type=code&client_id={clientId}&redirect_uri={Uri.EscapeDataString(redirectUri)}&scope=offline_access&state={entradaVentaId}";
 
             logger.LogInformation($"Redireccionando a URL de autorización: {authUrl}");
             return Redirect(authUrl);
         }
 
         [HttpGet("callback")]
-        public async Task<IActionResult> CallbackMercadoPago(string code)
+        public async Task<IActionResult> CallbackMercadoPago(string code, string state)
         {
-            logger.LogInformation($"Callback recibido de MercadoPago. Código: {code}");
+            logger.LogInformation($"Callback recibido de MercadoPago. Código: {code}, State (EntradaVentaId): {state}");
 
-            if (string.IsNullOrEmpty(code))
+            if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(state))
             {
-                logger.LogError("No se recibió el código de autorización");
-                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se recibió el código de autorización.");
+                logger.LogError("Faltan parámetros en el callback");
+                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Faltan parámetros en el callback.");
             }
 
             try
@@ -94,22 +94,27 @@ namespace TicketOn.Server.Controllers
                 await context.SaveChangesAsync();
                 logger.LogInformation("Token guardado correctamente.");
 
-                // Asociar el usuario
-                var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-                if (!string.IsNullOrEmpty(usuarioId))
+                // Asociar usuario con entradaVentaId usando el state
+                if (int.TryParse(state, out int entradaVentaId))
                 {
-                    logger.LogInformation($"Asociando el usuario {usuarioId} al registro de MercadoPago...");
-                    usuarioMP.UsuarioId = usuarioId;
-                    context.UsuarioMercadoPago.Update(usuarioMP);
-                    await context.SaveChangesAsync();
-                    logger.LogInformation("Usuario asociado correctamente.");
-                }
-                else
-                {
-                    logger.LogWarning("No se pudo obtener el usuario ID para asociarlo.");
+                    var entradaVenta = await context.EntradasVenta.Include(e => e.Usuario).FirstOrDefaultAsync(e => e.Id == entradaVentaId);
+                    if (entradaVenta != null && entradaVenta.Usuario != null)
+                    {
+                        usuarioMP.UsuarioId = entradaVenta.UsuarioId;
+                        context.UsuarioMercadoPago.Update(usuarioMP);
+                        await context.SaveChangesAsync();
+                        logger.LogInformation($"Usuario asociado correctamente: {entradaVenta.UsuarioId}");
+                    }
+                    else
+                    {
+                        logger.LogWarning("No se pudo encontrar el usuario relacionado con la entradaVentaId.");
+                    }
+
+                    return Redirect($"https://127.0.0.1:4200/crear-reventa?entradaVentaId={entradaVentaId}");
                 }
 
-                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=exito");
+                logger.LogWarning("No se pudo parsear el entradaVentaId desde el state.");
+                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Error procesando el callback.");
             }
             catch (Exception ex)
             {

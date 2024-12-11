@@ -17,8 +17,8 @@ export class MercadoPagoService {
   }
 
   // Método para redirigir a la autorización de MercadoPago
-  autorizarMercadoPago(usuarioId: string): void {
-    const apiUrl = `${this.apiUrl}/autorizar?usuarioId=${usuarioId}`;
-    window.location.href = apiUrl;
+  autorizarMercadoPago(entradaVentaId: string): void {
+    const url = `${this.apiUrl}/autorizar?entradaVentaId=${entradaVentaId}`;
+    window.location.href = url;
   }
 }
