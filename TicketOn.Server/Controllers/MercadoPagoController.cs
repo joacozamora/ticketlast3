@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TicketOn.Server.Entidades;
@@ -11,15 +12,16 @@ namespace TicketOn.Server.Controllers
     public class MercadoPagoController : Controller
     {
         private readonly ApplicationDbContext context;
+        private readonly UserManager<IdentityUser> userManager;
         private readonly IServicioUsuarios servicioUsuarios;
 
-        public MercadoPagoController(ApplicationDbContext context, IServicioUsuarios servicioUsuarios)
+        public MercadoPagoController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
+            this.userManager = userManager;
             this.servicioUsuarios = servicioUsuarios;
         }
 
-        // Redirigir al flujo de autorización de Mercado Pago
         [HttpGet("autorizar")]
         public IActionResult AutorizarMercadoPago()
         {
@@ -31,7 +33,6 @@ namespace TicketOn.Server.Controllers
             return Redirect(authUrl);
         }
 
-        // Callback de Mercado Pago después de la autorización
         [HttpGet("callback")]
         public async Task<IActionResult> CallbackMercadoPago(string code)
         {
@@ -40,13 +41,13 @@ namespace TicketOn.Server.Controllers
                 return BadRequest("No se recibió el código de autorización.");
             }
 
-            var clientId = "6998459718331446"; // Tu Client ID
-            var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf"; // Tu Client Secret
+            var clientId = "6998459718331446";
+            var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf";
             var redirectUri = "https://ticketlast3.onrender.com/api/mercadopago/callback";
 
             try
             {
-                Console.WriteLine($"Código recibido: {code}"); // Log del código recibido
+                Console.WriteLine($"Código recibido: {code}");
 
                 using var httpClient = new HttpClient();
                 var requestContent = new FormUrlEncodedContent(new[]
@@ -76,6 +77,12 @@ namespace TicketOn.Server.Controllers
                 }
 
                 var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+                if (string.IsNullOrEmpty(usuarioId))
+                {
+                    return BadRequest("El usuario actual no está autenticado.");
+                }
+
                 var usuarioMP = new UsuarioMercadoPago
                 {
                     UsuarioId = usuarioId,
@@ -84,7 +91,6 @@ namespace TicketOn.Server.Controllers
                     FechaExpiracion = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn)
                 };
 
-                // Actualizar o crear el registro del usuario en la base de datos
                 var registroExistente = await context.UsuarioMercadoPago.FirstOrDefaultAsync(u => u.UsuarioId == usuarioId);
                 if (registroExistente != null)
                 {
@@ -101,7 +107,7 @@ namespace TicketOn.Server.Controllers
                 await context.SaveChangesAsync();
 
                 Console.WriteLine("Token de acceso guardado correctamente.");
-                return Redirect("https://127.0.0.1:4200");
+                return Redirect("https://127.0.0.1:4200/confirmacion-mercadopago"); // Redirigir al frontend
             }
             catch (Exception ex)
             {
@@ -114,7 +120,6 @@ namespace TicketOn.Server.Controllers
             }
         }
 
-        // Verificar si el usuario está vinculado a Mercado Pago
         [HttpGet("vinculado")]
         public async Task<IActionResult> VerificarVinculacion()
         {
@@ -128,7 +133,6 @@ namespace TicketOn.Server.Controllers
 
             if (usuarioMercadoPago.FechaExpiracion <= DateTime.UtcNow)
             {
-                // Intentar renovar el token
                 var tokenRenovado = await RenovarToken(usuarioMercadoPago);
                 if (!tokenRenovado)
                 {
@@ -139,7 +143,6 @@ namespace TicketOn.Server.Controllers
             return Ok("Cuenta vinculada y activa.");
         }
 
-        // Método para renovar el token de acceso
         private async Task<bool> RenovarToken(UsuarioMercadoPago usuarioMercadoPago)
         {
             var clientId = "6998459718331446";
@@ -183,7 +186,6 @@ namespace TicketOn.Server.Controllers
             }
         }
 
-        // Clase para deserializar la respuesta del token
         public class TokenResponse
         {
             [JsonProperty("access_token")]
@@ -197,7 +199,6 @@ namespace TicketOn.Server.Controllers
         }
     }
 }
-
 
 
 //using Microsoft.AspNetCore.Mvc;
