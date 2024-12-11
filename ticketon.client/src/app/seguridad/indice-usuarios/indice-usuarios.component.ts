@@ -11,11 +11,10 @@ import { ListadoGenericoComponent } from '../../utilidades/listado-generico/list
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
-  selector: 'app-indice-usuarios',
-  standalone: true,
-  imports: [RouterLink, MatButtonModule, MatTableModule, ListadoGenericoComponent, MatPaginatorModule, SweetAlert2Module],
-  templateUrl: './indice-usuarios.component.html',
-  styleUrl: './indice-usuarios.component.css'
+    selector: 'app-indice-usuarios',
+    imports: [RouterLink, MatButtonModule, MatTableModule, ListadoGenericoComponent, MatPaginatorModule, SweetAlert2Module],
+    templateUrl: './indice-usuarios.component.html',
+    styleUrl: './indice-usuarios.component.css'
 })
 export class IndiceUsuariosComponent {
 

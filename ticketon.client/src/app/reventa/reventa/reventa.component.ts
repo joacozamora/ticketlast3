@@ -5,11 +5,10 @@ import { CommonModule } from '@angular/common';
 declare var MercadoPago: any;
 
 @Component({
-  selector: 'app-reventa',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './reventa.component.html',
-  styleUrls: ['./reventa.component.css'],
+    selector: 'app-reventa',
+    imports: [CommonModule],
+    templateUrl: './reventa.component.html',
+    styleUrls: ['./reventa.component.css']
 })
 export class ReventaComponent implements OnInit {
   reventas: ReventaDTO[] = [];

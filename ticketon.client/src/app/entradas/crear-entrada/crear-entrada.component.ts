@@ -5,11 +5,10 @@ import { Entrada } from '../entradas';
 import { FormularioEntradaComponent } from '../formulario-entrada/formulario-entrada.component';
 
 @Component({
-  selector: 'app-crear-entrada',
-  standalone: true,
-  imports: [FormularioEntradaComponent],
-  templateUrl: './crear-entrada.component.html',
-  styleUrls: ['./crear-entrada.component.css']
+    selector: 'app-crear-entrada',
+    imports: [FormularioEntradaComponent],
+    templateUrl: './crear-entrada.component.html',
+    styleUrls: ['./crear-entrada.component.css']
 })
 
 export class CrearEntradaComponent {

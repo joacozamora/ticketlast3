@@ -4,11 +4,10 @@ import { EventosService } from '../eventos/eventos.service';
 import { AutorizadoComponent } from '../seguridad/autorizado/autorizado.component';
 
 @Component({
-  selector: 'app-landing-page',
-  standalone: true,
-  imports: [ListadoEventosComponent, AutorizadoComponent],
-  templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.css'
+    selector: 'app-landing-page',
+    imports: [ListadoEventosComponent, AutorizadoComponent],
+    templateUrl: './landing-page.component.html',
+    styleUrl: './landing-page.component.css'
 })
 export class LandingPageComponent {
   eventosService = inject(EventosService);

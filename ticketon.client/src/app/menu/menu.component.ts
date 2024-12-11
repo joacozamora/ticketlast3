@@ -13,11 +13,10 @@ import { LoginComponent } from '../seguridad/login/login.component';
 import { RegistroComponent } from '../seguridad/registro/registro.component';
 
 @Component({
-  selector: 'app-menu',
-  standalone: true,
-  imports: [MatToolbarModule, MatIconModule, MatButtonModule, RouterLink, AutorizadoComponent, CommonModule],
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+    selector: 'app-menu',
+    imports: [MatToolbarModule, MatIconModule, MatButtonModule, RouterLink, AutorizadoComponent, CommonModule],
+    templateUrl: './menu.component.html',
+    styleUrl: './menu.component.css'
 })
 export class MenuComponent {
 

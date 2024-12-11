@@ -9,11 +9,10 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 
 
 @Component({
-  selector: 'app-registro',
-  standalone: true,
-  imports: [FormularioAutenticacionComponent, MostrarErroresComponent],
-  templateUrl: './registro.component.html',
-  styleUrl: './registro.component.css'
+    selector: 'app-registro',
+    imports: [FormularioAutenticacionComponent, MostrarErroresComponent],
+    templateUrl: './registro.component.html',
+    styleUrl: './registro.component.css'
 })
 export class RegistroComponent {
   seguridadService = inject(SeguridadService);

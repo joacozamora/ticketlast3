@@ -9,11 +9,10 @@ import { CommonModule } from '@angular/common';
 
 
 @Component({
-  selector: 'app-formulario-genero',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatFormFieldModule,MatInputModule],
-  templateUrl: './formulario-genero.component.html',
-  styleUrls: ['./formulario-genero.component.css']
+    selector: 'app-formulario-genero',
+    imports: [ReactiveFormsModule, CommonModule, MatFormFieldModule, MatInputModule],
+    templateUrl: './formulario-genero.component.html',
+    styleUrls: ['./formulario-genero.component.css']
 })
 export class FormularioGeneroComponent {
 

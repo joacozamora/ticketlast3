@@ -10,11 +10,10 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-formulario-autenticacion',
-  standalone: true,
-  imports: [MostrarErroresComponent, ReactiveFormsModule, RouterLink, MatFormFieldModule, MatButtonModule, MatInputModule, MatLabel, CommonModule],
-  templateUrl: './formulario-autenticacion.component.html',
-  styleUrl: './formulario-autenticacion.component.css'
+    selector: 'app-formulario-autenticacion',
+    imports: [MostrarErroresComponent, ReactiveFormsModule, RouterLink, MatFormFieldModule, MatButtonModule, MatInputModule, MatLabel, CommonModule],
+    templateUrl: './formulario-autenticacion.component.html',
+    styleUrl: './formulario-autenticacion.component.css'
 })
 export class FormularioAutenticacionComponent {
   @Input() titulo!: string;

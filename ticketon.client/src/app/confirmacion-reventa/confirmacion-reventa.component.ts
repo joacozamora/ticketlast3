@@ -4,11 +4,10 @@ import { ReventaService } from '../reventa/reventa.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-confirmacion-reventa',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './confirmacion-reventa.component.html',
-  styleUrls: ['./confirmacion-reventa.component.css'],
+    selector: 'app-confirmacion-reventa',
+    imports: [CommonModule],
+    templateUrl: './confirmacion-reventa.component.html',
+    styleUrls: ['./confirmacion-reventa.component.css']
 })
 export class ConfirmacionReventaComponent implements OnInit {
   reventaId!: number;

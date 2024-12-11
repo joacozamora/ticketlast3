@@ -7,11 +7,10 @@ import { FormularioGeneroComponent } from '../formulario-genero/formulario-gener
 
 
 @Component({
-  selector: 'app-crear-genero',
-  standalone: true,
-  imports: [FormularioGeneroComponent], 
-  templateUrl: './crear-genero.component.html',
-  styleUrls: ['./crear-genero.component.css']
+    selector: 'app-crear-genero',
+    imports: [FormularioGeneroComponent],
+    templateUrl: './crear-genero.component.html',
+    styleUrls: ['./crear-genero.component.css']
 })
 export class CrearGeneroComponent implements OnInit {
   form!: FormGroup;

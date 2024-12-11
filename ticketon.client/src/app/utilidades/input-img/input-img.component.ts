@@ -3,11 +3,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { toBase64 } from '../funciones/toBase64';
 
 @Component({
-  selector: 'app-input-img',
-  standalone: true,
-  imports: [MatButtonModule],
-  templateUrl: './input-img.component.html',
-  styleUrls: ['./input-img.component.css']
+    selector: 'app-input-img',
+    imports: [MatButtonModule],
+    templateUrl: './input-img.component.html',
+    styleUrls: ['./input-img.component.css']
 })
 export class InputImgComponent {
 

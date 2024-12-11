@@ -4,11 +4,10 @@ import { VentaService } from '../venta/venta.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-confirmacion',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './confirmacion.component.html',
-  styleUrls: ['./confirmacion.component.css'],
+    selector: 'app-confirmacion',
+    imports: [CommonModule],
+    templateUrl: './confirmacion.component.html',
+    styleUrls: ['./confirmacion.component.css']
 })
 export class ConfirmacionComponent implements OnInit {
   ventaId!: number;

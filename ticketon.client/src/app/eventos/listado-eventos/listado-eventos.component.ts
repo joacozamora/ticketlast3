@@ -115,21 +115,20 @@ import { SeguridadService } from '../../seguridad/seguridad.service';
 import { EventosPageDTO } from '../evento';
 
 @Component({
-  selector: 'app-listado-eventos',
-  standalone: true,
-  imports: [
-    DatePipe,
-    CurrencyPipe,
-    ListadoGenericoComponent,
-    MatButtonModule,
-    MatIconModule,
-    RouterLink,
-    SweetAlert2Module,
-    AutorizadoComponent,
-    CommonModule
-  ],
-  templateUrl: './listado-eventos.component.html',
-  styleUrls: ['./listado-eventos.component.css']
+    selector: 'app-listado-eventos',
+    imports: [
+        DatePipe,
+        CurrencyPipe,
+        ListadoGenericoComponent,
+        MatButtonModule,
+        MatIconModule,
+        RouterLink,
+        SweetAlert2Module,
+        AutorizadoComponent,
+        CommonModule
+    ],
+    templateUrl: './listado-eventos.component.html',
+    styleUrls: ['./listado-eventos.component.css']
 })
 export class ListadoEventosComponent implements OnInit, OnDestroy {
   @Input({ required: true })

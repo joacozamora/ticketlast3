@@ -8,11 +8,10 @@ import { FormsModule } from '@angular/forms';
 import { Entrada } from '../entradas';
 
 @Component({
-  selector: 'app-comprar-entradas',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './comprar-entradas.component.html',
-  styleUrls: ['./comprar-entradas.component.css']
+    selector: 'app-comprar-entradas',
+    imports: [CommonModule, FormsModule],
+    templateUrl: './comprar-entradas.component.html',
+    styleUrls: ['./comprar-entradas.component.css']
 })
 export class ComprarEntradasComponent implements OnInit {
   evento: any;

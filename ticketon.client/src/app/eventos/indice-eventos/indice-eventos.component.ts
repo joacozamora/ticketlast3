@@ -5,11 +5,10 @@ import { SeguridadService } from '../../seguridad/seguridad.service';
 import { AutorizadoComponent } from '../../seguridad/autorizado/autorizado.component';
 
 @Component({
-  selector: 'app-indice-eventos',
-  standalone: true,
-  imports: [ListadoEventosComponent, AutorizadoComponent],
-  templateUrl: './indice-eventos.component.html',
-  styleUrl: './indice-eventos.component.css'
+    selector: 'app-indice-eventos',
+    imports: [ListadoEventosComponent, AutorizadoComponent],
+    templateUrl: './indice-eventos.component.html',
+    styleUrl: './indice-eventos.component.css'
 })
 export class IndiceEventosComponent {
 

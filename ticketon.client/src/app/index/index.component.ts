@@ -7,12 +7,11 @@ import { EventoDTO } from '../eventos/evento';
 import { ListadoEventosComponent } from '../eventos/listado-eventos/listado-eventos.component';
 
 @Component({
-  selector: 'app-index',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet, CarruselComponent, ListadoEventosComponent],
-  templateUrl: './index.component.html',
-  styleUrls: ['./index.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    selector: 'app-index',
+    imports: [CommonModule, RouterOutlet, CarruselComponent, ListadoEventosComponent],
+    templateUrl: './index.component.html',
+    styleUrls: ['./index.component.css'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class IndexComponent implements OnInit {
   eventos: { nombre: string; imagen: string }[] = [];

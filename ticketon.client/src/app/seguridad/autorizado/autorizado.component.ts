@@ -2,11 +2,10 @@ import { Component, Input, inject } from '@angular/core';
 import { SeguridadService } from '../seguridad.service';
 
 @Component({
-  selector: 'app-autorizado',
-  standalone: true,
-  imports:[],
-  templateUrl: './autorizado.component.html',
-  styleUrl: './autorizado.component.css'
+    selector: 'app-autorizado',
+    imports: [],
+    templateUrl: './autorizado.component.html',
+    styleUrl: './autorizado.component.css'
 })
 export class AutorizadoComponent {
 

@@ -11,11 +11,10 @@ import { EventosService } from '../eventos.service';
 
 
 @Component({
-  selector: 'app-crear-evento',
-  standalone: true,
-  imports: [CommonModule, RouterModule, FormularioEventoComponent],  
-  templateUrl: './crear-evento.component.html',
-  styleUrls: ['./crear-evento.component.css']
+    selector: 'app-crear-evento',
+    imports: [CommonModule, RouterModule, FormularioEventoComponent],
+    templateUrl: './crear-evento.component.html',
+    styleUrls: ['./crear-evento.component.css']
 })
 export class CrearEventoComponent {
   router = inject(Router);  

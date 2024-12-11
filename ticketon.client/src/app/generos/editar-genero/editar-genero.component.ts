@@ -5,11 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormularioGeneroComponent } from '../formulario-genero/formulario-genero.component';
 
 @Component({
-  selector: 'app-editar-genero',
-  standalone: true,
-  imports: [FormularioGeneroComponent] ,
-  templateUrl: './editar-genero.component.html',
-  styleUrls: ['./editar-genero.component.css']
+    selector: 'app-editar-genero',
+    imports: [FormularioGeneroComponent],
+    templateUrl: './editar-genero.component.html',
+    styleUrls: ['./editar-genero.component.css']
 })
 export class EditarGeneroComponent implements OnInit {
 

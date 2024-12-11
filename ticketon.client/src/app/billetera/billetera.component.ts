@@ -11,11 +11,10 @@ import * as QRCode from 'qrcode';
 import { ReventaService } from '../reventa/reventa.service';
 
 @Component({
-  selector: 'app-billetera',
-  standalone: true,
-  imports: [CommonModule, QRCodeModule, RouterModule],
-  templateUrl: './billetera.component.html',
-  styleUrls: ['./billetera.component.css']
+    selector: 'app-billetera',
+    imports: [CommonModule, QRCodeModule, RouterModule],
+    templateUrl: './billetera.component.html',
+    styleUrls: ['./billetera.component.css']
 })
 export class BilleteraComponent implements OnInit {
   entradasBilletera: EntradaVentaDTO[] = [];

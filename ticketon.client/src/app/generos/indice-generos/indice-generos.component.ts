@@ -12,11 +12,10 @@ import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
-  selector: 'app-indice-generos',
-  standalone: true,
+    selector: 'app-indice-generos',
     imports: [RouterLink, DatePipe, CurrencyPipe, MatIconModule, MatButtonModule, MatTableModule, ListadoGenericoComponent, MatPaginatorModule, SweetAlert2Module],
-  templateUrl: './indice-generos.component.html',
-  styleUrls: ['./indice-generos.component.css']
+    templateUrl: './indice-generos.component.html',
+    styleUrls: ['./indice-generos.component.css']
 })
 
 

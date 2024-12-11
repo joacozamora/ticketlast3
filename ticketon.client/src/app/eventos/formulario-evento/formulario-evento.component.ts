@@ -14,21 +14,20 @@ import { MapaComponent } from '../../utilidades/mapa/mapa.component';
 import { Coordenada } from '../../utilidades/mapa/Coordenada';
 
 @Component({
-  selector: 'app-formulario-evento',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatMomentDateModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    InputImgComponent,
-    MapaComponent,
-  ],
-  templateUrl: './formulario-evento.component.html',
-  styleUrls: ['./formulario-evento.component.css']
+    selector: 'app-formulario-evento',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatMomentDateModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        InputImgComponent,
+        MapaComponent,
+    ],
+    templateUrl: './formulario-evento.component.html',
+    styleUrls: ['./formulario-evento.component.css']
 })
 export class FormularioEventoComponent implements OnInit {
 

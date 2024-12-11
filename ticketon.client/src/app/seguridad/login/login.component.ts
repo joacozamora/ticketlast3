@@ -8,11 +8,10 @@ import { extraerErroresIdentity } from '../../utilidades/extraerErrores';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [FormularioAutenticacionComponent, MostrarErroresComponent],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    imports: [FormularioAutenticacionComponent, MostrarErroresComponent],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 export class LoginComponent {
   seguridadService = inject(SeguridadService);

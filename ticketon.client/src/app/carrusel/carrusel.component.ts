@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-carrusel',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  templateUrl: './carrusel.component.html',
-  styleUrls: ['./carrusel.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    selector: 'app-carrusel',
+    imports: [CommonModule, RouterOutlet],
+    templateUrl: './carrusel.component.html',
+    styleUrls: ['./carrusel.component.css'],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class CarruselComponent implements AfterViewInit, OnChanges {
   @Input() eventos: { nombre: string; imagen: string }[] = [];

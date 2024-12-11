@@ -7,11 +7,10 @@ import { CommonModule } from '@angular/common';
 import { MercadoPagoService } from '../mercado-pago.service';
 
 @Component({
-  selector: 'app-crear-reventa',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './crear-reventa.component.html',
-  styleUrls: ['./crear-reventa.component.css']
+    selector: 'app-crear-reventa',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './crear-reventa.component.html',
+    styleUrls: ['./crear-reventa.component.css']
 })
 export class CrearReventaComponent implements OnInit {
   reventaForm: FormGroup;

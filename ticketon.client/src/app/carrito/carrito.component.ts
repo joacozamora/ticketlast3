@@ -7,11 +7,10 @@ import { VentaService } from '../venta/venta.service';
 declare var MercadoPago: any;
 
 @Component({
-  selector: 'app-carrito',
-  standalone: true,
-  imports: [CommonModule, RouterLink],
-  templateUrl: './carrito.component.html',
-  styleUrls: ['./carrito.component.css'],
+    selector: 'app-carrito',
+    imports: [CommonModule, RouterLink],
+    templateUrl: './carrito.component.html',
+    styleUrls: ['./carrito.component.css']
 })
 export class CarritoComponent implements OnInit {
   carritoItems: CarritoItem[] = [];

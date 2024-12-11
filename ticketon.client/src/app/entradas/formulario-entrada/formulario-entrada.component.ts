@@ -115,11 +115,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EventosService } from '../../eventos/eventos.service';
 
 @Component({
-  selector: 'app-formulario-entrada',
-  standalone: true,
-  imports: [CommonModule, MatFormField, MatLabel, MatError, ReactiveFormsModule],
-  templateUrl: './formulario-entrada.component.html',
-  styleUrls: ['./formulario-entrada.component.css']
+    selector: 'app-formulario-entrada',
+    imports: [CommonModule, MatFormField, MatLabel, MatError, ReactiveFormsModule],
+    templateUrl: './formulario-entrada.component.html',
+    styleUrls: ['./formulario-entrada.component.css']
 })
 export class FormularioEntradaComponent implements OnInit {
   @Input() idEvento!: number;

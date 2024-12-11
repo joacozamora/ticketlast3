@@ -5,11 +5,10 @@ import { EventosService } from '../eventos.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-editar-evento',
-  standalone: true,
-  imports: [FormularioEventoComponent],
-  templateUrl: './editar-evento.component.html',
-  styleUrl: './editar-evento.component.css'
+    selector: 'app-editar-evento',
+    imports: [FormularioEventoComponent],
+    templateUrl: './editar-evento.component.html',
+    styleUrl: './editar-evento.component.css'
 })
 export class EditarEventoComponent{
 

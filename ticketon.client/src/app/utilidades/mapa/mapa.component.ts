@@ -4,11 +4,10 @@ import { LeafletMouseEvent, Marker, MarkerOptions, icon, latLng, marker, tileLay
 import { Coordenada } from './Coordenada';
 
 @Component({
-  selector: 'app-mapa',
-  standalone: true,
-  imports: [LeafletModule],
-  templateUrl: './mapa.component.html',
-  styleUrl: './mapa.component.css'
+    selector: 'app-mapa',
+    imports: [LeafletModule],
+    templateUrl: './mapa.component.html',
+    styleUrl: './mapa.component.css'
 })
 export class MapaComponent implements OnInit {
 

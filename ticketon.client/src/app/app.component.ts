@@ -12,12 +12,11 @@ import { MostrarErroresComponent } from './utilidades/mostrar-errores/mostrar-er
 
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [MenuComponent, RouterOutlet, LoginComponent, RegistroComponent, AutorizadoComponent, FormularioAutenticacionComponent, MostrarErroresComponent],
-  /*providers: [JwtHelperService],*/
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    imports: [MenuComponent, RouterOutlet, LoginComponent, RegistroComponent, AutorizadoComponent, FormularioAutenticacionComponent, MostrarErroresComponent],
+    /*providers: [JwtHelperService],*/
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css'
 })
 export class AppComponent {
   /*constructor(private jwtHelper: JwtHelperService) { }*/
