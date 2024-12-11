@@ -23,7 +23,17 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "allowedCommonJsDependencies": ["sweetalert2", "moment", "leaflet", "qrcode"],
+            "allowedCommonJsDependencies": [
+              "sweetalert2",
+              "moment",
+              "leaflet",
+              "qrcode",
+              "html2canvas",
+              "canvg",
+              "jspdf",
+              "dompurify",
+              "core-js"
+            ],
             "outputPath": "dist/ticketon.client",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -52,13 +62,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "2mb"
+                  "maximumWarning": "3mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2mb",
-                  "maximumError": "2mb"
+                  "maximumWarning": "3mb",
+                  "maximumError": "3mb"
                 }
               ],
               "outputHashing": "all"
