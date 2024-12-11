@@ -22,6 +22,7 @@ import { ReventaComponent } from './reventa/reventa/reventa.component';
 import { CrearReventaComponent } from './reventa/crear-reventa/crear-reventa.component';
 import { ConfirmacionComponent } from './confirmacion/confirmacion.component';
 import { ConfirmacionReventaComponent } from './confirmacion-reventa/confirmacion-reventa.component';
+import { ConfirmacionMercadoPagoComponent } from './confirmacion-mercado-pago/confirmacion-mercado-pago.component';
 
 
 export const routes: Routes = [
@@ -45,6 +46,7 @@ export const routes: Routes = [
   { path: 'crear-reventa', component: CrearReventaComponent },
   { path: 'confirmacion-reventa', component: ConfirmacionReventaComponent },
   { path: 'confirmacion', component: ConfirmacionComponent, pathMatch: 'full' },
+  { path: 'confirmacion-mercadopago', component: ConfirmacionMercadoPagoComponent },
   { path: '**', redirectTo: '' }
 ];
 

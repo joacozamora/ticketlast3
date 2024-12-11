@@ -1,1 +1,6 @@
-<p>confirmacion-mercado-pago works!</p>
+<div class="container text-center mt-5">
+  <h2 *ngIf="estado === 'exito'" class="text-success">{{ mensaje }}</h2>
+  <h2 *ngIf="estado === 'error'" class="text-danger">{{ mensaje }}</h2>
+
+  <button class="btn btn-primary mt-4" (click)="regresar()">Regresar a la página principal</button>
+</div>

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TicketOn.Server.Entidades;
@@ -12,13 +11,11 @@ namespace TicketOn.Server.Controllers
     public class MercadoPagoController : Controller
     {
         private readonly ApplicationDbContext context;
-        private readonly UserManager<IdentityUser> userManager;
         private readonly IServicioUsuarios servicioUsuarios;
 
-        public MercadoPagoController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IServicioUsuarios servicioUsuarios)
+        public MercadoPagoController(ApplicationDbContext context, IServicioUsuarios servicioUsuarios)
         {
             this.context = context;
-            this.userManager = userManager;
             this.servicioUsuarios = servicioUsuarios;
         }
 
@@ -38,17 +35,15 @@ namespace TicketOn.Server.Controllers
         {
             if (string.IsNullOrEmpty(code))
             {
-                return BadRequest("No se recibió el código de autorización.");
+                return Redirect("https://127.0.0.1:4200/confirmacion-mercadopago?estado=error");
             }
 
-            var clientId = "6998459718331446";
-            var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf";
+            var clientId = "6998459718331446"; // Tu Client ID
+            var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf"; // Tu Client Secret
             var redirectUri = "https://ticketlast3.onrender.com/api/mercadopago/callback";
 
             try
             {
-                Console.WriteLine($"Código recibido: {code}");
-
                 using var httpClient = new HttpClient();
                 var requestContent = new FormUrlEncodedContent(new[]
                 {
@@ -64,24 +59,11 @@ namespace TicketOn.Server.Controllers
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"Error al obtener el token: {responseBody}");
-                    return StatusCode((int)response.StatusCode, $"Error al obtener el token de acceso: {responseBody}");
+                    return Redirect($"https://127.0.0.1:4200/confirmacion-mercadopago?estado=error");
                 }
 
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseBody);
-
-                if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.AccessToken))
-                {
-                    Console.WriteLine("El token de acceso es inválido o nulo.");
-                    return StatusCode(500, "El token de acceso obtenido es inválido.");
-                }
-
                 var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-
-                if (string.IsNullOrEmpty(usuarioId))
-                {
-                    return BadRequest("El usuario actual no está autenticado.");
-                }
 
                 var usuarioMP = new UsuarioMercadoPago
                 {
@@ -106,17 +88,12 @@ namespace TicketOn.Server.Controllers
 
                 await context.SaveChangesAsync();
 
-                Console.WriteLine("Token de acceso guardado correctamente.");
-                return Redirect("https://127.0.0.1:4200/confirmacion-mercadopago"); // Redirigir al frontend
+                return Redirect($"https://127.0.0.1:4200/confirmacion-mercadopago?estado=exito");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en el callback de MercadoPago: {ex.Message}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                }
-                return StatusCode(500, $"Error al procesar la autorización de Mercado Pago: {ex.Message}");
+                return Redirect($"https://127.0.0.1:4200/confirmacion-mercadopago?estado=error");
             }
         }
 
@@ -169,7 +146,6 @@ namespace TicketOn.Server.Controllers
                 }
 
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseBody);
-
                 usuarioMercadoPago.AccessToken = tokenResponse.AccessToken;
                 usuarioMercadoPago.RefreshToken = tokenResponse.RefreshToken;
                 usuarioMercadoPago.FechaExpiracion = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn);
