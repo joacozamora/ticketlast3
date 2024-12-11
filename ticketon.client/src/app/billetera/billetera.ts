@@ -7,8 +7,9 @@ export interface EntradaVentaDTO {
   codigoQR: string; // Código QR asociado a la venta
   fechaAsignacion: Date; // Fecha en que se realizó la venta
   nombreEntrada: string; // Nombre de la entrada (puede venir de la relación con Entrada)
-  imagenEvento: File | string;  // URL de la imagen del evento
-  correo: string;
+  imagenEvento: File | string; // URL de la imagen del evento
+  correo: string; // Correo del organizador o usuario
+  enReventa: boolean; // Nuevo campo: indica si la entrada está en reventa
 }
 export interface EventoEntradasDTO {
   eventoId: number;      // ID del evento

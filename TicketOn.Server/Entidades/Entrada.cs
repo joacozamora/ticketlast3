@@ -12,5 +12,6 @@ namespace TicketOn.Server.Entidades
         [ForeignKey("Evento")]
         public int IdEvento { get; set; }
         public Evento Evento { get; set; }
+        public string CorreoOrganizador { get; set; }
     }
 }

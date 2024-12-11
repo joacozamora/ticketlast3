@@ -1,6 +1,8 @@
-<div class="container text-center mt-5">
-  <h2 *ngIf="estado === 'exito'" class="text-success">{{ mensaje }}</h2>
-  <h2 *ngIf="estado === 'error'" class="text-danger">{{ mensaje }}</h2>
-
-  <button class="btn btn-primary mt-4" (click)="regresar()">Regresar a la página principal</button>
+<div *ngIf="estado === 'exito'" class="text-green-500">
+  <h2>{{ mensaje }}</h2>
+  <button (click)="regresar()">Regresar</button>
+</div>
+<div *ngIf="estado === 'error'" class="text-red-500">
+  <h2>{{ mensaje }}</h2>
+  <button (click)="regresar()">Regresar</button>
 </div>

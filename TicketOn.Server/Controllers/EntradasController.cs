@@ -68,11 +68,21 @@ namespace TicketOn.Server.Controllers
             foreach (var entradaCreacionDTO in entradasCreacionDTO)
             {
                 // Verificar que el evento existe
-                var eventoExiste = await context.Eventos.AnyAsync(e => e.Id == entradaCreacionDTO.IdEvento);
-                if (!eventoExiste)
+                var evento = await context.Eventos.FirstOrDefaultAsync(e => e.Id == entradaCreacionDTO.IdEvento);
+                if (evento == null)
                 {
-                    return BadRequest("El evento especificado no existe para alguna de las entradas");
+                    return BadRequest($"El evento con ID {entradaCreacionDTO.IdEvento} no existe.");
                 }
+
+                // Obtener el correo del usuario creador del evento a través del UsuarioId
+                var usuarioOrganizador = await context.Users.FirstOrDefaultAsync(u => u.Id == evento.UsuarioId);
+                if (usuarioOrganizador == null)
+                {
+                    return BadRequest("No se pudo obtener el correo del organizador del evento.");
+                }
+
+                // Asignar el correo del organizador al DTO
+                entradaCreacionDTO.CorreoOrganizador = usuarioOrganizador.Email;
 
                 // Mapear el DTO a la entidad Entrada
                 var entrada = mapper.Map<Entrada>(entradaCreacionDTO);
@@ -84,6 +94,7 @@ namespace TicketOn.Server.Controllers
             await context.SaveChangesAsync();
             return Ok("Entradas guardadas correctamente");
         }
+
 
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromBody] EntradaDTO entradaDTO)

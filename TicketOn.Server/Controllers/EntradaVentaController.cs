@@ -34,14 +34,14 @@ namespace TicketOn.Server.Controllers
             }
 
             var entradasVenta = await context.EntradasVenta
-                .Where(ev => ev.UsuarioId == usuario.Id)
-                .Include(ev => ev.Entrada) // Incluimos la entrada
-                    .ThenInclude(e => e.Evento) // Y luego el evento
+                .Where(ev => ev.UsuarioId == usuario.Id && !ev.EnReventa) // Filtrar entradas que no están en reventa
+                .Include(ev => ev.Entrada)
+                    .ThenInclude(e => e.Evento)
                 .ToListAsync();
 
             if (!entradasVenta.Any())
             {
-                return NotFound("No hay entradas vendidas para este usuario.");
+                return NotFound("No hay entradas disponibles para este usuario.");
             }
 
             var entradasVentaDTO = entradasVenta.Select(ev => new EntradaVentaDTO
@@ -52,9 +52,9 @@ namespace TicketOn.Server.Controllers
                 UsuarioId = ev.UsuarioId,
                 CodigoQR = ev.CodigoQR,
                 FechaAsignacion = ev.FechaAsignacion,
-                NombreEntrada = ev.Entrada.NombreTanda, // Asignamos el nombre de la entrada
-                ImagenEvento = ev.Entrada.Evento.Imagen, // Asignamos la imagen del evento
-                Correo = usuario.Email // También incluimos el correo
+                NombreEntrada = ev.Entrada.NombreTanda,
+                ImagenEvento = ev.Entrada.Evento.Imagen,
+                Correo = ev.Entrada.CorreoOrganizador // Asegúrate de tener este campo en la entidad Entrada
             }).ToList();
 
             return Ok(entradasVentaDTO);
