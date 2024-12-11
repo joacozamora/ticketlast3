@@ -31,28 +31,34 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpGet("callback")]
-        public async Task<IActionResult> CallbackMercadoPago(string code, string usuarioId)
+        public async Task<IActionResult> CallbackMercadoPago(string code, string receivedUsuarioId)
         {
             if (string.IsNullOrEmpty(code))
             {
                 return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se recibió el código de autorización.");
             }
 
-            var clientId = "6998459718331446"; // Tu Client ID
-            var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf"; // Tu Client Secret
-            var redirectUri = "https://ticketlast3.onrender.com/api/mercadopago/callback";
+            if (string.IsNullOrEmpty(receivedUsuarioId))
+            {
+                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se recibió el ID del usuario.");
+            }
 
             try
             {
+                // Aquí usas el `receivedUsuarioId` que viene del frontend
+                var clientId = "6998459718331446"; // Tu Client ID
+                var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf"; // Tu Client Secret
+                var redirectUri = "https://ticketlast3.onrender.com/api/mercadopago/callback";
+
                 using var httpClient = new HttpClient();
                 var requestContent = new FormUrlEncodedContent(new[]
                 {
-                    new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                    new KeyValuePair<string, string>("client_id", clientId),
-                    new KeyValuePair<string, string>("client_secret", clientSecret),
-                    new KeyValuePair<string, string>("code", code),
-                    new KeyValuePair<string, string>("redirect_uri", redirectUri)
-                });
+            new KeyValuePair<string, string>("grant_type", "authorization_code"),
+            new KeyValuePair<string, string>("client_id", clientId),
+            new KeyValuePair<string, string>("client_secret", clientSecret),
+            new KeyValuePair<string, string>("code", code),
+            new KeyValuePair<string, string>("redirect_uri", redirectUri)
+        });
 
                 var response = await httpClient.PostAsync("https://api.mercadopago.com/oauth/token", requestContent);
                 var responseBody = await response.Content.ReadAsStringAsync();
@@ -69,22 +75,16 @@ namespace TicketOn.Server.Controllers
                     return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=El token de acceso obtenido es inválido.");
                 }
 
-                // Obtener el UsuarioId
-                var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-                if (string.IsNullOrEmpty(usuarioId))
-                {
-                    return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se pudo obtener el ID del usuario logueado.");
-                }
-
+                // Usa el usuarioId recibido en lugar de obtenerlo de otra manera
                 var usuarioMP = new UsuarioMercadoPago
                 {
-                    UsuarioId = usuarioId,
+                    UsuarioId = receivedUsuarioId,
                     AccessToken = tokenResponse.AccessToken,
                     RefreshToken = tokenResponse.RefreshToken,
                     FechaExpiracion = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn)
                 };
 
-                var registroExistente = await context.UsuarioMercadoPago.FirstOrDefaultAsync(u => u.UsuarioId == usuarioId);
+                var registroExistente = await context.UsuarioMercadoPago.FirstOrDefaultAsync(u => u.UsuarioId == receivedUsuarioId);
                 if (registroExistente != null)
                 {
                     registroExistente.AccessToken = usuarioMP.AccessToken;
@@ -106,6 +106,7 @@ namespace TicketOn.Server.Controllers
                 return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Error interno: {Uri.EscapeDataString(ex.Message)}");
             }
         }
+
 
         [HttpGet("vinculado")]
         public async Task<IActionResult> VerificarVinculacion()
