@@ -47,12 +47,12 @@ namespace TicketOn.Server.Controllers
                 using var httpClient = new HttpClient();
                 var requestContent = new FormUrlEncodedContent(new[]
                 {
-            new KeyValuePair<string, string>("grant_type", "authorization_code"),
-            new KeyValuePair<string, string>("client_id", clientId),
-            new KeyValuePair<string, string>("client_secret", clientSecret),
-            new KeyValuePair<string, string>("code", code),
-            new KeyValuePair<string, string>("redirect_uri", redirectUri)
-        });
+                    new KeyValuePair<string, string>("grant_type", "authorization_code"),
+                    new KeyValuePair<string, string>("client_id", clientId),
+                    new KeyValuePair<string, string>("client_secret", clientSecret),
+                    new KeyValuePair<string, string>("code", code),
+                    new KeyValuePair<string, string>("redirect_uri", redirectUri)
+                });
 
                 var response = await httpClient.PostAsync("https://api.mercadopago.com/oauth/token", requestContent);
                 var responseBody = await response.Content.ReadAsStringAsync();
@@ -106,12 +106,15 @@ namespace TicketOn.Server.Controllers
             }
         }
 
-
-
         [HttpGet("vinculado")]
         public async Task<IActionResult> VerificarVinculacion()
         {
             var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                return BadRequest("No se pudo obtener el ID del usuario logueado.");
+            }
+
             var usuarioMercadoPago = await context.UsuarioMercadoPago.FirstOrDefaultAsync(ump => ump.UsuarioId == usuarioId);
 
             if (usuarioMercadoPago == null)
@@ -186,6 +189,7 @@ namespace TicketOn.Server.Controllers
         }
     }
 }
+
 
 
 //using Microsoft.AspNetCore.Mvc;
