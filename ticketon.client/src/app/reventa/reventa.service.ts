@@ -21,9 +21,10 @@ export class ReventaService {
     return this.http.get<ReventaDTO[]>(this.apiURL);
   }
 
-  crearPreferencia(reventaId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiURL}/crear-preferencia/${reventaId}`, {});
+  crearPreferencia(reventaId: number): Observable<{ preferenceId: string }> {
+    return this.http.post<{ preferenceId: string }>(`${this.apiURL}/crear-preferencia/${reventaId}`, {});
   }
+
 
   confirmarReventa(reventaId: number): Observable<any> {
     return this.http.post(`${this.apiURL}/confirmar/${reventaId}`, {});

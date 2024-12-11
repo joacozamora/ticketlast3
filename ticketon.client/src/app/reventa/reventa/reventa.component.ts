@@ -30,28 +30,42 @@ export class ReventaComponent implements OnInit {
       }
     );
   }
-
-  comprarReventa(reventaId: number): void {
-    if (this.isProcessing) return;
-    this.isProcessing = true;
-
-    this.reventaService.crearPreferencia(reventaId).subscribe(
+  comprarReventa(reventa: ReventaDTO): void {
+    this.reventaService.crearPreferencia(reventa.id).subscribe(
       (response) => {
-        if (response?.preferenceId) {
-          this.pagarConMercadoPago(response.preferenceId, reventaId);
-        } else {
-          console.error('No se recibió un PreferenceId válido.');
-          alert('Hubo un problema al generar la preferencia de pago.');
-          this.isProcessing = false;
-        }
+        const preferenceId = response.preferenceId;
+        console.log('PreferenceId generado:', preferenceId);
+        // Redirigir al checkout de MercadoPago
+        window.location.href = `https://www.mercadopago.com/checkout/v1/redirect?preference-id=${preferenceId}`;
       },
       (error) => {
         console.error('Error al crear la preferencia:', error);
-        alert('Hubo un problema al generar la preferencia de pago.');
-        this.isProcessing = false;
+        alert('Ocurrió un error al intentar comprar la reventa.');
       }
     );
   }
+
+  //comprarReventa(reventaId: number): void {
+  //  if (this.isProcessing) return;
+  //  this.isProcessing = true;
+
+  //  this.reventaService.crearPreferencia(reventaId).subscribe(
+  //    (response) => {
+  //      if (response?.preferenceId) {
+  //        this.pagarConMercadoPago(response.preferenceId, reventaId);
+  //      } else {
+  //        console.error('No se recibió un PreferenceId válido.');
+  //        alert('Hubo un problema al generar la preferencia de pago.');
+  //        this.isProcessing = false;
+  //      }
+  //    },
+  //    (error) => {
+  //      console.error('Error al crear la preferencia:', error);
+  //      alert('Hubo un problema al generar la preferencia de pago.');
+  //      this.isProcessing = false;
+  //    }
+  //  );
+  //}
 
   pagarConMercadoPago(preferenceId: string, reventaId: number): void {
     const mp = new MercadoPago('APP_USR-64585ae8-8796-44db-8f01-af9f6a1ed9ee');

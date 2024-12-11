@@ -64,17 +64,15 @@ namespace TicketOn.Server.Controllers
             return CreatedAtAction(nameof(GetById), new { id = reventa.Id }, mapper.Map<ReventaDTO>(reventa));
         }
 
-        // Crear una preferencia de pago para la reventa
         [HttpPost("crear-preferencia/{reventaId}")]
         public async Task<IActionResult> CrearPreferenciaReventa(int reventaId)
         {
             try
             {
-                // Incluir la cadena necesaria para acceder a Evento desde EntradaVenta
                 var reventa = await context.Reventas
                     .Include(r => r.EntradaVenta)
                     .ThenInclude(ev => ev.Entrada)
-                    .ThenInclude(ent => ent.Evento)
+                    .ThenInclude(e => e.Evento)
                     .FirstOrDefaultAsync(r => r.Id == reventaId && r.Estado == "Disponible");
 
                 if (reventa == null)
@@ -82,12 +80,15 @@ namespace TicketOn.Server.Controllers
                     return NotFound("La reventa no está disponible.");
                 }
 
-                if (reventa.EntradaVenta?.Entrada?.Evento == null)
+                var vendedor = await context.UsuarioMercadoPago
+                    .FirstOrDefaultAsync(ump => ump.UsuarioId == reventa.UsuarioId);
+
+                if (vendedor == null || string.IsNullOrEmpty(vendedor.AccessToken))
                 {
-                    return StatusCode(500, "No se pudo encontrar toda la información necesaria para generar la preferencia.");
+                    return BadRequest("El vendedor no tiene una cuenta válida de MercadoPago.");
                 }
 
-                // Crear items para la preferencia
+                // Crear los ítems de la preferencia
                 var items = new List<PreferenceItemRequest>
         {
             new PreferenceItemRequest
@@ -99,38 +100,112 @@ namespace TicketOn.Server.Controllers
             }
         };
 
-                // Crear objeto de preferencia
+                // Configurar las URLs de redirección
+                var backUrls = new PreferenceBackUrlsRequest
+                {
+                    Success = $"https://127.0.0.1:4200/confirmar-reventa?reventaId={reventa.Id}",
+                    Failure = "https://127.0.0.1:4200/error-reventa",
+                    Pending = "https://127.0.0.1:4200/pendiente-reventa"
+                };
+
                 var preferenceRequest = new PreferenceRequest
                 {
                     Items = items,
-                    BackUrls = new PreferenceBackUrlsRequest
-                    {
-                        Success = $"https://127.0.0.1:4200/confirmacion-reventa?reventaId={reventaId}",
-                        Failure = "https://127.0.0.1:4200/fallo",
-                        Pending = "https://127.0.0.1:4200/pendiente"
-                    },
+                    BackUrls = backUrls,
                     AutoReturn = "approved",
-                    ExternalReference = reventaId.ToString()
+                    ExternalReference = reventa.Id.ToString()
                 };
 
-                // Enviar preferencia a MercadoPago
                 var client = new PreferenceClient();
-                var preference = await client.CreateAsync(preferenceRequest);
+                var requestOptions = new MercadoPago.Client.RequestOptions
+                {
+                    AccessToken = vendedor.AccessToken
+                };
+
+                var preference = await client.CreateAsync(preferenceRequest, requestOptions);
 
                 if (preference == null || string.IsNullOrEmpty(preference.Id))
                 {
                     return StatusCode(500, "No se pudo generar un PreferenceId válido.");
                 }
 
-                Console.WriteLine($"PreferenceId generado: {preference.Id}");
-                return Ok(new { preferenceId = preference.Id }); // Ojo con minúscula
+                return Ok(new { preferenceId = preference.Id });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al crear la preferencia: {ex.Message}");
                 return StatusCode(500, $"Error al crear la preferencia: {ex.Message}");
             }
         }
+
+
+
+        // Crear una preferencia de pago para la reventa
+        //[HttpPost("crear-preferencia/{reventaId}")]
+        //public async Task<IActionResult> CrearPreferenciaReventa(int reventaId)
+        //{
+        //    try
+        //    {
+        //        // Incluir la cadena necesaria para acceder a Evento desde EntradaVenta
+        //        var reventa = await context.Reventas
+        //            .Include(r => r.EntradaVenta)
+        //            .ThenInclude(ev => ev.Entrada)
+        //            .ThenInclude(ent => ent.Evento)
+        //            .FirstOrDefaultAsync(r => r.Id == reventaId && r.Estado == "Disponible");
+
+        //        if (reventa == null)
+        //        {
+        //            return NotFound("La reventa no está disponible.");
+        //        }
+
+        //        if (reventa.EntradaVenta?.Entrada?.Evento == null)
+        //        {
+        //            return StatusCode(500, "No se pudo encontrar toda la información necesaria para generar la preferencia.");
+        //        }
+
+        //        // Crear items para la preferencia
+        //        var items = new List<PreferenceItemRequest>
+        //{
+        //    new PreferenceItemRequest
+        //    {
+        //        Title = reventa.EntradaVenta.Entrada.Evento.Nombre ?? "Evento sin nombre",
+        //        Quantity = 1,
+        //        CurrencyId = "ARS",
+        //        UnitPrice = reventa.PrecioReventa
+        //    }
+        //};
+
+        //        // Crear objeto de preferencia
+        //        var preferenceRequest = new PreferenceRequest
+        //        {
+        //            Items = items,
+        //            BackUrls = new PreferenceBackUrlsRequest
+        //            {
+        //                Success = $"https://127.0.0.1:4200/confirmacion-reventa?reventaId={reventaId}",
+        //                Failure = "https://127.0.0.1:4200/fallo",
+        //                Pending = "https://127.0.0.1:4200/pendiente"
+        //            },
+        //            AutoReturn = "approved",
+        //            ExternalReference = reventaId.ToString()
+        //        };
+
+        //        // Enviar preferencia a MercadoPago
+        //        var client = new PreferenceClient();
+        //        var preference = await client.CreateAsync(preferenceRequest);
+
+        //        if (preference == null || string.IsNullOrEmpty(preference.Id))
+        //        {
+        //            return StatusCode(500, "No se pudo generar un PreferenceId válido.");
+        //        }
+
+        //        Console.WriteLine($"PreferenceId generado: {preference.Id}");
+        //        return Ok(new { preferenceId = preference.Id }); // Ojo con minúscula
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error al crear la preferencia: {ex.Message}");
+        //        return StatusCode(500, $"Error al crear la preferencia: {ex.Message}");
+        //    }
+        //}
 
 
 
