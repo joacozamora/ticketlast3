@@ -35,7 +35,7 @@ namespace TicketOn.Server.Controllers
         {
             if (string.IsNullOrEmpty(code))
             {
-                return Redirect("https://127.0.0.1:4200/confirmacion-mercadopago?estado=error");
+                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se recibió el código de autorización.");
             }
 
             var clientId = "6998459718331446"; // Tu Client ID
@@ -47,23 +47,33 @@ namespace TicketOn.Server.Controllers
                 using var httpClient = new HttpClient();
                 var requestContent = new FormUrlEncodedContent(new[]
                 {
-                    new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                    new KeyValuePair<string, string>("client_id", clientId),
-                    new KeyValuePair<string, string>("client_secret", clientSecret),
-                    new KeyValuePair<string, string>("code", code),
-                    new KeyValuePair<string, string>("redirect_uri", redirectUri)
-                });
+            new KeyValuePair<string, string>("grant_type", "authorization_code"),
+            new KeyValuePair<string, string>("client_id", clientId),
+            new KeyValuePair<string, string>("client_secret", clientSecret),
+            new KeyValuePair<string, string>("code", code),
+            new KeyValuePair<string, string>("redirect_uri", redirectUri)
+        });
 
                 var response = await httpClient.PostAsync("https://api.mercadopago.com/oauth/token", requestContent);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return Redirect($"https://127.0.0.1:4200/confirmacion-mercadopago?estado=error");
+                    return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Error al obtener el token de acceso.");
                 }
 
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseBody);
+
+                if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.AccessToken))
+                {
+                    return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=El token de acceso obtenido es inválido.");
+                }
+
                 var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+                if (string.IsNullOrEmpty(usuarioId))
+                {
+                    return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=No se pudo obtener el ID del usuario logueado.");
+                }
 
                 var usuarioMP = new UsuarioMercadoPago
                 {
@@ -88,14 +98,15 @@ namespace TicketOn.Server.Controllers
 
                 await context.SaveChangesAsync();
 
-                return Redirect($"https://127.0.0.1:4200/confirmacion-mercadopago?estado=exito");
+                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=exito");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error en el callback de MercadoPago: {ex.Message}");
-                return Redirect($"https://127.0.0.1:4200/confirmacion-mercadopago?estado=error");
+                return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Error interno: {Uri.EscapeDataString(ex.Message)}");
             }
         }
+
+
 
         [HttpGet("vinculado")]
         public async Task<IActionResult> VerificarVinculacion()

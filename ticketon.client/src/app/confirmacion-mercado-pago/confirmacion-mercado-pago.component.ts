@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MercadoPagoService } from '../reventa/mercado-pago.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-confirmacion-mercado-pago',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, RouterLink],
   templateUrl: './confirmacion-mercado-pago.component.html',
   styleUrl: './confirmacion-mercado-pago.component.css'
 })

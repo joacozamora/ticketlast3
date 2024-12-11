@@ -49,7 +49,7 @@ export const MY_FORMATS = {
 
 @NgModule({
   declarations: [    
-    SelectorMultipleComponent, IndiceEventosComponent, ReventaComponent, 
+    SelectorMultipleComponent, IndiceEventosComponent, 
     ],
   imports: [
     SweetAlert2Module.forRoot(),
