@@ -1,4 +1,6 @@
-﻿namespace TicketOn.Server.Entidades
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace TicketOn.Server.Entidades
 {
     public class UsuarioMercadoPago
     {
@@ -7,5 +9,7 @@
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
         public DateTime FechaExpiracion { get; set; }
+
+        public IdentityUser Usuario { get; set;}
     }
 }
