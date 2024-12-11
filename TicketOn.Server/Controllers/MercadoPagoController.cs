@@ -24,7 +24,7 @@ namespace TicketOn.Server.Controllers
         public IActionResult AutorizarMercadoPago()
         {
             var clientId = "6998459718331446"; // Tu Client ID
-            var redirectUri = "https://bc8e-186-122-225-153.ngrok-free.app"; // Callback URL
+            var redirectUri = "https://ticketlast3.onrender.com/api/mercadopago/callback"; // Callback URL
 
             var authUrl = $"https://auth.mercadopago.com.ar/authorization?response_type=code&client_id={clientId}&redirect_uri={Uri.EscapeDataString(redirectUri)}&scope=offline_access";
 
@@ -42,7 +42,7 @@ namespace TicketOn.Server.Controllers
 
             var clientId = "6998459718331446"; // Tu Client ID
             var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf"; // Tu Client Secret
-            var redirectUri = "https://bc8e-186-122-225-153.ngrok-free.app";
+            var redirectUri = "https://ticketlast3.onrender.com/api/mercadopago/callback";
 
             try
             {
