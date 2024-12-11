@@ -7,7 +7,6 @@ import { MercadoPagoService } from '../mercado-pago.service';
 
 @Component({
   selector: 'app-crear-reventa',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crear-reventa.component.html',
   styleUrls: ['./crear-reventa.component.css']
@@ -15,7 +14,6 @@ import { MercadoPagoService } from '../mercado-pago.service';
 export class CrearReventaComponent implements OnInit {
   reventaForm: FormGroup;
   entradaVentaId!: number;
-  usuarioVinculado: boolean = false;
 
   constructor(
     private reventaService: ReventaService,
@@ -30,23 +28,25 @@ export class CrearReventaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Capturar el entradaVentaId desde los queryParams
     this.route.queryParams.subscribe((params) => {
       this.entradaVentaId = +params['entradaVentaId'];
       console.log('EntradaVentaId capturado:', this.entradaVentaId);
     });
 
-    // Verificar si el usuario está vinculado con MercadoPago
-    this.mercadoPagoService.verificarVinculacion().subscribe(
-      () => {
-        console.log('Usuario vinculado correctamente a MercadoPago.');
-        this.usuarioVinculado = true;
+    // Consultar si el usuario ya tiene un registro en MercadoPago
+    this.mercadoPagoService.verificarSiUsuarioExiste().subscribe(
+      (response) => {
+        if (response.vinculado) {
+          console.log('Usuario ya está vinculado a Mercado Pago.');
+          // Usuario vinculado, habilitar el formulario
+        } else {
+          console.warn('Usuario no está vinculado a Mercado Pago. Iniciando autorización...');
+          this.mercadoPagoService.autorizarMercadoPago(this.entradaVentaId.toString());
+        }
       },
-      (error: any) => {
-        console.error('Usuario no vinculado con MercadoPago:', error);
-        alert('Debes vincular tu cuenta de MercadoPago antes de continuar.');
-        // Redirigir a la autorización con entradaVentaId
-        this.mercadoPagoService.autorizarMercadoPago(this.entradaVentaId.toString());
+      (error) => {
+        console.error('Error al verificar si el usuario está vinculado:', error);
+        alert('Error al verificar la vinculación. Por favor, intenta nuevamente.');
       }
     );
   }
@@ -54,11 +54,6 @@ export class CrearReventaComponent implements OnInit {
   crearReventa(): void {
     if (!this.entradaVentaId || isNaN(this.entradaVentaId)) {
       alert('El ID de la entrada no es válido.');
-      return;
-    }
-
-    if (!this.usuarioVinculado) {
-      alert('Debes vincular tu cuenta de MercadoPago antes de publicar la reventa.');
       return;
     }
 
@@ -71,8 +66,7 @@ export class CrearReventaComponent implements OnInit {
       (response) => {
         console.log('Reventa creada:', response);
         alert('¡Reventa creada con éxito!');
-        // Redirigir a la página de confirmación o listado de reventas
-        this.router.navigate(['/reventas']);
+        this.router.navigate(['/reventas']); // Redirige a la lista de reventas o donde corresponda
       },
       (error) => {
         console.error('Error al crear reventa:', error);
@@ -81,7 +75,6 @@ export class CrearReventaComponent implements OnInit {
     );
   }
 }
-
 
 
 

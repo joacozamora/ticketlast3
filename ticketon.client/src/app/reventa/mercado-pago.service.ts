@@ -21,4 +21,8 @@ export class MercadoPagoService {
     const url = `${this.apiUrl}/autorizar?entradaVentaId=${entradaVentaId}`;
     window.location.href = url;
   }
+
+  verificarSiUsuarioExiste(): Observable<{ vinculado: boolean }> {
+    return this.http.get<{ vinculado: boolean }>(`${this.apiUrl}/existe`);
+  }
 }

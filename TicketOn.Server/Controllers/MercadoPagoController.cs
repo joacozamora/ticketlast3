@@ -213,6 +213,27 @@ namespace TicketOn.Server.Controllers
             [JsonProperty("expires_in")]
             public int ExpiresIn { get; set; }
         }
+
+        [HttpGet("existe")]
+        public async Task<IActionResult> VerificarSiUsuarioExiste()
+        {
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+            if (string.IsNullOrEmpty(usuarioId))
+            {
+                return Unauthorized("Usuario no autenticado.");
+            }
+
+            var usuarioMercadoPago = await context.UsuarioMercadoPago
+                .FirstOrDefaultAsync(ump => ump.UsuarioId == usuarioId);
+
+            if (usuarioMercadoPago == null)
+            {
+                return NotFound("El usuario no tiene una cuenta de MercadoPago vinculada.");
+            }
+
+            return Ok(new { vinculado = true });
+        }
     }
 }
 
