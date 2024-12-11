@@ -1,4 +1,4 @@
-﻿    using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketOn.Server.DTOs.EntradasVenta;
@@ -21,8 +21,6 @@ namespace TicketOn.Server.Controllers
             this.mapper = mapper;
             this.servicioUsuarios = servicioUsuarios;
         }
-
-
 
         [HttpGet("correo/{correo}")]
         public async Task<ActionResult<List<EntradaVentaDTO>>> ObtenerEntradasPorCorreo(string correo)
@@ -53,13 +51,12 @@ namespace TicketOn.Server.Controllers
                 CodigoQR = ev.CodigoQR,
                 FechaAsignacion = ev.FechaAsignacion,
                 NombreEntrada = ev.Entrada.NombreTanda,
-                ImagenEvento = ev.Entrada.Evento.Imagen,
-                Correo = ev.Entrada.CorreoOrganizador // Asegúrate de tener este campo en la entidad Entrada
+                ImagenEvento = ev.Entrada.Evento.Imagen ?? "default.jpg",
+                Correo = ev.Entrada.CorreoOrganizador ?? "Correo no disponible" // Asegurarse de manejar nulos
             }).ToList();
 
             return Ok(entradasVentaDTO);
         }
-
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<EntradaVentaDTO>> GetById(int id)
@@ -74,7 +71,20 @@ namespace TicketOn.Server.Controllers
                 return NotFound("No se encontró la entrada venta.");
             }
 
-            return Ok(mapper.Map<EntradaVentaDTO>(entradaVenta));
+            var entradaVentaDTO = new EntradaVentaDTO
+            {
+                Id = entradaVenta.Id,
+                EntradaId = entradaVenta.EntradaId,
+                VentaId = entradaVenta.VentaId,
+                UsuarioId = entradaVenta.UsuarioId,
+                CodigoQR = entradaVenta.CodigoQR,
+                FechaAsignacion = entradaVenta.FechaAsignacion,
+                NombreEntrada = entradaVenta.Entrada?.NombreTanda ?? "Nombre no disponible",
+                ImagenEvento = entradaVenta.Entrada?.Evento?.Imagen ?? "default.jpg",
+                Correo = entradaVenta.Entrada?.CorreoOrganizador ?? "Correo no disponible"
+            };
+
+            return Ok(entradaVentaDTO);
         }
 
         [HttpPut("{id:int}")]
@@ -91,12 +101,11 @@ namespace TicketOn.Server.Controllers
                 return NotFound("No se encontró la entrada venta.");
             }
 
-            // Actualizamos los campos necesarios, por ejemplo, EntradaId y VentaId
             entradaVenta.EntradaId = entradaVentaCreacionDTO.EntradaId;
             entradaVenta.VentaId = entradaVentaCreacionDTO.VentaId;
-            entradaVenta.UsuarioId = entradaVentaCreacionDTO.UsuarioId; // Se puede actualizar el UsuarioId si es necesario
-            entradaVenta.CodigoQR = entradaVentaCreacionDTO.CodigoQR; // Actualizar el Código QR si es necesario
-            entradaVenta.FechaAsignacion = DateTime.UtcNow; // Podrías actualizar la fecha también
+            entradaVenta.UsuarioId = entradaVentaCreacionDTO.UsuarioId;
+            entradaVenta.CodigoQR = entradaVentaCreacionDTO.CodigoQR;
+            entradaVenta.FechaAsignacion = DateTime.UtcNow;
 
             await context.SaveChangesAsync();
             return NoContent(); // 204 No Content

@@ -40,6 +40,7 @@ export class BilleteraComponent implements OnInit {
   cargarEntradasBilletera(correo: string): void {
     this.billeteraService.obtenerEntradasPorCorreo(correo).subscribe(
       (entradas) => {
+        console.log('Entradas recibidas:', entradas); // <-- Agregado
         this.entradasBilletera = entradas.map((entrada) => ({
           ...entrada,
           imagenEvento: entrada.imagenEvento instanceof File

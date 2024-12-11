@@ -18,7 +18,10 @@ export class BilleteraService {
   
   obtenerEntradasPorCorreo(correo: string): Observable<EntradaVentaDTO[]> {
     return this.http.get<EntradaVentaDTO[]>(`${this.apiURL}/correo/${correo}`).pipe(
-      map((entradas) => entradas.filter((entrada) => !entrada.enReventa)) // Solo mostrar las que no están en reventa
+      map((entradas) => {
+        console.log('Entradas obtenidas:', entradas); // Verifica que el correo está presente
+        return entradas.filter((entrada) => !entrada.enReventa);
+      })
     );
   }
   
