@@ -20,10 +20,10 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpGet("autorizar")]
-        public IActionResult AutorizarMercadoPago()
+        public IActionResult AutorizarMercadoPago(string usuarioId)
         {
             var clientId = "6998459718331446"; // Tu Client ID
-            var redirectUri = "https://ticketlast3.onrender.com/api/mercadopago/callback"; // Callback URL
+            var redirectUri = $"https://ticketlast3.onrender.com/api/mercadopago/callback?usuarioId={Uri.EscapeDataString(usuarioId)}"; // Callback URL
 
             var authUrl = $"https://auth.mercadopago.com.ar/authorization?response_type=code&client_id={clientId}&redirect_uri={Uri.EscapeDataString(redirectUri)}&scope=offline_access";
 
@@ -31,7 +31,7 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpGet("callback")]
-        public async Task<IActionResult> CallbackMercadoPago(string code)
+        public async Task<IActionResult> CallbackMercadoPago(string code, string usuarioId)
         {
             if (string.IsNullOrEmpty(code))
             {
