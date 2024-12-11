@@ -48,7 +48,7 @@ namespace TicketOn.Server.Controllers
                 // Aquí usas el `receivedUsuarioId` que viene del frontend
                 var clientId = "6998459718331446"; // Tu Client ID
                 var clientSecret = "BeOALsCmSuKyZVJWOOjj30qhqj2rBhpf"; // Tu Client Secret
-                var redirectUri = "https://ticketlast3.onrender.com/api/mercadopago/callback";
+                var redirectUri = $"https://ticketlast3.onrender.com/api/mercadopago/callback?usuarioId={Uri.EscapeDataString(receivedUsuarioId)}";
 
                 using var httpClient = new HttpClient();
                 var requestContent = new FormUrlEncodedContent(new[]

@@ -42,10 +42,19 @@ export class CrearReventaComponent implements OnInit {
       (error: any) => {
         console.error('El usuario no está vinculado con Mercado Pago:', error);
         alert('Debes vincular tu cuenta de Mercado Pago antes de continuar.');
-        this.mercadoPagoService.autorizarMercadoPago();
+
+        // Obtén el usuarioId del contexto o del servicio de autenticación
+        const usuarioId = 'TU_LOGICA_PARA_OBTENER_EL_USUARIO_ID'; // Reemplaza con la lógica para obtener el ID del usuario
+
+        if (usuarioId) {
+          this.mercadoPagoService.autorizarMercadoPago(usuarioId);
+        } else {
+          console.error('No se pudo obtener el usuarioId para autorizar Mercado Pago.');
+        }
       }
     );
   }
+
 
   crearReventa(): void {
     if (!this.entradaVentaId || isNaN(this.entradaVentaId)) {
