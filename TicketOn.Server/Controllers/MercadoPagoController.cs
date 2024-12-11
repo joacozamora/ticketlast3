@@ -46,6 +46,8 @@ namespace TicketOn.Server.Controllers
 
             try
             {
+                Console.WriteLine($"Código recibido: {code}"); // Log del código recibido
+
                 using var httpClient = new HttpClient();
                 var requestContent = new FormUrlEncodedContent(new[]
                 {
@@ -57,13 +59,21 @@ namespace TicketOn.Server.Controllers
                 });
 
                 var response = await httpClient.PostAsync("https://api.mercadopago.com/oauth/token", requestContent);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
                 if (!response.IsSuccessStatusCode)
                 {
-                    return StatusCode((int)response.StatusCode, "Error al obtener el token de acceso.");
+                    Console.WriteLine($"Error al obtener el token: {responseBody}");
+                    return StatusCode((int)response.StatusCode, $"Error al obtener el token de acceso: {responseBody}");
                 }
 
-                var responseBody = await response.Content.ReadAsStringAsync();
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseBody);
+
+                if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.AccessToken))
+                {
+                    Console.WriteLine("El token de acceso es inválido o nulo.");
+                    return StatusCode(500, "El token de acceso obtenido es inválido.");
+                }
 
                 var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
                 var usuarioMP = new UsuarioMercadoPago
@@ -90,12 +100,17 @@ namespace TicketOn.Server.Controllers
 
                 await context.SaveChangesAsync();
 
+                Console.WriteLine("Token de acceso guardado correctamente.");
                 return Redirect("https://127.0.0.1:4200");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error en el callback de MercadoPago: {ex.Message}");
-                return StatusCode(500, "Error al procesar la autorización de Mercado Pago.");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
+                return StatusCode(500, $"Error al procesar la autorización de Mercado Pago: {ex.Message}");
             }
         }
 
@@ -142,9 +157,14 @@ namespace TicketOn.Server.Controllers
                 });
 
                 var response = await httpClient.PostAsync("https://api.mercadopago.com/oauth/token", requestContent);
-                if (!response.IsSuccessStatusCode) return false;
-
                 var responseBody = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Error al renovar el token: {responseBody}");
+                    return false;
+                }
+
                 var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseBody);
 
                 usuarioMercadoPago.AccessToken = tokenResponse.AccessToken;
@@ -177,6 +197,7 @@ namespace TicketOn.Server.Controllers
         }
     }
 }
+
 
 
 //using Microsoft.AspNetCore.Mvc;
