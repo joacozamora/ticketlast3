@@ -30,17 +30,17 @@ export class ReventaComponent implements OnInit {
       }
     );
   }
-  comprarReventa(reventa: ReventaDTO): void {
-    this.reventaService.crearPreferencia(reventa.id).subscribe(
+  comprarReventa(reventaId: number): void {
+    this.reventaService.crearPreferencia(reventaId).subscribe(
       (response) => {
-        const preferenceId = response.preferenceId;
-        console.log('PreferenceId generado:', preferenceId);
-        // Redirigir al checkout de MercadoPago
-        window.location.href = `https://www.mercadopago.com/checkout/v1/redirect?preference-id=${preferenceId}`;
+        if (response && response.preferenceId) {
+          // Redirigir al checkout de MercadoPago
+          window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=${response.preferenceId}`;
+        }
       },
       (error) => {
         console.error('Error al crear la preferencia:', error);
-        alert('Ocurrió un error al intentar comprar la reventa.');
+        alert('Error al procesar la compra de la reventa.');
       }
     );
   }

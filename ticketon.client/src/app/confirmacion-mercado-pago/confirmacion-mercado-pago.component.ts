@@ -26,12 +26,23 @@ export class ConfirmacionMercadoPagoComponent implements OnInit {
       if (estado === 'exito') {
         this.mensaje = '¡Vinculación exitosa con MercadoPago!';
         this.estado = 'exito';
+
+        // Redirigir al flujo del usuario después de la confirmación
+        setTimeout(() => {
+          this.router.navigate(['/crear-reventa'], { queryParams: { entradaVentaId: this.getEntradaVentaIdFromSession() } });
+        }, 3000); // Espera 3 segundos antes de redirigir
       } else {
         this.mensaje = 'Hubo un problema al vincular tu cuenta con MercadoPago.';
         this.estado = 'error';
       }
     });
   }
+
+  getEntradaVentaIdFromSession(): number {
+    // Obtén el entradaVentaId guardado anteriormente (puedes usar sessionStorage/localStorage)
+    return Number(sessionStorage.getItem('entradaVentaId') || 0);
+  }
+
 
   regresar(): void {
     this.router.navigate(['/']); // Ajusta esta ruta según tu navegación principal

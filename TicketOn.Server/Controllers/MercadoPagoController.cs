@@ -56,12 +56,12 @@ namespace TicketOn.Server.Controllers
                 using var httpClient = new HttpClient();
                 var requestContent = new FormUrlEncodedContent(new[]
                 {
-                    new KeyValuePair<string, string>("grant_type", "authorization_code"),
-                    new KeyValuePair<string, string>("client_id", clientId),
-                    new KeyValuePair<string, string>("client_secret", clientSecret),
-                    new KeyValuePair<string, string>("code", code),
-                    new KeyValuePair<string, string>("redirect_uri", redirectUri)
-                });
+            new KeyValuePair<string, string>("grant_type", "authorization_code"),
+            new KeyValuePair<string, string>("client_id", clientId),
+            new KeyValuePair<string, string>("client_secret", clientSecret),
+            new KeyValuePair<string, string>("code", code),
+            new KeyValuePair<string, string>("redirect_uri", redirectUri)
+        });
 
                 var response = await httpClient.PostAsync("https://api.mercadopago.com/oauth/token", requestContent);
                 var responseBody = await response.Content.ReadAsStringAsync();
@@ -97,8 +97,11 @@ namespace TicketOn.Server.Controllers
                 // Asociar usuario con entradaVentaId usando el state
                 if (int.TryParse(state, out int entradaVentaId))
                 {
-                    var entradaVenta = await context.EntradasVenta.Include(e => e.Usuario).FirstOrDefaultAsync(e => e.Id == entradaVentaId);
-                    if (entradaVenta != null && entradaVenta.Usuario != null)
+                    var entradaVenta = await context.EntradasVenta
+                        .Include(e => e.Usuario)
+                        .FirstOrDefaultAsync(e => e.Id == entradaVentaId);
+
+                    if (entradaVenta != null && !string.IsNullOrEmpty(entradaVenta.UsuarioId))
                     {
                         usuarioMP.UsuarioId = entradaVenta.UsuarioId;
                         context.UsuarioMercadoPago.Update(usuarioMP);
@@ -110,6 +113,7 @@ namespace TicketOn.Server.Controllers
                         logger.LogWarning("No se pudo encontrar el usuario relacionado con la entradaVentaId.");
                     }
 
+                    // Redirigir a la página de crear-reventa con el entradaVentaId
                     return Redirect($"https://127.0.0.1:4200/crear-reventa?entradaVentaId={entradaVentaId}");
                 }
 
@@ -122,6 +126,7 @@ namespace TicketOn.Server.Controllers
                 return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=Error interno.");
             }
         }
+
 
         [HttpGet("vinculado")]
         public async Task<IActionResult> VerificarVinculacion()
