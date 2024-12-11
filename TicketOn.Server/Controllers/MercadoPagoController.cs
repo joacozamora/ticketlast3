@@ -8,7 +8,7 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/mercadopago")]
-    public class MercadoPagoController : Controller
+    public class MercadoPagoController : ControllerBase // Asegúrate de usar `ControllerBase` como en los otros controladores
     {
         private readonly ApplicationDbContext context;
         private readonly IServicioUsuarios servicioUsuarios;
@@ -69,6 +69,7 @@ namespace TicketOn.Server.Controllers
                     return Redirect($"https://127.0.0.1:4200/mercadopago/confirmacion?estado=error&mensaje=El token de acceso obtenido es inválido.");
                 }
 
+                // Obtener el UsuarioId
                 var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
                 if (string.IsNullOrEmpty(usuarioId))
                 {
@@ -110,11 +111,6 @@ namespace TicketOn.Server.Controllers
         public async Task<IActionResult> VerificarVinculacion()
         {
             var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
-            if (string.IsNullOrEmpty(usuarioId))
-            {
-                return BadRequest("No se pudo obtener el ID del usuario logueado.");
-            }
-
             var usuarioMercadoPago = await context.UsuarioMercadoPago.FirstOrDefaultAsync(ump => ump.UsuarioId == usuarioId);
 
             if (usuarioMercadoPago == null)
