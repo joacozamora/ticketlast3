@@ -23,14 +23,19 @@ import { CrearReventaComponent } from './reventa/crear-reventa/crear-reventa.com
 import { ConfirmacionComponent } from './confirmacion/confirmacion.component';
 import { ConfirmacionReventaComponent } from './confirmacion-reventa/confirmacion-reventa.component';
 import { ConfirmacionMercadoPagoComponent } from './confirmacion-mercado-pago/confirmacion-mercado-pago.component';
+import { esProductoraGuard } from './utilidades/guards/es-productora.guard';
+import { ListaEventosComponent } from './eventos/lista-eventos/lista-eventos.component';
+import { EditarEntradaComponent } from './entradas/editar-entrada/editar-entrada.component';
+import { EditarUsuarioComponent } from './seguridad/editar-usuario/editar-usuario.component';
 
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'generos', component: IndiceGenerosComponent },
-  { path: 'generos/crear', component: CrearGeneroComponent },
+  { path: 'generos/crear', component: CrearGeneroComponent, canActivate: [esProductoraGuard] },
   { path: 'eventos/filtrar', component: FiltroEventosComponent },
-  { path: 'eventos/crear', component: CrearEventoComponent, canActivate: [esAdminGuard] },
+  {
+    path: 'eventos/crear', component: CrearEventoComponent, canActivate: [esProductoraGuard] },
   { path: 'generos/editar/:id', component: EditarGeneroComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registrar', component: RegistroComponent },
@@ -47,6 +52,11 @@ export const routes: Routes = [
   { path: 'confirmacion-reventa', component: ConfirmacionReventaComponent },
   { path: 'confirmacion', component: ConfirmacionComponent, pathMatch: 'full' },
   { path: 'confirmacion-mercadopago', component: ConfirmacionMercadoPagoComponent },
+  { path: 'entradas/editar/:id', component: EditarEntradaComponent },
+  { path: 'lista-eventos', component: ListaEventosComponent, canActivate: [esProductoraGuard] },
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  {
+    path: 'usuario/editar/:email', component: EditarUsuarioComponent },
   { path: '**', redirectTo: '' }
 ];
 

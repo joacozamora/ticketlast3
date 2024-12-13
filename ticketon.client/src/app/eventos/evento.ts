@@ -1,9 +1,13 @@
 export interface EventoCreacionDTO {
   nombre: string;
+  direccion?: string;
+  nombreLugar?: string;
   fechaInicio: Date;
-  imagen?: File;
   latitud: number;
   longitud: number;
+  esPublicitado?: boolean;
+  activo?: boolean;
+  imagen?: File;
 }
 
 export interface EventoDTO {
@@ -13,6 +17,10 @@ export interface EventoDTO {
   imagen?: string;
   latitud: number;
   longitud: number;
+  direccion: string;
+  nombreLugar: string;
+  esPublicitado: boolean;
+  activo: boolean;
 }
 export interface LandingPageDTO {
   publicados: EventoDTO[];

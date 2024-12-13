@@ -11,10 +11,10 @@ import { ListadoGenericoComponent } from '../../utilidades/listado-generico/list
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
-    selector: 'app-indice-usuarios',
-    imports: [RouterLink, MatButtonModule, MatTableModule, ListadoGenericoComponent, MatPaginatorModule, SweetAlert2Module],
-    templateUrl: './indice-usuarios.component.html',
-    styleUrl: './indice-usuarios.component.css'
+  selector: 'app-indice-usuarios',
+  imports: [RouterLink, MatButtonModule, MatTableModule, ListadoGenericoComponent, MatPaginatorModule, SweetAlert2Module],
+  templateUrl: './indice-usuarios.component.html',
+  styleUrls: ['./indice-usuarios.component.css']
 })
 export class IndiceUsuariosComponent {
 
@@ -36,8 +36,7 @@ export class IndiceUsuariosComponent {
         this.usuarios = respuesta.body as UsuarioDTO[];
         const cabecera = respuesta.headers.get("cantidad-total-registros") as string;
         this.cantidadTotalRegistros = parseInt(cabecera, 10);
-
-      })
+      });
   }
 
   actualizarPaginacion(datos: PageEvent) {
@@ -56,6 +55,20 @@ export class IndiceUsuariosComponent {
     this.servicioSeguridad.removerAdmin(email)
       .subscribe(() => {
         Swal.fire("Exitoso", `El usuario ${email} ya no es admin`, "success");
+      });
+  }
+
+  hacerProductora(email: string) {
+    this.servicioSeguridad.hacerProductora(email)
+      .subscribe(() => {
+        Swal.fire("Exitoso", `El usuario ${email} ahora es productora`, "success");
+      });
+  }
+
+  removerProductora(email: string) {
+    this.servicioSeguridad.removerProductora(email)
+      .subscribe(() => {
+        Swal.fire("Exitoso", `El usuario ${email} ya no es productora`, "success");
       });
   }
 }

@@ -1,0 +1,28 @@
+<table class="table-auto w-full border-collapse border border-gray-300">
+  <thead>
+    <tr>
+      <th class="border px-4 py-2">ID</th>
+      <th class="border px-4 py-2">Correo Actual</th>
+      <th class="border px-4 py-2">Nuevo Correo</th>
+      <th class="border px-4 py-2">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let entrada of entradasVenta">
+      <td class="border px-4 py-2">{{ entrada.id }}</td>
+      <td class="border px-4 py-2">{{ entrada.correo }}</td>
+      <td class="border px-4 py-2">
+        <input type="email"
+               [(ngModel)]="entrada.nuevoCorreo"
+               placeholder="Nuevo correo"
+               class="w-full px-3 py-2 border rounded" />
+      </td>
+      <td class="border px-4 py-2">
+        <button (click)="actualizarCorreo(entrada)"
+                class="bg-blue-500 text-white px-4 py-2 rounded">
+          Actualizar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

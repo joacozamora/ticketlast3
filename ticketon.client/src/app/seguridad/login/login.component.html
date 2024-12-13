@@ -1,1 +1,5 @@
-<app-formulario-autenticacion [errores]="errores" titulo="Login" (posteoFormulario)="loguear($event)"></app-formulario-autenticacion>
+<!--<app-formulario-autenticacion [errores]="errores" titulo="Login" (posteoFormulario)="loguear($event)"></app-formulario-autenticacion>-->
+<app-formulario-autenticacion [titulo]="'Login'"
+                              [errores]="errores"
+                              (loginFormulario)="loguear($event)">
+</app-formulario-autenticacion>

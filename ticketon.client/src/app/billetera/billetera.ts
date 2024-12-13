@@ -18,3 +18,7 @@ export interface EventoEntradasDTO {
   correo: string;
   entradas: EntradaVentaDTO[]; // Lista de entradas asociadas a este evento
 }
+
+export interface EntradaVentaEditableDTO extends EntradaVentaDTO {
+  nuevoCorreo?: string;
+}

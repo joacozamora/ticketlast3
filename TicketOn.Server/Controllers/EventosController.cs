@@ -15,7 +15,7 @@ namespace TicketOn.Server.Controllers
 {
     [ApiController]
     [Route("api/eventos")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "esadmin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class EventosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -40,51 +40,70 @@ namespace TicketOn.Server.Controllers
         public async Task<ActionResult<LandingPageDTO>> Get()
         {
             var publicados = await context.Eventos
-                .ProjectTo<EventoDTO>(mapper.ConfigurationProvider) // Mapeamos usando AutoMapper
-                .ToListAsync();
-
-            var resultado = new LandingPageDTO
-            {
-                Publicados = publicados
-            };
-
-            return resultado;
-        }
-
-
-        [HttpGet("eventosPage")]
-        public async Task<ActionResult<EventoPageDTO>> Get([FromQuery] string email) // Usamos [FromQuery] para que sepa que el parámetro viene de la query string
-        {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return BadRequest("El correo electrónico es requerido.");
-            }
-
-            // Buscar el usuario con el correo electrónico proporcionado
-            var usuario = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
-
-            if (usuario == null)
-            {
-                return BadRequest("No se encontró un usuario con ese correo electrónico.");
-            }
-
-            // Filtrar los eventos por el ID del usuario
-            var creados = await context.Eventos
-                .Where(e => e.UsuarioId == usuario.Id)
+                .Where(e => e.Activo) // Filtrar solo los activos
                 .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
                 .ToListAsync();
 
-            var resultado = new EventoPageDTO
-            {
-                Creados = creados
-            };
+            return new LandingPageDTO { Publicados = publicados };
+        }
 
-            return resultado;
+        [HttpGet("nombre/{idEvento:int}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<string>> ObtenerNombreEvento(int idEvento)
+        {
+            var evento = await context.Eventos.FindAsync(idEvento);
+
+            if (evento == null)
+            {
+                return NotFound("Evento no encontrado.");
+            }
+
+            return Ok(evento.Nombre);
+        }
+
+        [HttpGet("todos")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<EventoDTO>>> GetTodos()
+        {
+            var todosLosEventos = await context.Eventos
+                .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            if (todosLosEventos == null || todosLosEventos.Count == 0)
+            {
+                return NotFound("No hay eventos disponibles.");
+            }
+
+            return Ok(todosLosEventos);
+        }
+
+        //eventospage claim
+        [HttpGet("eventosPage")]
+        [Authorize]
+        public async Task<ActionResult<EventoPageDTO>> GetEventosPage()
+        {
+            // Obtener el ID del usuario autenticado
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+            if (string.IsNullOrWhiteSpace(usuarioId))
+            {
+                return Unauthorized("No se pudo obtener la información del usuario.");
+            }
+
+            // Filtrar eventos creados por este usuario
+            var creados = await context.Eventos
+                .Where(e => e.UsuarioId == usuarioId)
+                .ProjectTo<EventoDTO>(mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            // Devolver la lista aunque esté vacía
+            return Ok(new EventoPageDTO { Creados = creados });
         }
 
 
 
-        
+
+
 
 
         [HttpGet("{id:int}", Name = "ObtenerEventoPorId")]
@@ -105,21 +124,37 @@ namespace TicketOn.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "esproductora")]
         public async Task<IActionResult> Post([FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
             var culture = System.Globalization.CultureInfo.InvariantCulture;
 
+            // Verificar que el usuario tiene el claim de "esproductora"
+            var esProductora = User.HasClaim(c => c.Type == "esproductora" && c.Value == "true");
+            if (!esProductora)
+            {
+                return Forbid("No tienes permisos para crear eventos.");
+            }
+
             // Mapeo inicial de DTO a entidad
             var evento = mapper.Map<Evento>(eventoCreacionDTO);
-            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
 
+            // Obtener el usuario logueado
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+            if (string.IsNullOrWhiteSpace(evento.Descripcion))
+            {
+                evento.Descripcion = "Descripción predeterminada"; // Cambia esto según sea necesario
+            }
             // Manejo de la imagen (subida a Cloudinary)
             if (eventoCreacionDTO.Imagen is not null)
             {
                 var url = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
                 evento.Imagen = url;
             }
-
+            if (eventoCreacionDTO.Imagen == null && string.IsNullOrWhiteSpace(evento.Imagen))
+            {
+                return BadRequest("No se especificó una imagen.");
+            }
             // Asignación del ID del usuario
             evento.UsuarioId = usuarioId;
 
@@ -127,11 +162,14 @@ namespace TicketOn.Server.Controllers
             evento.Latitud = decimal.Parse(eventoCreacionDTO.Latitud.ToString(culture), culture);
             evento.Longitud = decimal.Parse(eventoCreacionDTO.Longitud.ToString(culture), culture);
 
-            // Asignar valor predeterminado a Descripcion si está vacío
-            evento.Descripcion ??= "Descripción predeterminada"; // Cambia este texto según corresponda
+            // Validar y asignar valores para los nuevos campos
+            evento.Direccion = eventoCreacionDTO.Direccion ?? "Dirección no especificada";
+            evento.NombreLugar = eventoCreacionDTO.NombreLugar ?? "Lugar no especificado";
+            evento.EsPublicitado = false;
+            evento.Activo = true;
 
             // Log para verificar los valores
-            Console.WriteLine($"Latitud: {evento.Latitud}, Longitud: {evento.Longitud}, Descripcion: {evento.Descripcion}");
+            Console.WriteLine($"Latitud: {evento.Latitud}, Longitud: {evento.Longitud}, Dirección: {evento.Direccion}, NombreLugar: {evento.NombreLugar}, EsPublicitado: {evento.EsPublicitado}");
 
             // Agregar el evento a la base de datos
             context.Add(evento);
@@ -143,46 +181,149 @@ namespace TicketOn.Server.Controllers
             // Respuesta con CreatedAtRoute
             return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, eventoDTO);
         }
+        //post claim
+        //[HttpPost]
+        //[Authorize(Policy = "esproductora")]
+        //public async Task<IActionResult> Post([FromForm] EventoCreacionDTO eventoCreacionDTO)
+        //{
+        //    var culture = System.Globalization.CultureInfo.InvariantCulture;
+
+        //    // Verificar que el usuario tiene el claim de "esproductora"
+        //    var esProductora = User.HasClaim(c => c.Type == "esproductora" && c.Value == "true");
+        //    if (!esProductora)
+        //    {
+        //        return Forbid("No tienes permisos para crear eventos.");
+        //    }
+
+        //    // Mapeo inicial de DTO a entidad
+        //    var evento = mapper.Map<Evento>(eventoCreacionDTO);
+
+        //    // Obtener el usuario logueado
+        //    var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+
+        //    // Manejo de la imagen (subida a Cloudinary)
+        //    if (eventoCreacionDTO.Imagen is not null)
+        //    {
+        //        var url = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
+        //        evento.Imagen = url;
+        //    }
+
+        //    // Asignación del ID del usuario
+        //    evento.UsuarioId = usuarioId;
+
+        //    // Asegurar formato correcto para Latitud y Longitud
+        //    evento.Latitud = decimal.Parse(eventoCreacionDTO.Latitud.ToString(culture), culture);
+        //    evento.Longitud = decimal.Parse(eventoCreacionDTO.Longitud.ToString(culture), culture);
+
+        //    // Asignar valor predeterminado a Descripcion si está vacío
+        //    evento.Descripcion ??= "Descripción predeterminada"; // Cambia este texto según corresponda
+
+        //    // Log para verificar los valores
+        //    Console.WriteLine($"Latitud: {evento.Latitud}, Longitud: {evento.Longitud}, Descripcion: {evento.Descripcion}");
+
+        //    // Agregar el evento a la base de datos
+        //    context.Add(evento);
+        //    await context.SaveChangesAsync();
+
+        //    // Mapeo de la entidad creada a DTO
+        //    var eventoDTO = mapper.Map<EventoDTO>(evento);
+
+        //    // Respuesta con CreatedAtRoute
+        //    return CreatedAtRoute("ObtenerEventoPorId", new { id = evento.Id }, eventoDTO);
+        //}
 
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "esproductora")]
         public async Task<IActionResult> Put(int id, [FromForm] EventoCreacionDTO eventoCreacionDTO)
         {
-            // Verifica si el evento existe
-            var evento = await context.Eventos.FirstOrDefaultAsync(a => a.Id == id);
+            var eventoDB = await context.Eventos.FirstOrDefaultAsync(e => e.Id == id);
 
-            if (evento is null)
+            if (eventoDB == null)
             {
-                return NotFound();
+                return NotFound($"El evento con el ID {id} no existe.");
             }
+
+            // Validar que el usuario actual es el creador del evento
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+            if (eventoDB.UsuarioId != usuarioId)
+            {
+                return Forbid("No tienes permisos para editar este evento.");
+            }
+
+            // Actualizar propiedades del evento
+            eventoDB.Nombre = eventoCreacionDTO.Nombre;
+            eventoDB.Direccion = eventoCreacionDTO.Direccion;
+            eventoDB.NombreLugar = eventoCreacionDTO.NombreLugar;
+            eventoDB.Latitud = eventoCreacionDTO.Latitud;
+            eventoDB.Longitud = eventoCreacionDTO.Longitud;
+            eventoDB.FechaInicio = eventoCreacionDTO.FechaInicio;
+            eventoDB.EsPublicitado = eventoCreacionDTO.EsPublicitado;
+            eventoDB.Activo = eventoCreacionDTO.Activo;
+
+            // Manejar la imagen
+            if (eventoCreacionDTO.Imagen != null)
+            {
+                // Subir la nueva imagen
+                if (!string.IsNullOrWhiteSpace(eventoDB.Imagen))
+                {
+                    await almacenadorArchivos.Borrar(eventoDB.Imagen, contenedor);
+                }
+
+                var nuevaUrlImagen = await almacenadorArchivos.Almacenar(contenedor, eventoCreacionDTO.Imagen);
+                eventoDB.Imagen = nuevaUrlImagen;
+            }
+
+            // Si no se envía una nueva imagen, mantener la existente
+            if (eventoCreacionDTO.Imagen == null && string.IsNullOrWhiteSpace(eventoDB.Imagen))
+            {
+                return BadRequest("El evento debe tener una imagen.");
+            }
+
+            context.Entry(eventoDB).State = EntityState.Modified;
 
             try
             {
-                // Mapea los datos de eventoCreacionDTO a evento existente
-                evento = mapper.Map(eventoCreacionDTO, evento);
-
-                // Manejo de la imagen, si hay una imagen en el DTO
-                if (eventoCreacionDTO.Imagen is not null)
-                {
-                    evento.Imagen = await almacenadorArchivos.Editar(evento.Imagen, contenedor, eventoCreacionDTO.Imagen);
-                }
-
                 await context.SaveChangesAsync();
-                return NoContent();
             }
             catch (Exception ex)
             {
-                // Log del error para diagnóstico
-                Console.WriteLine($"Error al editar evento: {ex.Message}");
-                return StatusCode(500, "Hubo un error en el servidor al editar el evento.");
+                return StatusCode(500, $"Error al actualizar el evento: {ex.Message}");
             }
+
+            return NoContent();
         }
 
-        
 
 
+        //delete claim
         [HttpDelete("{id:int}")]
+        [Authorize(Policy = "esadmin")]
         public async Task<IActionResult> Delete(int id)
+        {
+            var evento = await context.Eventos.FirstOrDefaultAsync(e => e.Id == id);
+            if (evento == null)
+            {
+                return NotFound("No se encontró el evento.");
+            }
+
+            // Validar que el usuario que elimina es el creador del evento
+            var usuarioId = await servicioUsuarios.ObtenerUsuarioId();
+            if (evento.UsuarioId != usuarioId)
+            {
+                return Forbid("No tienes permiso para eliminar este evento.");
+            }
+
+            context.Remove(evento);
+            await context.SaveChangesAsync();
+
+            return Ok($"Se eliminó correctamente el evento con ID {id}.");
+        }
+
+
+        [HttpPatch("{id}/pausar")]
+        [Authorize(Policy = "esproductora")]
+        public async Task<IActionResult> PausarEvento(int id)
         {
             var evento = await context.Eventos.FindAsync(id);
             if (evento == null)
@@ -190,11 +331,27 @@ namespace TicketOn.Server.Controllers
                 return NotFound();
             }
 
-            context.Eventos.Remove(evento);
+            // Cambiar el estado del evento
+            evento.Activo = !evento.Activo;
             await context.SaveChangesAsync();
 
-            return Ok($"Se elimino correctamente el evento de id {id}");
+            return NoContent();
         }
+
+        //[HttpDelete("{id:int}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var evento = await context.Eventos.FindAsync(id);
+        //    if (evento == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    context.Eventos.Remove(evento);
+        //    await context.SaveChangesAsync();
+
+        //    return Ok($"Se elimino correctamente el evento de id {id}");
+        //}
 
         [HttpPost("subirImagen")]
         public async Task<ActionResult<string>> SubirImagen([FromForm] IFormFile archivo)

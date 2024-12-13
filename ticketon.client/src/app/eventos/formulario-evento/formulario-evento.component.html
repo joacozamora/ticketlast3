@@ -1,40 +1,72 @@
-<form *ngIf="form" (submit)="guardarCambios()" [formGroup]="form">
-  <mat-form-field appearance="outline">
-    <mat-label>Nombre</mat-label>
-    <input formControlName="nombre" matInput />
-    <mat-error>El campo nombre es requerido</mat-error>
-  </mat-form-field>
+<div class="max-w-2xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Editar Evento</h2>
 
+  <form *ngIf="form" (submit)="guardarCambios()" [formGroup]="form" class="space-y-6">
+    <!-- Campo Nombre del Evento -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Nombre del Evento</mat-label>
+      <input formControlName="nombre" matInput />
+      <mat-error *ngIf="form.controls['nombre'].hasError('required')">
+        El campo nombre es requerido.
+      </mat-error>
+    </mat-form-field>
 
-  <h4>Ubicacion</h4>
+    <!-- Campo Dirección -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Dirección</mat-label>
+      <input formControlName="direccion" matInput />
+      <mat-error *ngIf="form.controls['direccion'].hasError('required')">
+        La dirección es requerida.
+      </mat-error>
+    </mat-form-field>
 
-  <app-mapa *ngIf="coordenadasIniciales" (coordenadaSeleccionada)="coordenadaSeleccionada($event)"
-            [coordenadasIniciales]="coordenadasIniciales" matInput>
-  </app-mapa>
+    <!-- Campo Nombre del Lugar -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Nombre del Lugar</mat-label>
+      <input formControlName="nombreLugar" matInput />
+      <mat-error *ngIf="form.controls['nombreLugar'].hasError('required')">
+        El nombre del lugar es requerido.
+      </mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Fecha evento</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="fechaInicio" />
-    <mat-datepicker #picker></mat-datepicker>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-error *ngIf="form.controls['fechaInicio'].hasError('required')">
-      La fecha es requerida.
-    </mat-error>
-  </mat-form-field>
+    <!-- Mapa para seleccionar coordenadas -->
+    <h4 class="text-lg font-semibold text-gray-700">Ubicación</h4>
+    <app-mapa *ngIf="coordenadasIniciales"
+              (coordenadaSeleccionada)="coordenadaSeleccionada($event)"
+              [coordenadasIniciales]="coordenadasIniciales"
+              matInput>
+    </app-mapa>
 
-  <app-input-img [titulo]="'Imagen del Evento'"
-                 [urlImagenActual]="urlImagenActual"
-                 (archivoSeleccionado)="archivoSeleccionado($event)">
-  </app-input-img>
-  
+    <!-- Campo Fecha del Evento -->
+    <mat-form-field class="w-full" appearance="outline">
+      <mat-label>Fecha del Evento</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="fechaInicio" />
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-error *ngIf="form.controls['fechaInicio'].hasError('required')">
+        La fecha es requerida.
+      </mat-error>
+    </mat-form-field>
 
-  <div>
-    <button mat-flat-button color="primary" [disabled]="form.invalid">
-      Guardar Cambios
-    </button>
+    <!-- Campo Imagen -->
+    <app-input-img [titulo]="'Imagen del Evento'"
+                   [urlImagenActual]="urlImagenActual"
+                   (archivoSeleccionado)="archivoSeleccionado($event)">
+    </app-input-img>
 
-    <a mat-stroked-button routerLink="/">Cancelar</a>
-  </div>
-</form>
+    <!-- Checkbox Es Publicitado -->
+    <mat-checkbox formControlName="esPublicitado" class="mt-2">¿Publicitar Evento?</mat-checkbox>
 
+    <!-- Checkbox Activo -->
+    <mat-checkbox formControlName="activo" class="mt-2">¿Pausar evento?</mat-checkbox>
+
+    <!-- Botones de acción -->
+    <div class="flex justify-between mt-6">
+      <button mat-flat-button color="primary" [disabled]="form.invalid" class="px-6 py-2">
+        Guardar Cambios
+      </button>
+      <a mat-stroked-button routerLink="/" class="px-6 py-2">Cancelar</a>
+    </div>
+  </form>
+</div>
 

@@ -9,6 +9,7 @@ using MercadoPago.Config;
 using Microsoft.OpenApi.Models;
 using CloudinaryDotNet;
 using TicketOn.Server.Config;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,6 +77,14 @@ builder.Services.AddAuthentication().AddJwtBearer(opciones =>
 builder.Services.AddAuthorization(opciones =>
 {
     opciones.AddPolicy("esadmin", politica => politica.RequireClaim("esadmin"));
+    opciones.AddPolicy("esproductora", politica => politica.RequireClaim("esproductora", "true"));
+
+    // Política combinada para permitir acceso a admin o productora
+    opciones.AddPolicy("esadminoproductora", politica =>
+        politica.RequireAssertion(context =>
+            context.User.HasClaim(c => c.Type == "esadmin") ||
+            context.User.HasClaim(c => c.Type == "esproductora" && c.Value == "true")
+        ));
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

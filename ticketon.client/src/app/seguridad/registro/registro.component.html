@@ -1,1 +1,6 @@
-<app-formulario-autenticacion [errores]="errores" titulo="Registrate" (posteoFormulario)="registrar($event)"></app-formulario-autenticacion>
+<!--<app-formulario-autenticacion [errores]="errores" titulo="Registrate" (posteoFormulario)="registrar($event)"></app-formulario-autenticacion>-->
+
+<app-formulario-autenticacion [titulo]="'Registrate'"
+                              [errores]="errores"
+                              (registroFormulario)="registrar($event)">
+</app-formulario-autenticacion>

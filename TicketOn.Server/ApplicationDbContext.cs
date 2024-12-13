@@ -21,10 +21,21 @@ namespace TicketOn.Server
         public DbSet<EntradaVenta> EntradasVenta { get; set; }
         public DbSet<Reventa> Reventas { get; set; }
         public DbSet<UsuarioMercadoPago> UsuarioMercadoPago { get; set; }
+        public DbSet<UsuarioDetalle> UsuarioDetalles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UsuarioDetalle>()
+           .HasKey(u => u.Id);
+
+            modelBuilder.Entity<UsuarioDetalle>()
+                .HasOne(u => u.IdentityUser)
+                .WithOne()
+                .HasForeignKey<UsuarioDetalle>(u => u.Id);
+
+
             var cascadeFKs = modelBuilder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetForeignKeys())
                 .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);

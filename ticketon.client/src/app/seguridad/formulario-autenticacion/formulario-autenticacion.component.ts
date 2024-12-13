@@ -1,65 +1,105 @@
 import { Component, EventEmitter, Inject, Input, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CredencialesUsuarioDTO } from '../seguridad';
+import { CredencialesLoginDTO, CredencialesUsuarioDTO } from '../seguridad';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MostrarErroresComponent } from '../../utilidades/mostrar-errores/mostrar-errores.component';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SeguridadService } from '../seguridad.service';
+import { extraerErroresIdentity } from '../../utilidades/extraerErrores';
 
 @Component({
-    selector: 'app-formulario-autenticacion',
-    imports: [MostrarErroresComponent, ReactiveFormsModule, RouterLink, MatFormFieldModule, MatButtonModule, MatInputModule, MatLabel, CommonModule],
-    templateUrl: './formulario-autenticacion.component.html',
-    styleUrl: './formulario-autenticacion.component.css'
+  selector: 'app-formulario-autenticacion',
+  standalone: true,
+  imports: [
+    MostrarErroresComponent,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatLabel,
+    CommonModule
+  ],
+  templateUrl: './formulario-autenticacion.component.html',
+  styleUrls: ['./formulario-autenticacion.component.css']
 })
 export class FormularioAutenticacionComponent {
   @Input() titulo!: string;
   @Input() errores: string[] = [];
-  @Output() posteoFormulario = new EventEmitter<CredencialesUsuarioDTO>();
+  @Output() loginFormulario = new EventEmitter<CredencialesLoginDTO>();
+  @Output() registroFormulario = new EventEmitter<CredencialesUsuarioDTO>();
 
   form: FormGroup;
+  seguridadService = inject(SeguridadService);
+  router = inject(Router);
+  dialog = inject(MatDialog);
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<FormularioAutenticacionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialog: MatDialog
+    private dialogRef: MatDialogRef<FormularioAutenticacionComponent>
   ) {
-    this.titulo = data.titulo;
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
 
-  guardarCambios() {
-    if (this.form.valid) {
-      this.posteoFormulario.emit(this.form.value);
+  ngOnInit() {
+    if (this.titulo === 'Registrate') {
+      this.form.addControl('nombre', this.fb.control('', Validators.required));
+      this.form.addControl('apellido', this.fb.control('', Validators.required));
+      this.form.addControl('telefono', this.fb.control('', Validators.pattern(/^[0-9]{10,15}$/)));
+      this.form.addControl('dni', this.fb.control('', Validators.pattern(/^[0-9]{7,10}$/)));
     }
   }
 
-  cambiarARegistro() {
-    this.dialogRef.close(); // Cerrar el modal actual
+  guardarCambios() {
+    if (!this.form.valid) {
+      console.error('Formulario inválido:', this.form.value); // Para depuración
+      return;
+    }
 
-    // Abrir el modal opuesto
+    if (this.titulo === 'Login') {
+      const credencialesLogin: CredencialesLoginDTO = {
+        email: this.form.value.email,
+        password: this.form.value.password
+      };
+      console.log('Datos enviados para Login:', credencialesLogin); // Debug
+      this.loginFormulario.emit(credencialesLogin);
+    } else if (this.titulo === 'Registrate') {
+      const credencialesRegistro: CredencialesUsuarioDTO = {
+        email: this.form.value.email,
+        password: this.form.value.password,
+        nombre: this.form.value.nombre,
+        apellido: this.form.value.apellido,
+        telefono: this.form.value.telefono || '',
+        dni: this.form.value.dni || ''
+      };
+      console.log('Datos enviados para Registro:', credencialesRegistro); // Debug
+      this.registroFormulario.emit(credencialesRegistro);
+    }
+  }
+
+
+  cambiarARegistro() {
+    this.dialogRef.close(); // Cierra el modal actual
     const nuevoTitulo = this.titulo === 'Login' ? 'Registrate' : 'Login';
-    const dialogRef = this.dialog.open(FormularioAutenticacionComponent, {
-      width: '550px',
+
+    // Abre el modal opuesto
+    const nuevoDialog = this.dialog.open(FormularioAutenticacionComponent, {
+      width: '600px',
       data: { titulo: nuevoTitulo }
     });
 
-    dialogRef.componentInstance.posteoFormulario.subscribe((credenciales: CredencialesUsuarioDTO) => {
-      if (nuevoTitulo === 'Login') {
-        // Aquí deberás llamar al método de login en tu componente de login
-      } else {
-        // Aquí deberás llamar al método de registro en tu componente de registro
-      }
-      dialogRef.close();
+    nuevoDialog.componentInstance.registroFormulario.subscribe((credencialesRegistro: CredencialesUsuarioDTO) => {
+      console.log('Datos recibidos en cambiarARegistro (Registro):', credencialesRegistro); // Depuración
+    });
+
+    nuevoDialog.componentInstance.loginFormulario.subscribe((credencialesLogin: CredencialesLoginDTO) => {
+      console.log('Datos recibidos en cambiarARegistro (Login):', credencialesLogin); // Depuración
     });
   }
-
-  recuperarCuenta() { }
 }

@@ -1,0 +1,38 @@
+.admin-panel {
+  display: flex;
+}
+
+.sidebar {
+  background-color: #2d3748; /* Gris oscuro */
+  color: #fff;
+  padding: 1rem;
+}
+
+  .sidebar h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+    .sidebar ul li {
+      margin-bottom: 1rem;
+    }
+
+  .sidebar a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+  }
+
+    .sidebar a:hover {
+      background-color: #4a5568; /* Gris más claro */
+    }

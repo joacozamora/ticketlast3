@@ -7,6 +7,7 @@ namespace TicketOn.Server.Entidades
     {
         public int Id { get; set; }
         public string? NombreTanda { get; set; }
+
         public int? Stock { get; set; }
         public decimal? Precio { get; set; }
         [ForeignKey("Evento")]

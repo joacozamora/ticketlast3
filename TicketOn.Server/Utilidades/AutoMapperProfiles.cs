@@ -9,6 +9,7 @@ using TicketOn.Server.DTOs.DetalleVenta;
 using TicketOn.Server.Entidades;
 using TicketOn.Server.DTOs.EntradasVenta;
 using TicketOn.Server.DTOs.Reventas;
+using TicketOn.Server.DTOs.Entradas;
 
 namespace TicketOn.Server.Utilidades
 {
@@ -28,10 +29,22 @@ namespace TicketOn.Server.Utilidades
 
         private void ConfigurarMapeoEntradas()
         {
-            CreateMap<Entrada, EntradaDTO>().ReverseMap();
+            // Mapear de Entrada a EntradaDTO, incluyendo NombreEvento
+            CreateMap<Entrada, EntradaDTO>()
+                .ForMember(dest => dest.NombreEvento, opt => opt.MapFrom(src => src.Evento.Nombre))
+                .ReverseMap()
+                .ForMember(dest => dest.Evento, opt => opt.Ignore()) // Ignorar la relación Evento al mapear de DTO a entidad
+                .ForMember(dest => dest.IdEvento, opt => opt.MapFrom(src => src.IdEvento))
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); // Ignorar el ID al mapear de DTO a entidad para creación o edición
+
+            // Mapear de EntradaCreacionDTO a Entrada
             CreateMap<EntradaCreacionDTO, Entrada>()
-                .ForMember(dest => dest.IdEvento, opt => opt.MapFrom(src => src.IdEvento));
+                .ForMember(dest => dest.IdEvento, opt => opt.MapFrom(src => src.IdEvento))
+                .ForMember(dest => dest.Evento, opt => opt.Ignore()) // Ignorar la relación Evento
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); // Ignorar el ID para creación
+
         }
+
 
         private void ConfigurarMapeoUsuarios()
         {
@@ -67,6 +80,9 @@ namespace TicketOn.Server.Utilidades
         {
             CreateMap<EntradaVenta, EntradaVentaDTO>(); // Mapeo de EntradaVenta a EntradaVentaDTO
             CreateMap<EntradaVentaCreacionDTO, EntradaVenta>(); // Mapeo para crear EntradaVenta
+            
+
+
         }
 
         private void ConfigurarMapeoReventa() // Nuevo método para Reventa

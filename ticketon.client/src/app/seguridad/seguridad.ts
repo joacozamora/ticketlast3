@@ -1,6 +1,8 @@
-export interface CredencialesUsuarioDTO {
-  email: string;
-  password: string;
+export interface CredencialesUsuarioDTO extends CredencialesLoginDTO {
+  nombre: string;
+  apellido: string;
+  telefono?: string; // Opcional
+  dni?: string; // Opcional
 }
 
 export interface RespuestaAutenticacionDTO {
@@ -11,4 +13,9 @@ export interface RespuestaAutenticacionDTO {
 
 export interface UsuarioDTO {
   email: string;
+}
+
+export interface CredencialesLoginDTO {
+  email: string;
+  password: string;
 }

@@ -171,9 +171,7 @@ export class ListadoEventosComponent implements OnInit, OnDestroy {
       this.publicados = modelo.publicados;
     });
 
-    this.eventosService.obtenerEventoPage(this.usuarioEmail).subscribe(modelo => {
-      this.creados = modelo.creados;
-    });
+    
   }
 
   nextSlide() {

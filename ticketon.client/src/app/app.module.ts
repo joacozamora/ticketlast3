@@ -28,6 +28,7 @@ import { CarruselComponent } from './carrusel/carrusel.component';
 import { IndexComponent } from './index/index.component';
 import { BilleteraComponent } from './billetera/billetera.component';
 import { ReventaComponent } from './reventa/reventa/reventa.component';
+import { AdminRoutingModule } from './admin/admin-routing.module';
 
 
 
@@ -55,6 +56,7 @@ export const MY_FORMATS = {
     SweetAlert2Module.forRoot(),
     BrowserModule, HttpClientModule,
     AppRoutingModule,
+    
     MaterialModule,
     ReactiveFormsModule,
     MatMomentDateModule,

@@ -14,12 +14,12 @@ export class AutorizadoComponent {
   rol?: string;
 
   estaAutorizado(): boolean {
-
     if (this.rol) {
+      // Verificar si el usuario tiene el rol específico (admin o productora)
       return this.seguridadService.obtenerRol() === this.rol;
     } else {
+      // Verificar si el usuario está logueado
       return this.seguridadService.estaLogueado();
     }
-
   }
 }

@@ -24,5 +24,13 @@ export class BilleteraService {
       })
     );
   }
-  
+
+  actualizarCorreo(id: number, nuevoCorreo: string): Observable<void> {
+    const payload = { nuevoCorreo };
+    return this.http.put<void>(`${this.apiURL}/transferir/${id}`, payload);
+  }
+
+  obtenerTodasEntradasVenta(): Observable<EntradaVentaDTO[]> {
+    return this.http.get<EntradaVentaDTO[]>(`${this.apiURL}/todas`);
+  }
 }

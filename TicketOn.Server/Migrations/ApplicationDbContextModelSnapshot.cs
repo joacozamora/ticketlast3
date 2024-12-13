@@ -329,9 +329,19 @@ namespace TicketOn.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EsPublicitado")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("FechaFin")
                         .HasColumnType("datetime2");
@@ -350,6 +360,10 @@ namespace TicketOn.Server.Migrations
                         .HasColumnType("decimal(11, 8)");
 
                     b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreLugar")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -444,6 +458,28 @@ namespace TicketOn.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tandas");
+                });
+
+            modelBuilder.Entity("TicketOn.Server.Entidades.UsuarioDetalle", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Apellido")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DNI")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UsuarioDetalles");
                 });
 
             modelBuilder.Entity("TicketOn.Server.Entidades.UsuarioMercadoPago", b =>
@@ -646,6 +682,17 @@ namespace TicketOn.Server.Migrations
                     b.Navigation("EntradaVenta");
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("TicketOn.Server.Entidades.UsuarioDetalle", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithOne()
+                        .HasForeignKey("TicketOn.Server.Entidades.UsuarioDetalle", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("TicketOn.Server.Entidades.UsuarioMercadoPago", b =>

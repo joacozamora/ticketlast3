@@ -1,4 +1,11 @@
-<h2>Editar Evento</h2>
+<div *ngIf="evento">
+  <app-formulario-evento [modelo]="evento"
+                         [urlImagenActual]="imagenActual"
+                         (posteoFormulario)="guardarCambios($event)">
+  </app-formulario-evento>
+
+
+<!--<h2>Editar Evento</h2>
 
 
 
@@ -6,7 +13,7 @@
 <app-formulario-evento [modelo]="evento" (posteoFormulario)="guardarCambios($event)"></app-formulario-evento>
 
 
-}
+}-->
 <!--<h2>Editar Evento</h2>
 
 <ng-container *ngIf="evento">

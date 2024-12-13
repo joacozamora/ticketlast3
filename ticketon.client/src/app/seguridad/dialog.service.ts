@@ -12,7 +12,7 @@ export class DialogService {
 
   openAuthDialog(mode: 'login' | 'register', titulo: string): void {
     this.dialog.open(FormularioAutenticacionComponent, {
-      width: '400px',
+      width: '479px',
       data: { mode, titulo }
     });
   }

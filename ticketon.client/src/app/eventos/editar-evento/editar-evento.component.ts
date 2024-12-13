@@ -1,52 +1,71 @@
-import { Component, Inject,  Input, OnInit, inject, numberAttribute } from '@angular/core';
-import { EventoCreacionDTO, EventoDTO } from '../evento';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormularioEventoComponent } from '../formulario-evento/formulario-evento.component';
 import { EventosService } from '../eventos.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { EventoCreacionDTO, EventoDTO } from '../evento';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-editar-evento',
-    imports: [FormularioEventoComponent],
-    templateUrl: './editar-evento.component.html',
-    styleUrl: './editar-evento.component.css'
+  selector: 'app-editar-evento',
+  standalone: true,
+  imports: [FormularioEventoComponent, CommonModule, RouterModule],
+  templateUrl: './editar-evento.component.html',
+  styleUrls: ['./editar-evento.component.css']
 })
-export class EditarEventoComponent{
+export class EditarEventoComponent implements OnInit {
+  evento?: EventoDTO;
+  imagenActual?: string;
+  id!: number; 
+
+  private eventosService = inject(EventosService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   ngOnInit(): void {
-    // Captura el ID desde la URL
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
-
-    if (this.id) {
-      this.eventosServices.obtenerPorId(this.id).subscribe({
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.id = Number(idParam); // Aseguramos que el ID se obtiene y asigna
+      this.eventosService.obtenerPorId(this.id).subscribe({
         next: (evento) => {
           this.evento = evento;
           this.imagenActual = evento.imagen as string;
+
         },
-        error: (err) => {
-          console.error('Error al obtener el género:', err);
-        }
+        error: (err) => console.error('Error al obtener el evento:', err),
       });
+    } else {
+      console.error('No se encontró el ID del evento en la URL.');
     }
   }
 
-
-  @Input({ transform: numberAttribute })
-  id!: number;
-
-  evento?: EventoDTO;
-  eventosServices = inject(EventosService);
-  router = inject(Router);
-  route = inject(ActivatedRoute);
-  imagenActual: string = '';
-
-
-  guardarCambios(evento: EventoCreacionDTO) {
-
-    this.eventosServices.actualizar(this.id, evento).subscribe({
-      next: () => {
-        console.log(evento);
-        this.router.navigate(['/eventos'])
-      } 
-    })
+  guardarCambios(evento: EventoCreacionDTO): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.eventosService.actualizar(id, evento).subscribe({
+      next: () => this.router.navigate(['/lista-eventos']),
+      error: (err) => console.error('Error al actualizar el evento:', err),
+    });
   }
+
+  eliminarEvento(): void {
+    if (this.id) {
+      if (confirm('¿Estás seguro de que deseas eliminar este evento? Esta acción no se puede deshacer.')) {
+        this.eventosService.borrar(this.id).subscribe({
+          next: () => {
+            alert('Evento eliminado con éxito.');
+            this.router.navigate(['/eventos']); // Redirige al listado de eventos
+          },
+          error: (err) => {
+            console.error('Error al eliminar el evento:', err);
+            alert('Ocurrió un error al intentar eliminar el evento.');
+          },
+        });
+      }
+    } else {
+      console.error('El ID del evento no está definido.');
+    }
+  }
+
+  
 }
+
+

@@ -1,17 +1,18 @@
 import { Component, Inject, inject } from '@angular/core';
 import { SeguridadService } from '../seguridad.service';
 import { Router } from '@angular/router';
-import { CredencialesUsuarioDTO } from '../seguridad';
+import { CredencialesLoginDTO } from '../seguridad';
 import { FormularioAutenticacionComponent } from '../formulario-autenticacion/formulario-autenticacion.component';
 import { MostrarErroresComponent } from '../../utilidades/mostrar-errores/mostrar-errores.component';
 import { extraerErroresIdentity } from '../../utilidades/extraerErrores';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-    selector: 'app-login',
-    imports: [FormularioAutenticacionComponent, MostrarErroresComponent],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css'
+  selector: 'app-login',
+  standalone: true,
+  imports: [FormularioAutenticacionComponent, MostrarErroresComponent],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   seguridadService = inject(SeguridadService);
@@ -21,19 +22,15 @@ export class LoginComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { titulo: string }) { }
 
-  loguear(credenciales: CredencialesUsuarioDTO) {
-    this.seguridadService.login(credenciales)
-      .subscribe({
-        next: () => {
-          this.dialogRef.close();
-          this.router.navigate(['/'])
-        },
-        error: err => {
-          const errores = extraerErroresIdentity(err);
-          this.errores = errores;
-        }
-      })
+  loguear(credenciales: CredencialesLoginDTO) {
+    this.seguridadService.login(credenciales).subscribe({
+      next: () => {
+        this.dialogRef.close(); // Cierra el modal tras loguear
+        this.router.navigate(['/']); // Redirige al home
+      },
+      error: (err) => {
+        this.errores = extraerErroresIdentity(err); // Maneja errores
+      },
+    });
   }
-
-
 }

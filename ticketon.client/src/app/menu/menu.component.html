@@ -67,17 +67,26 @@
           <div class="flex space-x-4">
             <app-autorizado rol="admin">
               <ng-container autorizado>
-                <a routerLink="generos" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Géneros</a>
-                <a routerLink="eventos/crear" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Nuevo Evento</a>
                 <a routerLink="usuarios" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Usuarios</a>
+                <a routerLink="admin" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Panel Admin</a>
+              </ng-container>
+            </app-autorizado>
+            <app-autorizado rol="productora">
+              <ng-container autorizado>
+                <a routerLink="eventos/crear" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Nuevo Evento</a>
+                <a routerLink="lista-eventos" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Mis Eventos</a>
               </ng-container>
             </app-autorizado>
             <a routerLink="billetera" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Billetera</a>
             <a routerLink="reventa" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Reventa</a>
+            <a [routerLink]="['/usuario/editar', seguridadService.obtenerCampoJWT('email')]"
+               class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+              Datos Usuario
+            </a>
           </div>
         </div>
       </div>
-
+     
       <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
         <app-autorizado>
           <ng-container autorizado>
@@ -86,7 +95,7 @@
               <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h18l-2 13H5L3 3zm6 16a2 2 0 100 4 2 2 0 000-4zm8 0a2 2 0 100 4 2 2 0 000-4z" />
               </svg>
-              
+
             </button>
 
             <!-- Círculo con la primera letra del correo -->

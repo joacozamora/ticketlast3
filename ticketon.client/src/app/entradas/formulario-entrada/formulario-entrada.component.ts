@@ -65,9 +65,7 @@ export class FormularioEntradaComponent implements OnInit {
     this.entradas.push(this.crearEntrada());
   }
 
-  eliminarEntrada(index: number): void {
-    this.entradas.removeAt(index);
-  }
+  
 
   guardarCambios() {
     if (this.form.invalid) return;
@@ -92,6 +90,38 @@ export class FormularioEntradaComponent implements OnInit {
       }
     });
   }
+
+  actualizarEntrada(index: number): void {
+    const entrada = this.entradas.at(index).value;
+    this.entradasService.editar(entrada.id, entrada).subscribe({
+      next: () => {
+        alert('Entrada actualizada con éxito.');
+      },
+      error: (error) => {
+        console.error('Error al actualizar entrada:', error);
+        alert('Ocurrió un error al actualizar la entrada.');
+      }
+    });
+  }
+
+  eliminarEntrada(index: number): void {
+    const entradaId = this.entradas.at(index).get('id')?.value;
+    if (entradaId) {
+      this.entradasService.eliminar(entradaId).subscribe({
+        next: () => {
+          this.entradas.removeAt(index);
+          alert('Entrada eliminada con éxito.');
+        },
+        error: (error) => {
+          console.error('Error al eliminar entrada:', error);
+          alert('Ocurrió un error al eliminar la entrada.');
+        }
+      });
+    } else {
+      this.entradas.removeAt(index);
+    }
+  }
+
 }
 
 

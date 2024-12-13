@@ -86,17 +86,6 @@
               <div class="p-5">
                 <a [routerLink]="['/comprar-entradas', evento.id]" class="px-5 py-2.5 rounded-full text-white text-sm bg-blue-700 hover:bg-blue-800">Comprar Tickets</a>
               </div>
-
-              <app-autorizado rol="admin">
-                <ng-container autorizado>
-                  <div>
-                    <a mat-flat-button [routerLink]="['/eventos/editar', evento.id]">Editar</a>
-                    <button mat-flat-button type="button" color="warn" [swal]="{title: 'Confirmación', text: '¿Deseas borrar el registro?', showCancelButton: true}" (confirm)="borrar(evento.id)">
-                      Borrar
-                    </button>
-                  </div>
-                </ng-container>
-              </app-autorizado>
             </div>
           </div>
         </div>

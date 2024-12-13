@@ -28,9 +28,7 @@ export class IndiceEventosComponent {
     console.log("Correo del usuario:", this.usuarioEmail); // Agrega este log
 
 
-    this.eventosService.obtenerEventoPage(this.usuarioEmail).subscribe(modelo => {
-      this.creados = modelo.creados;
-    });
+    
   }
   //cargarEventos() {
   //  this.eventosService.obtenerLandingPage().subscribe(modelo => {
